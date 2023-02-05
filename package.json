@@ -3,7 +3,7 @@
   "description": "CM4025 Enterprise Web App coursework",
   "scripts": {
     "start": "ts-node-esm src/server.ts",
-    "prestart": "postcss src/public/index.css -o src/public/style.css",
+    "prestart": "postcss src/public/styles/index.css -o src/public/styles/style.css",
     "dev": "nodemon"
   },
   "devDependencies": {
