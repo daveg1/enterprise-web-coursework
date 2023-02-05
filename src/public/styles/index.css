@@ -2,8 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-	body {
-		background-color: red;
+@layer components {
+	.NavLink {
+		@apply text-sm font-semibold;
+	}
+
+	.NavLink:hover {
+		box-shadow: 0 2px 0;
 	}
 }

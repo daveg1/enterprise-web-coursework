@@ -1,12 +1,20 @@
 <% var hasSession = false; %>
-<nav>
-	<ul>
-		<li><a href="/">Home</a></li>
-		<% if (hasSession) { %>
-		<li><a href="/account">Account</a></li>
-		<% } else { %>
-		<li><a href="/login">Sign In</a></li>
-		<li><a href="/signup">Sign Up</a></li>
-		<% } %>
-	</ul>
+<nav class="p-4 flex justify-center">
+	<div class="max-w-4xl w-full flex items-center justify-between">
+		<!-- Left -->
+		<div class="flex gap-4">
+			<a class="NavLink" href="/">Home</a>
+		</div>
+
+		<!--  Right -->
+		<div class="flex gap-4">
+			<% if (hasSession) { %>
+			<a class="NavLink" href="/account">Account</a>
+			<% } else { %>
+			<a class="NavLink" href="/login">Sign In</a>
+			<span class="text-sm opacity-50 select-none">/</span>
+			<a class="NavLink" href="/signup">Sign Up</a>
+			<% } %>
+		</div>
+	</div>
 </nav>
