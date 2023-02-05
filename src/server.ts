@@ -1,5 +1,6 @@
 import express from 'express'
 import path from 'node:path'
+import { routes } from './routes'
 
 const app = express()
 
@@ -11,9 +12,7 @@ app.set('views', path.join(__dirname, 'views'))
 app.use(express.static(__dirname + '/public'))
 
 // Set app routes
-app.get('/', (req, res) => {
-	res.render('pages/home')
-})
+app.use(routes)
 
 // Set port to listen on
 app.listen(8080, () => {
