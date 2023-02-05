@@ -20,12 +20,12 @@
 				<div class="flex">
 					<input
 						class="w-32 h-8 px-2 text-sm border border-r-0 rounded-l-md focus:z-10"
-						name="time-worked"
+						name="timeWorked"
 						type="number"
 						placeholder="123"
 					/>
 
-					<select class="h-8 px-2 text-sm border cursor-pointer rounded-r-md" name="time-unit">
+					<select class="h-8 px-2 text-sm border cursor-pointer rounded-r-md" name="timeUnit">
 						<option value="hours">Hours</option>
 						<option value="days">Days</option>
 						<option value="months">Months</option>
@@ -33,24 +33,27 @@
 				</div>
 
 				<h3>Pay grade</h3>
-				<select class="h-8 px-2 text-sm border rounded-md cursor-pointer" name="pay-grade">
+				<select class="h-8 px-2 text-sm border rounded-md cursor-pointer" name="payGrade">
 					<option value="junior">Junior</option>
 					<option value="standard">Standard</option>
 					<option value="senior">Senior</option>
 				</select>
 
 				<h3>One-off Cost (£)</h3>
-				<input class="w-32 h-8 px-2 text-sm border rounded-md" name="one-off" type="number" />
+				<input class="w-32 h-8 px-2 text-sm border rounded-md" name="oneOffCost" type="number" />
 
 				<h3>Ongoing Cost (£)</h3>
 				<div class="flex">
 					<input
 						class="w-32 h-8 px-2 text-sm border border-r-0 rounded-l-md focus:z-10"
-						name="ongoing-cost"
+						name="ongoingCost"
 						type="number"
 					/>
 
-					<select class="h-8 px-2 text-sm border cursor-pointer rounded-r-md" name="ongoing-freq">
+					<select
+						class="h-8 px-2 text-sm border cursor-pointer rounded-r-md"
+						name="ongoingFrequency"
+					>
 						<option value="weekly">Weekly</option>
 						<option value="monthly">Monthly</option>
 					</select>
