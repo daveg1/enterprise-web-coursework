@@ -1,0 +1,12 @@
+<% var hasSession = false; %>
+<nav>
+	<ul>
+		<li><a href="#">Home</a></li>
+		<% if (hasSession) { %>
+		<li><a href="/account">Account</a></li>
+		<% } else { %>
+		<li><a href="/login">Sign In</a></li>
+		<li><a href="/signup">Sign Up</a></li>
+		<% } %>
+	</ul>
+</nav>

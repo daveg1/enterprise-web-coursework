@@ -12,7 +12,7 @@ app.use(express.static(__dirname + '/public'))
 
 // Set app routes
 app.get('/', (req, res) => {
-	res.render('home')
+	res.render('pages/home')
 })
 
 // Set port to listen on
