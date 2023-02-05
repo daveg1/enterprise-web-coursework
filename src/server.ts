@@ -1,4 +1,4 @@
-import express from 'express'
+import express, { urlencoded } from 'express'
 import path from 'node:path'
 import { routes } from './routes'
 
@@ -10,6 +10,7 @@ app.set('views', path.join(__dirname, 'views'))
 
 // Set app middlewares
 app.use(express.static(__dirname + '/public'))
+app.use(urlencoded({ extended: true }))
 
 // Set app routes
 app.use(routes)
