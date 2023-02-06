@@ -1,5 +1,20 @@
+function formatValue(value) {
+	value = value.toString()
+	let formatted = ''
+
+	for (let i = 0; i < value.length; i++) {
+		if (i !== 0 && i % 3 === 0) {
+			formatted = ',' + formatted
+		}
+		formatted = value[value.length - i - 1] + formatted
+	}
+
+	return '£' + formatted
+}
+
 window.onload = (e) => {
 	const formElem = document.querySelector('#budget-form')
+	const outputElem = document.querySelector('#output')
 
 	formElem.onsubmit = async (e) => {
 		e.preventDefault()
@@ -24,5 +39,7 @@ window.onload = (e) => {
 
 		const res = await req.json()
 		console.log(res)
+
+		outputElem.textContent = `Your quote: ${formatValue(res.quote)}`
 	}
 }
