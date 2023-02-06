@@ -30,6 +30,6 @@ window.onload = (e) => {
 		const res = await req.json()
 		console.log(res)
 
-		outputElem.textContent = `Your quote: ${formatAsCurrency(res.quote)}`
+		outputElem.textContent = `Estimated budget: ${formatAsCurrency(res.quote)}`
 	}
 }
