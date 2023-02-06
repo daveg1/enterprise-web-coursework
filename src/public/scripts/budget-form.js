@@ -1,15 +1,5 @@
-function formatValue(value) {
-	value = value.toString()
-	let formatted = ''
-
-	for (let i = 0; i < value.length; i++) {
-		if (i !== 0 && i % 3 === 0) {
-			formatted = ',' + formatted
-		}
-		formatted = value[value.length - i - 1] + formatted
-	}
-
-	return '£' + formatted
+function formatAsCurrency(value) {
+	return new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(value)
 }
 
 window.onload = (e) => {
@@ -40,6 +30,6 @@ window.onload = (e) => {
 		const res = await req.json()
 		console.log(res)
 
-		outputElem.textContent = `Your quote: ${formatValue(res.quote)}`
+		outputElem.textContent = `Your quote: ${formatAsCurrency(res.quote)}`
 	}
 }
