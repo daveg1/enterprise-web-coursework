@@ -102,3 +102,6 @@ dist
 
 # TernJS port file
 .tern-port
+
+# App-specific files
+src/public/styles/style.css
