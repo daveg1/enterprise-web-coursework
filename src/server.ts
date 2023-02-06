@@ -1,10 +1,12 @@
-import express, { json, urlencoded } from 'express'
+import 'dotenv/config'
+import express from 'express'
 import path from 'node:path'
 import { routes } from './routes'
 
 const app = express()
 
 // Set app variables
+app.set('port', process.env.PORT || 8080)
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'))
 
@@ -17,6 +19,6 @@ app.use(express.json())
 app.use(routes)
 
 // Set port to listen on
-app.listen(8080, () => {
-	console.log(`Listening at http://localhost:${8080}`)
+app.listen(app.get('port'), () => {
+	console.log(`Listening at http://localhost:${app.get('port')}`)
 })
