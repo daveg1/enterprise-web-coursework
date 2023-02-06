@@ -1,19 +1,25 @@
 <% var hasSession = false; %>
-<nav class="p-4 flex justify-center">
-	<div class="max-w-4xl w-full flex items-center justify-between">
+<nav class="flex items-center justify-center p-4">
+	<div class="flex items-center justify-between w-full max-w-4xl">
 		<!-- Left -->
 		<div class="flex gap-4">
-			<a class="NavLink" href="/">Home</a>
+			<a class="text-sm font-semibold transition-opacity hover:opacity-50" href="/">Home</a>
 		</div>
 
 		<!--  Right -->
-		<div class="flex gap-4">
+		<div class="flex items-center gap-4">
 			<% if (hasSession) { %>
-			<a class="NavLink" href="/account">Account</a>
+			<a class="text-sm font-semibold transition-opacity hover:opacity-50" href="/account"
+				>Account</a
+			>
 			<% } else { %>
-			<a class="NavLink" href="/login">Sign In</a>
-			<span class="text-sm opacity-50 select-none">/</span>
-			<a class="NavLink" href="/signup">Sign Up</a>
+			<a class="text-sm font-semibold transition-opacity hover:opacity-50" href="/login">Sign in</a>
+
+			<a
+				class="px-2 py-1 text-sm font-semibold transition-opacity border rounded hover:opacity-50"
+				href="/signup"
+				>Sign up</a
+			>
 			<% } %>
 		</div>
 	</div>
