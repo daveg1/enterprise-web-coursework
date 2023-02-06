@@ -32,10 +32,10 @@ export function calculateQuote(body: Budget) {
 	let ongoingRate = body.ongoingCost
 
 	if (body.ongoingFrequency === 'weekly') {
-		const weeks = Math.floor(hoursNeeded / 168)
+		const weeks = Math.ceil(hoursNeeded / 168)
 		ongoingRate *= weeks
 	} else {
-		const months = Math.floor(hoursNeeded / 730)
+		const months = Math.ceil(hoursNeeded / 730)
 		ongoingRate *= months
 	}
 
