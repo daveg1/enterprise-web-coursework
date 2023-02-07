@@ -1,7 +1,7 @@
 <app-page-title title="Sign Up"></app-page-title>
 
 <form
-	id="signup-form"
+	[formGroup]="signupForm"
 	class="flex flex-col items-start gap-4 py-4"
 	method="post"
 	spellcheck="false"
@@ -13,6 +13,7 @@
 			<input
 				class="w-32 h-8 px-2 text-sm border rounded-md"
 				name="firstname"
+				formControlName="firstname"
 				placeholder="Buster"
 				maxlength="32"
 				required
@@ -21,6 +22,7 @@
 			<input
 				class="w-32 h-8 px-2 text-sm border rounded-md"
 				name="lastname"
+				formControlName="lastname"
 				placeholder="Scruggs"
 				maxlength="48"
 				required
@@ -35,6 +37,7 @@
 			<input
 				class="w-32 h-8 px-2 text-sm border rounded-md"
 				name="username"
+				formControlName="username"
 				placeholder="b.scruggs"
 				maxlength="32"
 				required
@@ -43,7 +46,7 @@
 			<input
 				class="w-32 h-8 px-2 text-sm border rounded-md"
 				type="password"
-				name="password"
+				formControlName="password"
 				placeholder="••••••••"
 				required
 			/>
@@ -52,6 +55,8 @@
 
 	<button
 		class="flex items-center h-8 px-2 rounded text-slate-50 bg-emerald-600"
+		type="button"
+		(click)="submitForm()"
 	>
 		<span class="text-sm font-semibold">Create account</span>
 	</button>
