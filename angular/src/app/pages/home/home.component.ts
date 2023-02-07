@@ -33,8 +33,6 @@ export class HomeComponent {
 	}
 
 	submitForm() {
-		console.log('hello');
-
 		if (this.budgetForm.valid) {
 			this.budgetService
 				.getQuote(this.budgetForm.value as Budget)

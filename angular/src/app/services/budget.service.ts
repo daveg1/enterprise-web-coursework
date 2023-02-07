@@ -29,8 +29,4 @@ export class BudgetService {
 			this.httpOptions
 		);
 	}
-
-	formatAsCurrency(value: number) {
-		return this.currencyFormat.format(value);
-	}
 }

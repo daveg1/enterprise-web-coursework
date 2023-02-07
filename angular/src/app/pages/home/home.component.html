@@ -103,7 +103,7 @@
 	</button>
 
 	<ng-container *ngIf="quote$ | async as quote">
-		<div class="text-2xl">{{ quote }}</div>
+		<div class="text-2xl">{{ quote | currency : 'GBP' }}</div>
 	</ng-container>
 </form>
 
