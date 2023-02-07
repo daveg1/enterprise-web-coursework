@@ -4,10 +4,6 @@ import { userSchema } from '../schemas/user.schema'
 
 const signupRoutes = Router()
 
-signupRoutes.get('/', (req, res) => {
-	res.render('pages/signup')
-})
-
 // TODO: encrypt passwords before storing on database
 signupRoutes.post('/', urlencoded({ extended: true }), async (req, res) => {
 	try {

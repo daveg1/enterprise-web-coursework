@@ -9,8 +9,6 @@ const app = express()
 
 // Set app variables
 app.set('port', process.env.PORT || 8080)
-app.set('view engine', 'ejs')
-app.set('views', path.join(__dirname, 'views'))
 
 // Set app middlewares and routes
 app.use(express.static(__dirname + '/public'))
