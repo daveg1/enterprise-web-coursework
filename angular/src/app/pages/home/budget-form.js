@@ -1,7 +1,3 @@
-function formatAsCurrency(value) {
-	return new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(value)
-}
-
 window.onload = (e) => {
 	const formElem = document.querySelector('#budget-form')
 	const outputElem = document.querySelector('#output')
