@@ -2,7 +2,7 @@
 
 <!-- Assume only one worker for now -->
 <form
-	id="budget-form"
+	[formGroup]="budgetForm"
 	class="flex flex-col items-start gap-4 p-4 border rounded-lg"
 	method="post"
 	spellcheck="false"
@@ -15,7 +15,7 @@
 			<div class="flex">
 				<input
 					class="w-32 h-8 px-2 text-sm border border-r-0 rounded-l-md focus:z-10"
-					name="timeWorked"
+					formControlName="timeWorked"
 					type="number"
 					placeholder="36"
 					min="1"
@@ -24,11 +24,11 @@
 
 				<select
 					class="h-8 px-2 text-sm border cursor-pointer rounded-r-md"
-					name="timeUnit"
+					formControlName="timeUnit"
 				>
-					<option value="hours">Hours</option>
-					<option value="days">Days</option>
-					<option value="months">Months</option>
+					<option *ngFor="let unit of timeUnits" [value]="unit">
+						{{ unit }}
+					</option>
 				</select>
 			</div>
 		</div>
@@ -37,12 +37,12 @@
 			<h3>Pay grade</h3>
 			<select
 				class="h-8 px-2 text-sm border rounded-md cursor-pointer"
-				name="payGrade"
+				formControlName="payGrade"
 				required
 			>
-				<option value="junior">Junior</option>
-				<option value="standard">Standard</option>
-				<option value="senior">Senior</option>
+				<option *ngFor="let grade of payGrades" [value]="grade">
+					{{ grade }}
+				</option>
 			</select>
 		</div>
 	</div>
@@ -54,7 +54,7 @@
 			<h3>One-off Cost</h3>
 			<input
 				class="w-32 h-8 px-2 text-sm border rounded-md"
-				name="oneOffCost"
+				formControlName="oneOffCost"
 				type="number"
 				placeholder="£"
 				min="1"
@@ -67,7 +67,7 @@
 			<div class="flex">
 				<input
 					class="w-32 h-8 px-2 text-sm border border-r-0 rounded-l-md focus:z-10"
-					name="ongoingCost"
+					formControlName="ongoingCost"
 					type="number"
 					placeholder="£"
 					min="1"
@@ -76,11 +76,12 @@
 
 				<select
 					class="h-8 px-2 text-sm border cursor-pointer rounded-r-md"
-					name="ongoingFrequency"
+					formControlName="ongoingFrequency"
 					required
 				>
-					<option value="weekly">Weekly</option>
-					<option value="monthly">Monthly</option>
+					<option *ngFor="let freq of frequencies" [value]="freq">
+						{{ freq }}
+					</option>
 				</select>
 			</div>
 		</div>
@@ -88,6 +89,7 @@
 
 	<button
 		class="flex items-center h-8 px-2 rounded text-slate-50 bg-emerald-600"
+		(click)="submitForm()"
 	>
 		<span class="text-sm font-semibold">Calculate</span>
 
@@ -100,7 +102,9 @@
 		</svg>
 	</button>
 
-	<div id="output" class="text-2xl empty:hidden"></div>
+	<ng-container *ngIf="quote$ | async as quote">
+		<div class="text-2xl">{{ quote }}</div>
+	</ng-container>
 </form>
 
 <app-user-notice></app-user-notice>
