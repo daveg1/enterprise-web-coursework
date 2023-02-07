@@ -2,8 +2,13 @@ import { Router } from 'express'
 import { calculateQuote } from '../modules/calculateQuote'
 import { budgetSchema } from '../schemas/budget.schema'
 
-const calculateRoutes = Router()
-calculateRoutes.post('/', async (req, res) => {
+const budgetRoutes = Router()
+
+budgetRoutes.get('/', (req, res) => {
+	res.status(200).json({ hello: 'world' })
+})
+
+budgetRoutes.post('/', async (req, res) => {
 	try {
 		const parsed = await budgetSchema.parseAsync(req.body)
 
@@ -15,4 +20,4 @@ calculateRoutes.post('/', async (req, res) => {
 	}
 })
 
-export { calculateRoutes }
+export { budgetRoutes }
