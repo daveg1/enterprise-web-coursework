@@ -1,6 +1,5 @@
 import 'dotenv/config'
 import express from 'express'
-import path from 'node:path'
 import { routes } from './routes'
 import { connectDatabase } from './modules/connectDatabase'
 import { timestamp } from './modules/timestamp'
@@ -14,6 +13,8 @@ app.set('port', process.env.PORT || 8080)
 app.use(express.static(__dirname + '/public'))
 app.use(express.json())
 app.use(routes)
+
+console.log(timestamp(), 'Server starting...')
 
 // Connect to database, then run server
 connectDatabase()
