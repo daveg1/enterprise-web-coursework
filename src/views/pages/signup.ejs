@@ -6,7 +6,62 @@
 	<body>
 		<%- include('../partials/nav') %>
 		<div class="max-w-4xl mx-auto">
-			<h1 class="text-2xl">Sign In</h1>
+			<h1 class="text-2xl">Sign Up</h1>
+
+			<form
+				id="signup-form"
+				class="flex flex-col items-start gap-4 py-4"
+				method="post"
+				spellcheck="false"
+			>
+				<div class="flex flex-col gap-1">
+					<h3>Please enter your name</h3>
+
+					<div class="flex gap-4">
+						<input
+							class="w-32 h-8 px-2 text-sm border rounded-md"
+							name="firstname"
+							placeholder="Buster"
+							maxlength="32"
+							required
+						/>
+
+						<input
+							class="w-32 h-8 px-2 text-sm border rounded-md"
+							name="lastname"
+							placeholder="Scruggs"
+							maxlength="48"
+							required
+						/>
+					</div>
+				</div>
+
+				<div class="flex flex-col gap-1">
+					<h3>Please create a username and password</h3>
+
+					<div class="flex gap-4">
+						<input
+							class="w-32 h-8 px-2 text-sm border rounded-md"
+							name="username"
+							placeholder="b.scruggs"
+							maxlength="32"
+							required
+						/>
+
+						<input
+							class="w-32 h-8 px-2 text-sm border rounded-md"
+							type="password"
+							name="password"
+							placeholder="••••••••"
+							required
+						/>
+					</div>
+				</div>
+
+				<button class="flex items-center h-8 px-2 rounded text-slate-50 bg-emerald-600">
+					<span class="text-sm font-semibold">Create account</span>
+				</button>
+			</form>
 		</div>
 	</body>
 </html>
