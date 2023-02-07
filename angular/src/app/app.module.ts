@@ -10,6 +10,7 @@ import { AccountComponent } from './pages/account/account.component';
 import { LoginComponent } from './pages/login/login.component';
 import { SignupComponent } from './pages/signup/signup.component';
 import { UserNoticeComponent } from './components/user-notice/user-notice.component';
+import { PageTitleComponent } from './components/page-title/page-title.component';
 
 @NgModule({
 	declarations: [
@@ -19,7 +20,8 @@ import { UserNoticeComponent } from './components/user-notice/user-notice.compon
 		AccountComponent,
 		LoginComponent,
 		SignupComponent,
-  UserNoticeComponent,
+		UserNoticeComponent,
+		PageTitleComponent,
 	],
 	imports: [BrowserModule, AppRoutingModule, HttpClientModule],
 	providers: [],
