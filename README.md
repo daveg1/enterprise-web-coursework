@@ -35,3 +35,4 @@ The webapp and database are run on a server installed with Ubuntu 22.04 OS. The 
 
 - [How To Use Tailwindcss with Express](https://daily.dev/blog/how-to-use-tailwindcss-with-node-js-express-and-pug#add-tailwindcss)
 - [Using Zod for Request Body Validation](https://dev.to/franciscomendes10866/schema-validation-with-zod-and-expressjs-111p)
+- [Password Storage OWASP](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html)
