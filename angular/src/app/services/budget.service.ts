@@ -9,11 +9,6 @@ import type { QuoteResponse } from '../types/Quote';
 export class BudgetService {
 	private endpoint = 'http://localhost:3934/budget';
 
-	private currencyFormat = new Intl.NumberFormat('en-GB', {
-		style: 'currency',
-		currency: 'GBP',
-	});
-
 	private httpOptions = {
 		headers: new HttpHeaders({
 			'Content-Type': 'application/json',
