@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NonNullableFormBuilder } from '@angular/forms';
+import { AccountService } from 'src/app/services/account.service';
 import type { User } from 'src/app/types/User';
 
 @Component({
@@ -10,7 +11,10 @@ import type { User } from 'src/app/types/User';
 export class SignupComponent {
 	signupForm;
 
-	constructor(readonly formBuilder: NonNullableFormBuilder) {
+	constructor(
+		readonly formBuilder: NonNullableFormBuilder,
+		private readonly accountService: AccountService
+	) {
 		this.signupForm = this.formBuilder.group<User>({
 			firstname: '',
 			lastname: '',
@@ -21,7 +25,9 @@ export class SignupComponent {
 
 	submitForm() {
 		if (this.signupForm.valid) {
-			console.log(this.signupForm.value);
+			this.accountService
+				.createUser(this.signupForm.value as User)
+				.subscribe(console.log);
 		} else {
 			console.log('Form is not valid', this.signupForm.value);
 		}
