@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import type { User } from '../types/User';
+import type { AuthLogin, AuthSignUp } from '../types/auth';
 
 @Injectable({
 	providedIn: 'root',
@@ -16,11 +16,15 @@ export class AuthService {
 
 	constructor(private readonly http: HttpClient) {}
 
-	createUser(newUser: User) {
+	signup(user: AuthSignUp) {
 		return this.http.post<string>(
-			`${this.endpoint}/signup`,
-			newUser,
+			this.endpoint + '/signup',
+			user,
 			this.httpOptions
 		);
+	}
+
+	login(user: AuthLogin) {
+		return this.http.post(this.endpoint + '/login', user, this.httpOptions);
 	}
 }
