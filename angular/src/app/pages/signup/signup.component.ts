@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NonNullableFormBuilder } from '@angular/forms';
-import { AccountService } from 'src/app/services/account.service';
+import { AuthService } from 'src/app/services/auth.service';
 import type { User } from 'src/app/types/User';
 
 @Component({
@@ -13,7 +13,7 @@ export class SignupComponent {
 
 	constructor(
 		readonly formBuilder: NonNullableFormBuilder,
-		private readonly accountService: AccountService
+		private readonly accountService: AuthService
 	) {
 		this.signupForm = this.formBuilder.group<User>({
 			firstname: '',

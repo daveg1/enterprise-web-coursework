@@ -5,8 +5,8 @@ import type { User } from '../types/User';
 @Injectable({
 	providedIn: 'root',
 })
-export class AccountService {
-	private readonly endpoint = 'http://localhost:3934/account';
+export class AuthService {
+	private readonly endpoint = 'http://localhost:3934/auth';
 
 	private httpOptions = {
 		headers: new HttpHeaders({
@@ -18,7 +18,7 @@ export class AccountService {
 
 	createUser(newUser: User) {
 		return this.http.post<string>(
-			`${this.endpoint}/create`,
+			`${this.endpoint}/signup`,
 			newUser,
 			this.httpOptions
 		);
