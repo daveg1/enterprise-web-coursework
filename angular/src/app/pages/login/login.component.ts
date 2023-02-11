@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NonNullableFormBuilder } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { AuthLogin } from 'src/app/types/auth';
 
@@ -13,8 +14,15 @@ export class LoginComponent {
 
 	constructor(
 		readonly formBuilder: NonNullableFormBuilder,
-		private readonly authService: AuthService
+		private readonly authService: AuthService,
+		readonly router: Router
 	) {
+		this.authService.isLoggedIn$.subscribe((isLoggedIn) => {
+			if (isLoggedIn) {
+				this.router.navigate(['']);
+			}
+		});
+
 		this.loginForm = this.formBuilder.group<AuthLogin>({
 			username: '',
 			password: '',

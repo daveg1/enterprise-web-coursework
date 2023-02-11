@@ -18,7 +18,10 @@ export class AuthService {
 		}),
 	};
 
-	constructor(private readonly http: HttpClient) {}
+	constructor(private readonly http: HttpClient) {
+		const token = localStorage.getItem('token');
+		this._isLoggedIn$.next(!!token);
+	}
 
 	signup(user: AuthSignUp) {
 		return this.http.post<string>(
