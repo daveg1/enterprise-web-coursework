@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NonNullableFormBuilder } from '@angular/forms';
-import { BudgetService } from 'src/app/services/budget.service';
+import { QuoteService } from 'src/app/services/quote.service';
 import type { Budget } from 'src/app/types/Budget';
 import { Subject } from 'rxjs';
 
@@ -19,7 +19,7 @@ export class HomeComponent {
 	quote$ = new Subject<number>();
 
 	constructor(
-		private readonly budgetService: BudgetService,
+		private readonly quoteService: QuoteService,
 		readonly formBuilder: NonNullableFormBuilder
 	) {
 		this.budgetForm = this.formBuilder.group<Budget>({
@@ -34,7 +34,7 @@ export class HomeComponent {
 
 	submitForm() {
 		if (this.budgetForm.valid) {
-			this.budgetService
+			this.quoteService
 				.getQuote(this.budgetForm.value as Budget)
 				.subscribe((res) => {
 					this.quote$.next(res.quote);

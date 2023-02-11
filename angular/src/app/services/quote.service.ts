@@ -6,7 +6,7 @@ import type { QuoteResponse } from '../types/Quote';
 @Injectable({
 	providedIn: 'root',
 })
-export class BudgetService {
+export class QuoteService {
 	private readonly endpoint = 'http://localhost:3934/budget';
 
 	private httpOptions = {
