@@ -1,6 +1,7 @@
 import { Router, urlencoded } from 'express'
 import { User } from '../models/user.model'
 import { loginSchema, signUpSchema } from '../schemas/auth.schema'
+import jwt from 'jsonwebtoken'
 
 const authRoutes = Router()
 
@@ -42,7 +43,10 @@ authRoutes.post('/login', async (req, res) => {
 		}
 
 		// JWT
+		const token = jwt.sign(user.toJSON(), process.env.ACCESS_TOKEN)
+		res.status(200).json({ token })
 	} catch (error) {
+		console.log(error)
 		return res.status(500).json({ error })
 	}
 })
