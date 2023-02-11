@@ -1,10 +1,10 @@
 import { Router } from 'express'
-import { accountRoutes } from './account.route'
+import { authRoutes } from './auth.route'
 import { budgetRoutes } from './budget.route'
 
 const routes = Router()
 
-routes.use('/account', accountRoutes)
+routes.use('/auth', authRoutes)
 routes.use('/budget', budgetRoutes)
 
 export { routes }

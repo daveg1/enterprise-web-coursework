@@ -2,10 +2,10 @@ import { Router, urlencoded } from 'express'
 import { User } from '../models/user.model'
 import { userSchema } from '../schemas/user.schema'
 
-const accountRoutes = Router()
+const authRoutes = Router()
 
 // TODO: encrypt passwords before storing on database
-accountRoutes.post('/create', urlencoded({ extended: true }), async (req, res) => {
+authRoutes.post('/create', urlencoded({ extended: true }), async (req, res) => {
 	try {
 		const parsed = await userSchema.parseAsync(req.body)
 
@@ -25,4 +25,4 @@ accountRoutes.post('/create', urlencoded({ extended: true }), async (req, res) =
 	}
 })
 
-export { accountRoutes }
+export { authRoutes }
