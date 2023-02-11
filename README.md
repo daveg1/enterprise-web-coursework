@@ -35,4 +35,5 @@ The webapp and database are run on a server installed with Ubuntu 22.04 OS. The 
 
 - [How To Use Tailwindcss with Express](https://daily.dev/blog/how-to-use-tailwindcss-with-node-js-express-and-pug#add-tailwindcss)
 - [Using Zod for Request Body Validation](https://dev.to/franciscomendes10866/schema-validation-with-zod-and-expressjs-111p)
+- [Zod 3.20.2 Causes Slow TypeScript Autocompletion](https://stackoverflow.com/a/74901864)
 - [Password Storage OWASP](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html)
