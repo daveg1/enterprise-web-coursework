@@ -5,7 +5,7 @@ import { userSchema } from '../schemas/user.schema'
 const authRoutes = Router()
 
 // TODO: encrypt passwords before storing on database
-authRoutes.post('/create', urlencoded({ extended: true }), async (req, res) => {
+authRoutes.post('/signup', urlencoded({ extended: true }), async (req, res) => {
 	try {
 		const parsed = await userSchema.parseAsync(req.body)
 
