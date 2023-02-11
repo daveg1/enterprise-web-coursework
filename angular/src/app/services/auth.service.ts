@@ -1,12 +1,16 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import type { AuthLogin, AuthSignUp } from '../types/auth';
+import { BehaviorSubject, tap } from 'rxjs';
+import type { AuthLogin, AuthResponse, AuthSignUp } from '../types/auth';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class AuthService {
 	private readonly endpoint = 'http://localhost:3934/auth';
+
+	private _isLoggedIn$ = new BehaviorSubject<boolean>(false);
+	isLoggedIn$ = this._isLoggedIn$.asObservable();
 
 	private httpOptions = {
 		headers: new HttpHeaders({
@@ -25,6 +29,13 @@ export class AuthService {
 	}
 
 	login(user: AuthLogin) {
-		return this.http.post(this.endpoint + '/login', user, this.httpOptions);
+		return this.http
+			.post<AuthResponse>(this.endpoint + '/login', user, this.httpOptions)
+			.pipe(
+				tap((response) => {
+					localStorage.setItem('token', response.token);
+					this._isLoggedIn$.next(true);
+				})
+			);
 	}
 }

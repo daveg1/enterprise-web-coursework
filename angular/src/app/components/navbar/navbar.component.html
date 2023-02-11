@@ -11,7 +11,7 @@
 
 		<!--  Right -->
 		<div class="flex items-center gap-4">
-			<ng-container *ngIf="hasSession; else noSession">
+			<ng-container *ngIf="isLoggedIn$ | async; else noSession">
 				<a
 					class="text-sm font-semibold transition-opacity hover:opacity-50"
 					routerLink="/account"
