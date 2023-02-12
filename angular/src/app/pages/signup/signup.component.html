@@ -61,3 +61,7 @@
 		<span class="text-sm font-semibold">Create account</span>
 	</button>
 </form>
+
+<ng-container *ngIf="response$ | async as response">
+	<div>{{ response }}</div>
+</ng-container>

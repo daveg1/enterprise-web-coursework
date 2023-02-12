@@ -6,9 +6,7 @@ export type AuthSignUp = {
 };
 
 export type AuthSignUpResponse = {
-	reason?: string;
-	error?: Error;
-	firstname?: string;
+	firstname: string;
 };
 
 export type AuthLogin = {
