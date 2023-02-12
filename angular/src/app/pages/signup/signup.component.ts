@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NonNullableFormBuilder } from '@angular/forms';
+import { NonNullableFormBuilder, Validators } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import type { AuthSignUp } from 'src/app/types/auth';
@@ -17,11 +17,11 @@ export class SignupComponent {
 		readonly formBuilder: NonNullableFormBuilder,
 		private readonly authService: AuthService
 	) {
-		this.signupForm = this.formBuilder.group<AuthSignUp>({
-			firstname: '',
-			lastname: '',
-			username: '',
-			password: '',
+		this.signupForm = this.formBuilder.group({
+			firstname: this.formBuilder.control('', Validators.required),
+			lastname: this.formBuilder.control('', Validators.required),
+			username: this.formBuilder.control('', Validators.required),
+			password: this.formBuilder.control('', Validators.required),
 		});
 	}
 
@@ -39,7 +39,7 @@ export class SignupComponent {
 				},
 			});
 		} else {
-			console.log('Form is not valid', this.signupForm.value);
+			this.signupForm.markAllAsTouched();
 		}
 	}
 }

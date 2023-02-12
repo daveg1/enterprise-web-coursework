@@ -1,17 +1,24 @@
-<app-page-title title="Sign Up"></app-page-title>
+<div class="flex flex-col items-center pt-8">
+	<app-page-title title="Sign Up"></app-page-title>
 
-<form
-	[formGroup]="signupForm"
-	class="flex flex-col items-start gap-4 py-4"
-	method="post"
-	spellcheck="false"
->
-	<div class="flex flex-col gap-1">
-		<h3>Please enter your name</h3>
+	<form
+		[formGroup]="signupForm"
+		class="flex flex-col items-start gap-4 py-4"
+		method="post"
+		spellcheck="false"
+	>
+		<div class="flex flex-col gap-2">
+			<label class="cursor-pointer" for="firstname">First name</label>
 
-		<div class="flex gap-4">
 			<input
-				class="w-32 h-8 px-2 text-sm border rounded-md"
+				class="w-64 h-8 px-2 text-sm border rounded-md"
+				[ngClass]="
+					signupForm.controls['firstname'].invalid &&
+					signupForm.controls['firstname'].touched
+						? 'border-red-500'
+						: ''
+				"
+				id="firstname"
 				name="firstname"
 				formControlName="firstname"
 				placeholder="Buster"
@@ -19,23 +26,67 @@
 				required
 			/>
 
+			<div
+				*ngIf="
+					signupForm.controls['firstname'].invalid &&
+					signupForm.controls['firstname'].touched
+				"
+				class="text-sm text-gray-700"
+			>
+				<ng-container
+					*ngIf="signupForm.controls['firstname'].errors?.['required']"
+				>
+					This field is required
+				</ng-container>
+			</div>
+		</div>
+
+		<div class="flex flex-col gap-2">
+			<label class="cursor-pointer" for="lastname">Last name</label>
+
 			<input
-				class="w-32 h-8 px-2 text-sm border rounded-md"
+				class="w-64 h-8 px-2 text-sm border rounded-md"
+				[ngClass]="
+					signupForm.controls['lastname'].invalid &&
+					signupForm.controls['lastname'].touched
+						? 'border-red-500'
+						: ''
+				"
+				id="lastname"
 				name="lastname"
 				formControlName="lastname"
 				placeholder="Scruggs"
 				maxlength="48"
 				required
 			/>
+
+			<div
+				*ngIf="
+					signupForm.controls['lastname'].invalid &&
+					signupForm.controls['lastname'].touched
+				"
+				class="text-sm text-gray-700"
+			>
+				<ng-container
+					*ngIf="signupForm.controls['lastname'].errors?.['required']"
+				>
+					This field is required
+				</ng-container>
+			</div>
 		</div>
-	</div>
 
-	<div class="flex flex-col gap-1">
-		<h3>Please create a username and password</h3>
+		<div class="flex flex-col gap-2">
+			<label class="cursor-pointer" for="username">Username</label>
 
-		<div class="flex gap-4">
 			<input
-				class="w-32 h-8 px-2 text-sm border rounded-md"
+				class="w-64 h-8 px-2 text-sm border rounded-md"
+				[ngClass]="
+					signupForm.controls['username'].invalid &&
+					signupForm.controls['username'].touched
+						? 'border-red-500'
+						: ''
+				"
+				id="username"
 				name="username"
 				formControlName="username"
 				placeholder="b.scruggs"
@@ -43,25 +94,65 @@
 				required
 			/>
 
+			<div
+				*ngIf="
+					signupForm.controls['username'].invalid &&
+					signupForm.controls['username'].touched
+				"
+				class="text-sm text-gray-700"
+			>
+				<ng-container
+					*ngIf="signupForm.controls['username'].errors?.['required']"
+				>
+					This field is required
+				</ng-container>
+			</div>
+		</div>
+
+		<div class="flex flex-col gap-2">
+			<label class="cursor-pointer" for="password">Password</label>
+
 			<input
-				class="w-32 h-8 px-2 text-sm border rounded-md"
+				class="w-64 h-8 px-2 text-sm border rounded-md"
+				[ngClass]="
+					signupForm.controls['password'].invalid &&
+					signupForm.controls['password'].touched
+						? 'border-red-500'
+						: ''
+				"
+				id="password"
 				type="password"
 				formControlName="password"
 				placeholder="••••••••"
+				maxlength="72"
 				required
 			/>
+
+			<div
+				*ngIf="
+					signupForm.controls['password'].invalid &&
+					signupForm.controls['password'].touched
+				"
+				class="text-sm text-gray-700"
+			>
+				<ng-container
+					*ngIf="signupForm.controls['password'].errors?.['required']"
+				>
+					This field is required
+				</ng-container>
+			</div>
 		</div>
-	</div>
 
-	<button
-		class="flex items-center h-8 px-2 rounded text-slate-50 bg-emerald-600"
-		type="button"
-		(click)="submitForm()"
-	>
-		<span class="text-sm font-semibold">Create account</span>
-	</button>
-</form>
+		<button
+			class="flex items-center justify-center w-64 h-8 px-2 transition-colors rounded text-slate-50 bg-emerald-600 hover:bg-emerald-600/75 active:bg-emerald-700"
+			type="button"
+			(click)="submitForm()"
+		>
+			<span class="text-sm font-semibold">Create</span>
+		</button>
+	</form>
 
-<ng-container *ngIf="response$ | async as response">
-	<div>{{ response }}</div>
-</ng-container>
+	<ng-container *ngIf="response$ | async as response">
+		<div>{{ response }}</div>
+	</ng-container>
+</div>
