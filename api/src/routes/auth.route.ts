@@ -60,7 +60,6 @@ authRoutes.post('/login', async (req, res) => {
 
 		res.status(200).json({ username, token, quotes: user.quotes ?? [] })
 	} catch (error) {
-		console.log(error)
 		return res.status(500).json({ error })
 	}
 })
