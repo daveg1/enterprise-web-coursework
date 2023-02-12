@@ -1,1 +1,7 @@
-<app-page-title title="Account"></app-page-title>
+<ng-container *ngIf="isLoggedIn$ | async">
+	<app-page-title [title]="username"></app-page-title>
+
+	<h2 class="my-4 text-lg font-semibold">Your quotes</h2>
+
+	<div>None available</div>
+</ng-container>

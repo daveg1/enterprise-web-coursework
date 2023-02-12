@@ -8,16 +8,23 @@ import { AuthService } from 'src/app/services/auth.service';
 	styleUrls: ['./account.component.css'],
 })
 export class AccountComponent {
+	isLoggedIn$;
+	username = '';
+
 	constructor(
 		private readonly authService: AuthService,
 		readonly router: Router,
 		readonly route: ActivatedRoute
 	) {
+		this.isLoggedIn$ = this.authService.isLoggedIn$;
+
 		this.authService.isLoggedIn$.subscribe((isLoggedIn) => {
-			console.log(isLoggedIn);
+			// Redirect if no session
 			if (!isLoggedIn) {
 				this.router.navigate(['/']);
 			}
+
+			this.username = localStorage.getItem('username') ?? '';
 		});
 	}
 }

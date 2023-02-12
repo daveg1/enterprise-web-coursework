@@ -15,5 +15,7 @@ export type AuthLogin = {
 };
 
 export type AuthResponse = {
+	username: string;
 	token: string;
+	quotes: any[];
 };

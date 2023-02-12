@@ -49,6 +49,7 @@ export class AuthService {
 				catchError(this.handleError),
 				tap((response) => {
 					localStorage.setItem('token', response.token);
+					localStorage.setItem('username', response.username);
 					this._isLoggedIn$.next(true);
 				})
 			);
@@ -56,6 +57,7 @@ export class AuthService {
 
 	logout() {
 		localStorage.removeItem('token');
+		localStorage.removeItem('username');
 		this._isLoggedIn$.next(false);
 	}
 
