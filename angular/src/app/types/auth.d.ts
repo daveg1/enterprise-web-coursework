@@ -5,6 +5,12 @@ export type AuthSignUp = {
 	password: string;
 };
 
+export type AuthSignUpResponse = {
+	reason?: string;
+	error?: Error;
+	firstname?: string;
+};
+
 export type AuthLogin = {
 	username: string;
 	password: string;

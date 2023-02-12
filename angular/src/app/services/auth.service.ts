@@ -1,7 +1,16 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {
+	HttpClient,
+	HttpErrorResponse,
+	HttpHeaders,
+} from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, tap } from 'rxjs';
-import type { AuthLogin, AuthResponse, AuthSignUp } from '../types/auth';
+import { BehaviorSubject, catchError, tap, throwError } from 'rxjs';
+import type {
+	AuthLogin,
+	AuthResponse,
+	AuthSignUp,
+	AuthSignUpResponse,
+} from '../types/auth';
 
 @Injectable({
 	providedIn: 'root',
@@ -24,17 +33,20 @@ export class AuthService {
 	}
 
 	signup(user: AuthSignUp) {
-		return this.http.post<string>(
-			this.endpoint + '/signup',
-			user,
-			this.httpOptions
-		);
+		return this.http
+			.post<AuthSignUpResponse>(
+				this.endpoint + '/signup',
+				user,
+				this.httpOptions
+			)
+			.pipe(catchError(this.handleError));
 	}
 
 	login(user: AuthLogin) {
 		return this.http
 			.post<AuthResponse>(this.endpoint + '/login', user, this.httpOptions)
 			.pipe(
+				catchError(this.handleError),
 				tap((response) => {
 					localStorage.setItem('token', response.token);
 					this._isLoggedIn$.next(true);
@@ -45,5 +57,16 @@ export class AuthService {
 	logout() {
 		localStorage.removeItem('token');
 		this._isLoggedIn$.next(false);
+	}
+
+	private handleError(response: HttpErrorResponse) {
+		if (response.status === 400) {
+			return throwError(() => new Error(response.error.reason));
+		}
+
+		return throwError(
+			() =>
+				new Error('Sorry, there was a problem on our end. Please try again.')
+		);
 	}
 }
