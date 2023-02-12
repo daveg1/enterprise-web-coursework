@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { NonNullableFormBuilder } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
-import type { AuthSignUp, AuthSignUpResponse } from 'src/app/types/auth';
+import type { AuthSignUp } from 'src/app/types/auth';
 
 @Component({
 	selector: 'app-signup',

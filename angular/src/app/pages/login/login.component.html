@@ -41,3 +41,7 @@
 		<span class="text-sm font-semibold">Sign in</span>
 	</button>
 </form>
+
+<ng-container *ngIf="response$ | async as response">
+	<div>{{ response }}</div>
+</ng-container>
