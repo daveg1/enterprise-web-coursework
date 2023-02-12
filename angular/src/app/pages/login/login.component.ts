@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NonNullableFormBuilder } from '@angular/forms';
+import { NonNullableFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
@@ -25,10 +25,12 @@ export class LoginComponent {
 			}
 		});
 
-		this.loginForm = this.formBuilder.group<AuthLogin>({
-			username: '',
-			password: '',
+		this.loginForm = this.formBuilder.group({
+			username: this.formBuilder.control<string>('', Validators.required),
+			password: this.formBuilder.control<string>('', Validators.required),
 		});
+
+		this.loginForm.controls['username'].errors;
 	}
 
 	submitForm() {
@@ -43,7 +45,7 @@ export class LoginComponent {
 				},
 			});
 		} else {
-			console.log('Form is not valid', this.loginForm.value);
+			this.loginForm.markAllAsTouched();
 		}
 	}
 }

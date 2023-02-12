@@ -1,47 +1,111 @@
-<app-page-title title="Sign In"></app-page-title>
+<div class="flex flex-col items-center pt-8">
+	<app-page-title title="Sign In"></app-page-title>
 
-<form
-	[formGroup]="loginForm"
-	class="flex flex-col items-start gap-4 py-4"
-	method="post"
-	spellcheck="false"
->
-	<div class="flex flex-col gap-1">
-		<h3>Username</h3>
-
-		<input
-			class="w-32 h-8 px-2 text-sm border rounded-md"
-			name="username"
-			formControlName="username"
-			placeholder="JSmith"
-			maxlength="32"
-			required
-		/>
-	</div>
-
-	<div class="flex flex-col gap-1">
-		<h3>Password</h3>
-
-		<input
-			class="w-32 h-8 px-2 text-sm border rounded-md"
-			type="password"
-			name="password"
-			formControlName="password"
-			placeholder="••••••••"
-			maxlength="72"
-			required
-		/>
-	</div>
-
-	<button
-		class="flex items-center h-8 px-2 rounded text-slate-50 bg-emerald-600"
-		type="button"
-		(click)="submitForm()"
+	<form
+		[formGroup]="loginForm"
+		class="flex flex-col items-start gap-4 py-4"
+		method="post"
+		spellcheck="false"
 	>
-		<span class="text-sm font-semibold">Sign in</span>
-	</button>
-</form>
+		<div class="flex flex-col gap-1">
+			<label class="my-2 font-semibold cursor-pointer" for="username"
+				>Username</label
+			>
 
-<ng-container *ngIf="response$ | async as response">
-	<div>{{ response }}</div>
-</ng-container>
+			<input
+				class="w-64 h-8 px-2 text-sm transition-colors border rounded-md hover:border-gray-400"
+				[ngClass]="
+					loginForm.controls['username'].invalid &&
+					loginForm.controls['username'].touched
+						? 'border-red-500'
+						: ''
+				"
+				id="username"
+				name="username"
+				formControlName="username"
+				placeholder="JSmith"
+				maxlength="32"
+				required
+			/>
+
+			<ng-container
+				*ngIf="
+					loginForm.controls['username'].invalid &&
+					loginForm.controls['username'].touched
+				"
+			>
+				<div
+					*ngIf="loginForm.controls['username'].errors?.['required']"
+					class="text-sm text-gray-700"
+				>
+					You must enter a username
+				</div>
+			</ng-container>
+		</div>
+
+		<div class="flex flex-col gap-1">
+			<label class="my-2 font-semibold cursor-pointer" for="password"
+				>Password</label
+			>
+
+			<input
+				class="w-64 h-8 px-2 text-sm transition-colors border rounded-md hover:border-gray-400"
+				[ngClass]="
+					loginForm.controls['password'].invalid &&
+					loginForm.controls['password'].touched
+						? 'border-red-500'
+						: ''
+				"
+				id="password"
+				type="password"
+				name="password"
+				formControlName="password"
+				placeholder="••••••••"
+				maxlength="72"
+				required
+			/>
+
+			<ng-container
+				*ngIf="
+					loginForm.controls['password'].invalid &&
+					loginForm.controls['password'].touched
+				"
+			>
+				<div
+					*ngIf="loginForm.controls['password'].errors?.['required']"
+					class="text-sm text-gray-700"
+				>
+					You must enter a password
+				</div>
+			</ng-container>
+		</div>
+
+		<button
+			class="flex items-center justify-center w-64 h-8 px-2 transition-colors rounded text-slate-50 bg-emerald-600 hover:bg-emerald-600/75 active:bg-emerald-700"
+			type="button"
+			(click)="submitForm()"
+		>
+			<span class="text-sm font-semibold">Sign in</span>
+		</button>
+	</form>
+
+	<ng-container *ngIf="response$ | async as response">
+		<div class="flex gap-2 text-center max-w-[56ch]">
+			<svg
+				fill="none"
+				viewBox="0 0 24 24"
+				stroke-width="1.5"
+				stroke="currentColor"
+				class="w-8 h-8 min-w-fit"
+			>
+				<path
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"
+				/>
+			</svg>
+
+			{{ response }}
+		</div>
+	</ng-container>
+</div>
