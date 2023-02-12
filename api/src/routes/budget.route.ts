@@ -4,10 +4,6 @@ import { budgetSchema } from '../schemas/budget.schema'
 
 const budgetRoutes = Router()
 
-budgetRoutes.get('/', (req, res) => {
-	res.status(200).json({ hello: 'world' })
-})
-
 budgetRoutes.post('/', async (req, res) => {
 	try {
 		const parsed = await budgetSchema.parseAsync(req.body)
