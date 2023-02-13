@@ -7,8 +7,10 @@
 		method="post"
 		spellcheck="false"
 	>
-		<div class="flex flex-col gap-2">
-			<label class="cursor-pointer" for="firstname">First name</label>
+		<div class="flex flex-col">
+			<label class="my-2 font-semibold cursor-pointer" for="firstname"
+				>First name</label
+			>
 
 			<input
 				class="w-64 h-8 px-2 text-sm border rounded-md"
@@ -31,7 +33,7 @@
 					signupForm.controls['firstname'].invalid &&
 					signupForm.controls['firstname'].touched
 				"
-				class="text-sm text-gray-700"
+				class="mt-1 text-sm italic text-red-700"
 			>
 				<ng-container
 					*ngIf="signupForm.controls['firstname'].errors?.['required']"
@@ -41,8 +43,10 @@
 			</div>
 		</div>
 
-		<div class="flex flex-col gap-2">
-			<label class="cursor-pointer" for="lastname">Last name</label>
+		<div class="flex flex-col">
+			<label class="my-2 font-semibold cursor-pointer" for="lastname"
+				>Last name</label
+			>
 
 			<input
 				class="w-64 h-8 px-2 text-sm border rounded-md"
@@ -65,7 +69,7 @@
 					signupForm.controls['lastname'].invalid &&
 					signupForm.controls['lastname'].touched
 				"
-				class="text-sm text-gray-700"
+				class="mt-1 text-sm italic text-red-700"
 			>
 				<ng-container
 					*ngIf="signupForm.controls['lastname'].errors?.['required']"
@@ -75,8 +79,10 @@
 			</div>
 		</div>
 
-		<div class="flex flex-col gap-2">
-			<label class="cursor-pointer" for="username">Username</label>
+		<div class="flex flex-col">
+			<label class="my-2 font-semibold cursor-pointer" for="username"
+				>Username</label
+			>
 
 			<input
 				class="w-64 h-8 px-2 text-sm border rounded-md"
@@ -99,7 +105,7 @@
 					signupForm.controls['username'].invalid &&
 					signupForm.controls['username'].touched
 				"
-				class="text-sm text-gray-700"
+				class="mt-1 text-sm italic text-red-700"
 			>
 				<ng-container
 					*ngIf="signupForm.controls['username'].errors?.['required']"
@@ -109,8 +115,10 @@
 			</div>
 		</div>
 
-		<div class="flex flex-col gap-2">
-			<label class="cursor-pointer" for="password">Password</label>
+		<div class="flex flex-col">
+			<label class="my-2 font-semibold cursor-pointer" for="password"
+				>Password</label
+			>
 
 			<input
 				class="w-64 h-8 px-2 text-sm border rounded-md"
@@ -133,7 +141,7 @@
 					signupForm.controls['password'].invalid &&
 					signupForm.controls['password'].touched
 				"
-				class="text-sm text-gray-700"
+				class="mt-1 text-sm italic text-red-700"
 			>
 				<ng-container
 					*ngIf="signupForm.controls['password'].errors?.['required']"
