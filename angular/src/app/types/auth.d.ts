@@ -19,3 +19,6 @@ export type AuthResponse = {
 	token: string;
 	quotes: any[];
 };
+
+// Alias
+export type AuthState = AuthResponse;

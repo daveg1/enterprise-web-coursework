@@ -1,7 +1,15 @@
-<ng-container *ngIf="isLoggedIn$ | async">
-	<app-page-title [title]="username"></app-page-title>
+<ng-container *ngIf="user$ | async as user">
+	<app-page-title [title]="user.username"></app-page-title>
 
 	<h2 class="my-4 text-lg font-semibold">Your quotes</h2>
 
-	<div>None available</div>
+	<ng-container *ngIf="user.quotes.length; else noQuotes">
+		<ul>
+			<li *ngFor="let quote of user.quotes">{{ quote.name }}</li>
+		</ul>
+	</ng-container>
+
+	<ng-template #noQuotes>
+		<div>No quotes created yet.</div>
+	</ng-template>
 </ng-container>

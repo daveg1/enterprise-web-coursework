@@ -4,12 +4,13 @@ import {
 	HttpHeaders,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, tap, throwError } from 'rxjs';
-import type {
+import { BehaviorSubject, catchError, Subject, tap, throwError } from 'rxjs';
+import {
 	AuthLogin,
 	AuthResponse,
 	AuthSignUp,
 	AuthSignUpResponse,
+	AuthState,
 } from '../types/auth';
 
 @Injectable({
@@ -17,6 +18,9 @@ import type {
 })
 export class AuthService {
 	private readonly endpoint = 'http://localhost:3934/auth';
+
+	private _userState$ = new BehaviorSubject<AuthState | null>(null);
+	userState$ = this._userState$.asObservable();
 
 	private _isLoggedIn$ = new BehaviorSubject<boolean>(false);
 	isLoggedIn$ = this._isLoggedIn$.asObservable();
@@ -28,8 +32,12 @@ export class AuthService {
 	};
 
 	constructor(private readonly http: HttpClient) {
-		const token = localStorage.getItem('token');
-		this._isLoggedIn$.next(!!token);
+		const state = localStorage.getItem('state');
+
+		if (state) {
+			this._isLoggedIn$.next(true);
+			this._userState$.next(JSON.parse(state));
+		}
 	}
 
 	signup(user: AuthSignUp) {
@@ -48,17 +56,22 @@ export class AuthService {
 			.pipe(
 				catchError(this.handleError),
 				tap((response) => {
-					localStorage.setItem('token', response.token);
-					localStorage.setItem('username', response.username);
+					// Set persistent state
+					localStorage.setItem('state', JSON.stringify(response));
+
+					// Update app states
 					this._isLoggedIn$.next(true);
+					this._userState$.next(response);
 				})
 			);
 	}
 
 	logout() {
-		localStorage.removeItem('token');
-		localStorage.removeItem('username');
+		// Clear session and state
+		localStorage.removeItem('state');
+
 		this._isLoggedIn$.next(false);
+		this._userState$.next(null);
 	}
 
 	private handleError(response: HttpErrorResponse) {
