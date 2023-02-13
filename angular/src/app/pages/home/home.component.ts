@@ -3,6 +3,7 @@ import { NonNullableFormBuilder } from '@angular/forms';
 import { QuoteService } from 'src/app/services/quote.service';
 import type { Budget } from 'src/app/types/Budget';
 import { Subject } from 'rxjs';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
 	selector: 'app-home',
@@ -17,11 +18,17 @@ export class HomeComponent {
 	frequencies = ['weekly', 'monthly'];
 
 	quote$ = new Subject<number>();
+	isLoggedIn$;
+
+	hasSaved = false;
 
 	constructor(
+		private readonly authService: AuthService,
 		private readonly quoteService: QuoteService,
 		readonly formBuilder: NonNullableFormBuilder
 	) {
+		this.isLoggedIn$ = this.authService.isLoggedIn$;
+
 		this.budgetForm = this.formBuilder.group<Budget>({
 			timeWorked: 0,
 			timeUnit: this.timeUnits[0],
@@ -42,5 +49,9 @@ export class HomeComponent {
 		} else {
 			console.log('Form not valid', this.budgetForm.value);
 		}
+	}
+
+	saveQuote() {
+		this.hasSaved = !this.hasSaved;
 	}
 }
