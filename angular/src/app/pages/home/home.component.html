@@ -3,7 +3,7 @@
 <!-- Assume only one worker for now -->
 <form
 	[formGroup]="budgetForm"
-	class="flex flex-col items-start gap-4 p-4 border rounded-lg"
+	class="flex flex-col items-start gap-4 p-4 mt-4 border rounded-lg"
 	method="post"
 	spellcheck="false"
 >
@@ -87,20 +87,11 @@
 		</div>
 	</div>
 
-	<button
-		class="flex items-center h-8 px-2 rounded text-slate-50 bg-emerald-600"
+	<app-button
+		styles="px-8"
+		text="Calculate"
 		(click)="submitForm()"
-	>
-		<span class="text-sm font-semibold">Calculate</span>
-
-		<svg viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 -mr-1">
-			<path
-				fill-rule="evenodd"
-				d="M5 10a.75.75 0 01.75-.75h6.638L10.23 7.29a.75.75 0 111.04-1.08l3.5 3.25a.75.75 0 010 1.08l-3.5 3.25a.75.75 0 11-1.04-1.08l2.158-1.96H5.75A.75.75 0 015 10z"
-				clip-rule="evenodd"
-			/>
-		</svg>
-	</button>
+	></app-button>
 
 	<ng-container *ngIf="quote$ | async as quote">
 		<div class="text-2xl">{{ quote | currency : 'GBP' }}</div>

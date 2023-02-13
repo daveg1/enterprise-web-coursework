@@ -80,13 +80,11 @@
 			</ng-container>
 		</div>
 
-		<button
-			class="flex items-center justify-center w-64 h-8 px-2 transition-colors rounded text-slate-50 bg-emerald-600 hover:bg-emerald-600/75 active:bg-emerald-700"
-			type="button"
+		<app-button
+			styles="w-64"
+			text="Sign in"
 			(click)="submitForm()"
-		>
-			<span class="text-sm font-semibold">Sign in</span>
-		</button>
+		></app-button>
 	</form>
 
 	<ng-container *ngIf="response$ | async as response">
