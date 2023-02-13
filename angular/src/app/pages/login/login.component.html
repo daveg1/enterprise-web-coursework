@@ -14,12 +14,6 @@
 
 			<input
 				class="w-64 h-8 px-2 text-sm transition-colors border rounded-md hover:border-gray-400"
-				[ngClass]="
-					loginForm.controls['username'].invalid &&
-					loginForm.controls['username'].touched
-						? 'border-red-500'
-						: ''
-				"
 				id="username"
 				name="username"
 				formControlName="username"
@@ -50,12 +44,6 @@
 
 			<input
 				class="w-64 h-8 px-2 text-sm transition-colors border rounded-md hover:border-gray-400"
-				[ngClass]="
-					loginForm.controls['password'].invalid &&
-					loginForm.controls['password'].touched
-						? 'border-red-500'
-						: ''
-				"
 				id="password"
 				type="password"
 				name="password"

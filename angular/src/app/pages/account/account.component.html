@@ -1,5 +1,7 @@
 <ng-container *ngIf="user$ | async as user">
-	<app-page-title [title]="user.username"></app-page-title>
+	<div class="my-4">
+		<app-page-title [title]="user.username"></app-page-title>
+	</div>
 
 	<h2 class="my-4 text-lg font-semibold">Your quotes</h2>
 
