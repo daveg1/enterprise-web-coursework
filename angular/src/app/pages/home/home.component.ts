@@ -45,7 +45,6 @@ export class HomeComponent {
 
 	submitForm() {
 		if (this.budgetForm.valid) {
-			console.log(this.budgetForm.value);
 			this.quoteService
 				.getQuote(this.budgetForm.value as Budget)
 				.subscribe((res) => {
