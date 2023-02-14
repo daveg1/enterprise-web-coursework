@@ -10,11 +10,17 @@ import { AuthService } from 'src/app/services/auth.service';
 	templateUrl: './home.component.html',
 })
 export class HomeComponent {
-	readonly budgetForm;
-
 	timeUnits = ['hours', 'days', 'months'];
 	payGrades = ['junior', 'standard', 'senior'];
 	frequencies = ['weekly', 'monthly'];
+
+	readonly budgetForm;
+
+	private readonly workerForm = {
+		timeWorked: 0,
+		timeUnit: this.timeUnits[0],
+		payGrade: this.payGrades[0],
+	};
 
 	quote$ = new Subject<number>();
 	isLoggedIn$;
@@ -24,14 +30,13 @@ export class HomeComponent {
 	constructor(
 		private readonly authService: AuthService,
 		private readonly quoteService: QuoteService,
-		readonly formBuilder: NonNullableFormBuilder
+		readonly fb: NonNullableFormBuilder
 	) {
 		this.isLoggedIn$ = this.authService.isLoggedIn$;
 
-		this.budgetForm = this.formBuilder.group<Budget>({
-			timeWorked: 0,
-			timeUnit: this.timeUnits[0],
-			payGrade: this.payGrades[0],
+		this.budgetForm = this.fb.group({
+			projectName: '',
+			workers: this.fb.array([this.fb.group(this.workerForm)]),
 			oneOffCost: 0,
 			ongoingCost: 0,
 			ongoingFrequency: this.frequencies[0],
@@ -40,6 +45,7 @@ export class HomeComponent {
 
 	submitForm() {
 		if (this.budgetForm.valid) {
+			console.log(this.budgetForm.value);
 			this.quoteService
 				.getQuote(this.budgetForm.value as Budget)
 				.subscribe((res) => {
@@ -52,5 +58,14 @@ export class HomeComponent {
 
 	saveQuote() {
 		this.hasSaved = !this.hasSaved;
+	}
+
+	addWorker() {
+		const worker = this.fb.group(this.workerForm);
+		this.budgetForm.controls['workers'].push(worker);
+	}
+
+	removeWorker(index: number) {
+		this.budgetForm.controls['workers'].removeAt(index);
 	}
 }

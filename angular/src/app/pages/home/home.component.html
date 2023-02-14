@@ -43,50 +43,57 @@
 			</tr>
 		</thead>
 
-		<tbody>
-			<tr>
-				<td class="py-2">
-					<input
-						class="w-48 h-8 px-2 text-sm border rounded focus:z-10"
-						id="timeWorked"
-						formControlName="timeWorked"
-						type="number"
-						placeholder="36"
-						min="1"
-						required
-					/>
-				</td>
+		<tbody formArrayName="workers">
+			<ng-container
+				*ngFor="
+					let workerForm of budgetForm.controls['workers'].controls;
+					let i = index
+				"
+			>
+				<tr [formGroup]="workerForm">
+					<td class="py-2">
+						<input
+							class="w-48 h-8 px-2 text-sm border rounded focus:z-10"
+							formControlName="timeWorked"
+							type="number"
+							placeholder="36"
+							min="1"
+							required
+						/>
+					</td>
 
-				<td>
-					<select
-						class="w-24 h-8 px-2 text-sm border rounded cursor-pointer"
-						formControlName="timeUnit"
-					>
-						<option *ngFor="let unit of timeUnits" [value]="unit">
-							{{ unit | titlecase }}
-						</option>
-					</select>
-				</td>
+					<td>
+						<select
+							class="w-24 h-8 px-2 text-sm border rounded cursor-pointer"
+							formControlName="timeUnit"
+						>
+							<option *ngFor="let unit of timeUnits" [value]="unit">
+								{{ unit | titlecase }}
+							</option>
+						</select>
+					</td>
 
-				<td>
-					<select
-						class="w-24 h-8 px-2 text-sm border rounded-md cursor-pointer"
-						id="payGrade"
-						formControlName="payGrade"
-						required
-					>
-						<option *ngFor="let grade of payGrades" [value]="grade">
-							{{ grade | titlecase }}
-						</option>
-					</select>
-				</td>
+					<td>
+						<select
+							class="w-24 h-8 px-2 text-sm border rounded-md cursor-pointer"
+							formControlName="payGrade"
+							required
+						>
+							<option *ngFor="let grade of payGrades" [value]="grade">
+								{{ grade | titlecase }}
+							</option>
+						</select>
+					</td>
 
-				<td>
-					<app-button text="Delete"></app-button>
-				</td>
-			</tr>
+					<td>
+						<app-button text="Delete" (click)="removeWorker(i)"></app-button>
+					</td>
+				</tr>
+			</ng-container>
 		</tbody>
 	</table>
+
+	<app-button text="Add worker" (click)="addWorker()"></app-button>
 
 	<hr class="w-full my-4" />
 
