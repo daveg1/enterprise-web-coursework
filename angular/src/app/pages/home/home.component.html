@@ -26,7 +26,7 @@
 
 	<table
 		class="-mx-2 border-separate table-fixed border-spacing-y-1 border-spacing-x-2"
-		*ngIf="budgetForm.controls['workers'].controls.length; else noWorkers"
+		*ngIf="budgetForm.controls['workers'].controls.length"
 	>
 		<thead>
 			<tr class="border-b">
@@ -79,7 +79,7 @@
 						</select>
 					</td>
 
-					<td>
+					<td *ngIf="i > 0">
 						<button
 							class="flex items-center justify-center h-8 gap-1 px-2 transition-colors rounded text-slate-50 bg-emerald-600 hover:bg-emerald-600/75 active:bg-emerald-700"
 							type="button"
@@ -92,10 +92,6 @@
 			</ng-container>
 		</tbody>
 	</table>
-
-	<ng-template #noWorkers>
-		<div class="h-[82px] italic">No workers added</div>
-	</ng-template>
 
 	<hr class="w-full my-4" />
 
