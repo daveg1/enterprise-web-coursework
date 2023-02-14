@@ -9,14 +9,36 @@
 	method="post"
 	spellcheck="false"
 >
-	<h2 class="text-lg font-semibold">Workers</h2>
+	<ng-container *ngIf="isLoggedIn$ | async">
+		<div class="flex flex-col gap-2">
+			<label class="text-sm font-semibold cursor-pointer" for="projectName"
+				>Project name</label
+			>
+
+			<input
+				class="w-64 h-8 px-2 text-sm border rounded-md"
+				id="projectName"
+				formControlName="projectName"
+				type="text"
+				placeholder="My project"
+				maxlength="32"
+				required
+			/>
+		</div>
+
+		<hr class="w-full my-4" />
+	</ng-container>
 
 	<div class="grid grid-cols-2 gap-4">
 		<div class="flex flex-col gap-1">
-			<h3>Time worked</h3>
+			<label class="text-sm font-semibold cursor-pointer" for="timeWorked"
+				>Time worked</label
+			>
+
 			<div class="flex">
 				<input
-					class="w-32 h-8 px-2 text-sm border border-r-0 rounded-l-md focus:z-10"
+					class="w-48 h-8 px-2 text-sm border rounded-l-md focus:z-10"
+					id="timeWorked"
 					formControlName="timeWorked"
 					type="number"
 					placeholder="36"
@@ -25,7 +47,7 @@
 				/>
 
 				<select
-					class="h-8 px-2 text-sm border cursor-pointer rounded-r-md"
+					class="h-8 px-2 text-sm border border-l-0 cursor-pointer rounded-r-md"
 					formControlName="timeUnit"
 				>
 					<option *ngFor="let unit of timeUnits" [value]="unit">
@@ -36,9 +58,13 @@
 		</div>
 
 		<div class="flex flex-col gap-1">
-			<h3>Pay grade</h3>
+			<label class="text-sm font-semibold cursor-pointer" for="payGrade"
+				>Pay grade</label
+			>
+
 			<select
-				class="h-8 px-2 text-sm border rounded-md cursor-pointer"
+				class="w-48 h-8 px-2 text-sm border rounded-md cursor-pointer"
+				id="payGrade"
 				formControlName="payGrade"
 				required
 			>
@@ -49,13 +75,17 @@
 		</div>
 	</div>
 
-	<h2 class="mt-4 text-lg font-semibold">Physical Resources</h2>
+	<hr class="w-full my-4" />
 
 	<div class="grid grid-cols-2">
 		<div class="flex flex-col gap-1">
-			<h3>One-off Cost</h3>
+			<label class="text-sm font-semibold cursor-pointer" for="oneOffCost"
+				>One-off cost</label
+			>
+
 			<input
-				class="w-32 h-8 px-2 text-sm border rounded-md"
+				class="w-48 h-8 px-2 text-sm border rounded-md"
+				id="oneOffCost"
 				formControlName="oneOffCost"
 				type="number"
 				placeholder="£"
@@ -65,10 +95,14 @@
 		</div>
 
 		<div class="flex flex-col gap-1">
-			<h3>Ongoing Cost</h3>
+			<label class="text-sm font-semibold cursor-pointer" for="ongoingCost"
+				>Ongoing cost</label
+			>
+
 			<div class="flex">
 				<input
-					class="w-32 h-8 px-2 text-sm border border-r-0 rounded-l-md focus:z-10"
+					class="w-48 h-8 px-2 text-sm border rounded-l-md focus:z-10"
+					id="ongoingCost"
 					formControlName="ongoingCost"
 					type="number"
 					placeholder="£"
@@ -77,7 +111,7 @@
 				/>
 
 				<select
-					class="h-8 px-2 text-sm border cursor-pointer rounded-r-md"
+					class="h-8 px-2 text-sm border border-l-0 cursor-pointer rounded-r-md"
 					formControlName="ongoingFrequency"
 					required
 				>
