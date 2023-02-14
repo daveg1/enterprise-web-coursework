@@ -29,51 +29,64 @@
 		<hr class="w-full my-4" />
 	</ng-container>
 
-	<div class="grid grid-cols-2 gap-4">
-		<div class="flex flex-col gap-1">
-			<label class="text-sm font-semibold cursor-pointer" for="timeWorked"
-				>Time worked</label
-			>
+	<h2>Workers</h2>
 
-			<div class="flex">
-				<input
-					class="w-48 h-8 px-2 text-sm border rounded-l-md focus:z-10"
-					id="timeWorked"
-					formControlName="timeWorked"
-					type="number"
-					placeholder="36"
-					min="1"
-					required
-				/>
+	<table
+		class="border-separate table-fixed border-spacing-y-1 border-spacing-x-2"
+	>
+		<thead>
+			<tr class="border-b">
+				<td class="w-32 text-sm font-semibold">Time worked</td>
+				<td class="w-24 text-sm font-semibold">Units</td>
+				<td class="w-24 text-sm font-semibold">Pay grade</td>
+				<td></td>
+			</tr>
+		</thead>
 
-				<select
-					class="h-8 px-2 text-sm border border-l-0 cursor-pointer rounded-r-md"
-					formControlName="timeUnit"
-				>
-					<option *ngFor="let unit of timeUnits" [value]="unit">
-						{{ unit }}
-					</option>
-				</select>
-			</div>
-		</div>
+		<tbody>
+			<tr>
+				<td class="py-2">
+					<input
+						class="w-48 h-8 px-2 text-sm border rounded focus:z-10"
+						id="timeWorked"
+						formControlName="timeWorked"
+						type="number"
+						placeholder="36"
+						min="1"
+						required
+					/>
+				</td>
 
-		<div class="flex flex-col gap-1">
-			<label class="text-sm font-semibold cursor-pointer" for="payGrade"
-				>Pay grade</label
-			>
+				<td>
+					<select
+						class="w-24 h-8 px-2 text-sm border rounded cursor-pointer"
+						formControlName="timeUnit"
+					>
+						<option *ngFor="let unit of timeUnits" [value]="unit">
+							{{ unit | titlecase }}
+						</option>
+					</select>
+				</td>
 
-			<select
-				class="w-48 h-8 px-2 text-sm border rounded-md cursor-pointer"
-				id="payGrade"
-				formControlName="payGrade"
-				required
-			>
-				<option *ngFor="let grade of payGrades" [value]="grade">
-					{{ grade }}
-				</option>
-			</select>
-		</div>
-	</div>
+				<td>
+					<select
+						class="w-24 h-8 px-2 text-sm border rounded-md cursor-pointer"
+						id="payGrade"
+						formControlName="payGrade"
+						required
+					>
+						<option *ngFor="let grade of payGrades" [value]="grade">
+							{{ grade | titlecase }}
+						</option>
+					</select>
+				</td>
+
+				<td>
+					<app-button text="Delete"></app-button>
+				</td>
+			</tr>
+		</tbody>
+	</table>
 
 	<hr class="w-full my-4" />
 
