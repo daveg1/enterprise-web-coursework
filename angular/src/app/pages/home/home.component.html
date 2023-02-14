@@ -78,51 +78,146 @@
 
 	<hr class="w-full my-4" />
 
-	<div class="grid grid-cols-2">
-		<div class="flex flex-col gap-1">
-			<label class="text-sm font-semibold cursor-pointer" for="oneOffCost"
-				>One-off cost</label
-			>
-
-			<input
-				class="w-48 h-8 px-2 text-sm border rounded-md"
-				id="oneOffCost"
-				formControlName="oneOffCost"
-				type="number"
-				placeholder="£"
-				min="0"
-				required
-			/>
-		</div>
-
-		<div class="flex flex-col gap-1">
-			<label class="text-sm font-semibold cursor-pointer" for="ongoingCost"
-				>Ongoing cost</label
-			>
-
-			<div class="flex">
-				<input
-					class="w-48 h-8 px-2 text-sm border rounded-l-md focus:z-10"
-					id="ongoingCost"
-					formControlName="ongoingCost"
-					type="number"
-					placeholder="£"
-					min="0"
-					required
-				/>
-
-				<select
-					class="h-8 px-2 text-sm border border-l-0 cursor-pointer rounded-r-md"
-					formControlName="ongoingFrequency"
-					required
-				>
-					<option *ngFor="let freq of frequencies" [value]="freq">
-						{{ freq }}
-					</option>
-				</select>
-			</div>
-		</div>
+	<div class="flex items-center gap-4">
+		<h2 class="text-lg">One-off Costs</h2>
+		<app-button text="Add item" (click)="addOneOffCost()"></app-button>
 	</div>
+
+	<table
+		class="-mx-2 border-separate table-fixed border-spacing-y-1 border-spacing-x-2"
+		*ngIf="budgetForm.controls['oneOffCosts'].controls.length"
+	>
+		<thead>
+			<tr class="border-b">
+				<td class="w-48 text-sm font-semibold">Item name</td>
+				<td class="w-32 text-sm font-semibold">Cost</td>
+				<td></td>
+			</tr>
+		</thead>
+
+		<tbody formArrayName="oneOffCosts">
+			<ng-container
+				*ngFor="
+					let oneOffCostForm of budgetForm.controls['oneOffCosts'].controls;
+					let i = index
+				"
+			>
+				<tr [formGroup]="oneOffCostForm">
+					<td class="py-2">
+						<input
+							class="w-48 h-8 px-2 text-sm border rounded focus:z-10"
+							formControlName="itemName"
+							type="text"
+							placeholder="E.g. desk"
+							maxlength="64"
+							required
+						/>
+					</td>
+
+					<td class="py-2">
+						<input
+							class="w-48 h-8 px-2 text-sm border rounded focus:z-10"
+							formControlName="cost"
+							type="number"
+							placeholder="£"
+							min="1"
+							required
+						/>
+					</td>
+
+					<td>
+						<app-button
+							text="Delete"
+							(click)="removeOneOffCost(i)"
+						></app-button>
+					</td>
+				</tr>
+			</ng-container>
+		</tbody>
+	</table>
+
+	<hr class="w-full my-4" />
+
+	<div class="flex items-center gap-4">
+		<h2 class="text-lg">Ongoing Costs</h2>
+		<app-button text="Add item" (click)="addOngoingCost()"></app-button>
+	</div>
+
+	<table
+		class="-mx-2 border-separate table-fixed border-spacing-y-1 border-spacing-x-2"
+		*ngIf="budgetForm.controls['ongoingCosts'].controls.length"
+	>
+		<thead>
+			<tr class="border-b">
+				<td class="w-64 text-sm font-semibold">Item name</td>
+				<td class="w-24 text-sm font-semibold">Cost</td>
+				<td class="w-24 text-sm font-semibold">How many</td>
+				<td class="w-24 text-sm font-semibold">How often</td>
+				<td></td>
+			</tr>
+		</thead>
+
+		<tbody formArrayName="ongoingCosts">
+			<ng-container
+				*ngFor="
+					let ongoingCostForm of budgetForm.controls['ongoingCosts'].controls;
+					let i = index
+				"
+			>
+				<tr [formGroup]="ongoingCostForm">
+					<td class="py-2">
+						<input
+							class="w-64 h-8 px-2 text-sm border rounded focus:z-10"
+							formControlName="itemName"
+							type="text"
+							placeholder="E.g. desk"
+							maxlength="64"
+							required
+						/>
+					</td>
+
+					<td class="py-2">
+						<input
+							class="w-24 h-8 px-2 text-sm border rounded focus:z-10"
+							formControlName="cost"
+							type="number"
+							placeholder="£"
+							min="1"
+							required
+						/>
+					</td>
+
+					<td class="py-2">
+						<input
+							class="w-24 h-8 px-2 text-sm border rounded focus:z-10"
+							formControlName="amount"
+							type="number"
+							min="1"
+							required
+						/>
+					</td>
+
+					<td>
+						<select
+							class="w-24 h-8 px-2 text-sm border rounded cursor-pointer"
+							formControlName="frequency"
+						>
+							<option *ngFor="let unit of frequencies" [value]="unit">
+								{{ unit | titlecase }}
+							</option>
+						</select>
+					</td>
+
+					<td>
+						<app-button
+							text="Delete"
+							(click)="removeOngoingCost(i)"
+						></app-button>
+					</td>
+				</tr>
+			</ng-container>
+		</tbody>
+	</table>
 
 	<app-button
 		styles="px-8"
