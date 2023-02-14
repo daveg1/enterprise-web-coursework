@@ -24,76 +24,78 @@
 		</button>
 	</div>
 
-	<table
-		class="-mx-2 border-separate table-fixed border-spacing-y-1 border-spacing-x-2"
-		*ngIf="budgetForm.controls['workers'].controls.length"
-	>
-		<thead>
-			<tr class="border-b">
-				<td class="w-48 text-sm font-semibold">Time worked</td>
-				<td class="w-24 text-sm font-semibold">Units</td>
-				<td class="w-24 text-sm font-semibold">Pay grade</td>
-				<td></td>
-			</tr>
-		</thead>
-
-		<tbody formArrayName="workers">
-			<ng-container
-				*ngFor="
-					let workerForm of budgetForm.controls['workers'].controls;
-					let i = index
-				"
-			>
-				<tr [formGroup]="workerForm">
-					<td class="py-2">
-						<input
-							class="w-48 h-8 px-2 text-sm border rounded focus:z-10"
-							formControlName="timeWorked"
-							type="number"
-							placeholder="36"
-							min="1"
-							required
-						/>
-					</td>
-
-					<td>
-						<select
-							class="w-24 h-8 px-2 text-sm border rounded cursor-pointer"
-							formControlName="timeUnit"
-						>
-							<option *ngFor="let unit of timeUnits" [value]="unit">
-								{{ unit | titlecase }}
-							</option>
-						</select>
-					</td>
-
-					<td>
-						<select
-							class="w-24 h-8 px-2 text-sm border rounded-md cursor-pointer"
-							formControlName="payGrade"
-							required
-						>
-							<option *ngFor="let grade of payGrades" [value]="grade">
-								{{ grade | titlecase }}
-							</option>
-						</select>
-					</td>
-
-					<td *ngIf="i > 0">
-						<button
-							class="flex items-center justify-center h-8 gap-1 px-2 transition-colors rounded text-slate-50 bg-emerald-600 hover:bg-emerald-600/75 active:bg-emerald-700"
-							type="button"
-							(click)="removeWorker(i)"
-						>
-							<span class="text-sm font-semibold">Delete</span>
-						</button>
-					</td>
+	<div class="pr-2 overflow-x-hidden overflow-y-auto max-h-72">
+		<table
+			class="-mx-2 border-separate table-fixed border-spacing-y-1 border-spacing-x-2"
+			*ngIf="budgetForm.controls['workers'].controls.length"
+		>
+			<thead>
+				<tr class="border-b">
+					<td class="w-48 text-sm font-semibold">Time worked</td>
+					<td class="w-24 text-sm font-semibold">Units</td>
+					<td class="w-24 text-sm font-semibold">Pay grade</td>
+					<td></td>
 				</tr>
-			</ng-container>
-		</tbody>
-	</table>
+			</thead>
 
-	<hr class="w-full my-4" />
+			<tbody formArrayName="workers">
+				<ng-container
+					*ngFor="
+						let workerForm of budgetForm.controls['workers'].controls;
+						let i = index
+					"
+				>
+					<tr [formGroup]="workerForm">
+						<td class="py-2">
+							<input
+								class="w-48 h-8 px-2 text-sm border rounded focus:z-10"
+								formControlName="timeWorked"
+								type="number"
+								placeholder="36"
+								min="1"
+								required
+							/>
+						</td>
+
+						<td>
+							<select
+								class="w-24 h-8 px-2 text-sm border rounded cursor-pointer"
+								formControlName="timeUnit"
+							>
+								<option *ngFor="let unit of timeUnits" [value]="unit">
+									{{ unit | titlecase }}
+								</option>
+							</select>
+						</td>
+
+						<td>
+							<select
+								class="w-24 h-8 px-2 text-sm border rounded-md cursor-pointer"
+								formControlName="payGrade"
+								required
+							>
+								<option *ngFor="let grade of payGrades" [value]="grade">
+									{{ grade | titlecase }}
+								</option>
+							</select>
+						</td>
+
+						<td *ngIf="i > 0">
+							<button
+								class="flex items-center justify-center h-8 gap-1 px-2 transition-colors rounded text-slate-50 bg-emerald-600 hover:bg-emerald-600/75 active:bg-emerald-700"
+								type="button"
+								(click)="removeWorker(i)"
+							>
+								<span class="text-sm font-semibold">Delete</span>
+							</button>
+						</td>
+					</tr>
+				</ng-container>
+			</tbody>
+		</table>
+	</div>
+
+	<hr class="w-full" />
 
 	<div class="flex items-center gap-2">
 		<h2 class="text-lg">One-off Costs</h2>
@@ -171,10 +173,10 @@
 	</table>
 
 	<ng-template #noOneOffCosts>
-		<div class="h-[82px] italic">No one-off costs added</div>
+		<div class="italic">No one-off costs added</div>
 	</ng-template>
 
-	<hr class="w-full my-4" />
+	<hr class="w-full" />
 
 	<div class="flex items-center gap-2">
 		<h2 class="text-lg">Ongoing Costs</h2>
@@ -275,8 +277,10 @@
 	</table>
 
 	<ng-template #noOngoingCosts>
-		<div class="h-[82px] italic">No ongoing costs added</div>
+		<div class="italic">No ongoing costs added</div>
 	</ng-template>
+
+	<hr class="w-full" />
 
 	<button
 		class="flex items-center justify-center h-8 gap-1 px-8 transition-colors rounded text-slate-50 bg-emerald-600 hover:bg-emerald-600/75 active:bg-emerald-700"
