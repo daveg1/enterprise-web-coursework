@@ -7,7 +7,6 @@ const budgetRoutes = Router()
 budgetRoutes.post('/', async (req, res) => {
 	try {
 		const parsed = await budgetSchema.parseAsync(req.body)
-
 		const quote = calculateQuote(parsed)
 
 		res.status(200).json({ quote })
