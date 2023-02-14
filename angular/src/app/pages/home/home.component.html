@@ -8,14 +8,25 @@
 	method="post"
 	spellcheck="false"
 >
-	<div class="flex items-center gap-4">
+	<div class="flex items-center gap-2">
 		<h2 class="text-lg">Workers</h2>
-		<app-button text="Add worker" (click)="addWorker()"></app-button>
+
+		<button
+			class="flex items-center justify-center w-6 h-6 transition-colors border rounded text-emerald-600 border-emerald-600"
+			type="button"
+			(click)="addWorker()"
+		>
+			<svg viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+				<path
+					d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z"
+				/>
+			</svg>
+		</button>
 	</div>
 
 	<table
 		class="-mx-2 border-separate table-fixed border-spacing-y-1 border-spacing-x-2"
-		*ngIf="budgetForm.controls['workers'].controls.length"
+		*ngIf="budgetForm.controls['workers'].controls.length; else noWorkers"
 	>
 		<thead>
 			<tr class="border-b">
@@ -69,23 +80,47 @@
 					</td>
 
 					<td>
-						<app-button text="Delete" (click)="removeWorker(i)"></app-button>
+						<button
+							class="flex items-center justify-center h-8 gap-1 px-2 transition-colors rounded text-slate-50 bg-emerald-600 hover:bg-emerald-600/75 active:bg-emerald-700"
+							type="button"
+							(click)="removeWorker(i)"
+						>
+							<span class="text-sm font-semibold">Delete</span>
+						</button>
 					</td>
 				</tr>
 			</ng-container>
 		</tbody>
 	</table>
 
+	<ng-template #noWorkers>
+		<div class="h-[82px] italic">No workers added</div>
+	</ng-template>
+
 	<hr class="w-full my-4" />
 
-	<div class="flex items-center gap-4">
+	<div class="flex items-center gap-2">
 		<h2 class="text-lg">One-off Costs</h2>
-		<app-button text="Add item" (click)="addOneOffCost()"></app-button>
+
+		<button
+			class="flex items-center justify-center w-6 h-6 transition-colors border rounded text-emerald-600 border-emerald-600"
+			type="button"
+			(click)="addOneOffCost()"
+		>
+			<svg viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+				<path
+					d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z"
+				/>
+			</svg>
+		</button>
 	</div>
 
 	<table
 		class="-mx-2 border-separate table-fixed border-spacing-y-1 border-spacing-x-2"
-		*ngIf="budgetForm.controls['oneOffCosts'].controls.length"
+		*ngIf="
+			budgetForm.controls['oneOffCosts'].controls.length;
+			else noOneOffCosts
+		"
 	>
 		<thead>
 			<tr class="border-b">
@@ -126,26 +161,47 @@
 					</td>
 
 					<td>
-						<app-button
-							text="Delete"
+						<button
+							class="flex items-center justify-center h-8 gap-1 px-2 transition-colors rounded text-slate-50 bg-emerald-600 hover:bg-emerald-600/75 active:bg-emerald-700"
+							type="button"
 							(click)="removeOneOffCost(i)"
-						></app-button>
+						>
+							<span class="text-sm font-semibold">Delete</span>
+						</button>
 					</td>
 				</tr>
 			</ng-container>
 		</tbody>
 	</table>
 
+	<ng-template #noOneOffCosts>
+		<div class="h-[82px] italic">No one-off costs added</div>
+	</ng-template>
+
 	<hr class="w-full my-4" />
 
-	<div class="flex items-center gap-4">
+	<div class="flex items-center gap-2">
 		<h2 class="text-lg">Ongoing Costs</h2>
-		<app-button text="Add item" (click)="addOngoingCost()"></app-button>
+
+		<button
+			class="flex items-center justify-center w-6 h-6 transition-colors border rounded text-emerald-600 border-emerald-600"
+			type="button"
+			(click)="addOngoingCost()"
+		>
+			<svg viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+				<path
+					d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z"
+				/>
+			</svg>
+		</button>
 	</div>
 
 	<table
 		class="-mx-2 border-separate table-fixed border-spacing-y-1 border-spacing-x-2"
-		*ngIf="budgetForm.controls['ongoingCosts'].controls.length"
+		*ngIf="
+			budgetForm.controls['ongoingCosts'].controls.length;
+			else noOngoingCosts
+		"
 	>
 		<thead>
 			<tr class="border-b">
@@ -209,21 +265,30 @@
 					</td>
 
 					<td>
-						<app-button
-							text="Delete"
+						<button
+							class="flex items-center justify-center h-8 gap-1 px-2 transition-colors rounded text-slate-50 bg-emerald-600 hover:bg-emerald-600/75 active:bg-emerald-700"
+							type="button"
 							(click)="removeOngoingCost(i)"
-						></app-button>
+						>
+							<span class="text-sm font-semibold">Delete</span>
+						</button>
 					</td>
 				</tr>
 			</ng-container>
 		</tbody>
 	</table>
 
-	<app-button
-		styles="px-8"
-		text="Calculate"
+	<ng-template #noOngoingCosts>
+		<div class="h-[82px] italic">No ongoing costs added</div>
+	</ng-template>
+
+	<button
+		class="flex items-center justify-center h-8 gap-1 px-8 transition-colors rounded text-slate-50 bg-emerald-600 hover:bg-emerald-600/75 active:bg-emerald-700"
+		type="button"
 		(click)="submitForm()"
-	></app-button>
+	>
+		<span class="text-sm font-semibold">Calculate</span>
+	</button>
 </form>
 
 <div *ngIf="quote$ | async as quote" class="px-4 py-6">
