@@ -24,75 +24,65 @@
 		</button>
 	</div>
 
-	<div class="pr-2 overflow-x-hidden overflow-y-auto max-h-72">
-		<table
-			class="-mx-2 border-separate table-fixed border-spacing-y-1 border-spacing-x-2"
-			*ngIf="budgetForm.controls['workers'].controls.length"
+	<div class="flex flex-col gap-2">
+		<!-- Header -->
+		<div class="flex gap-2">
+			<div class="w-48 text-sm font-semibold">Time worked</div>
+			<div class="w-24 text-sm font-semibold">Units</div>
+			<div class="w-24 text-sm font-semibold">Pay grade</div>
+		</div>
+
+		<!-- Body -->
+		<div
+			formArrayName="workers"
+			class="flex flex-col gap-2 pr-2 overflow-x-hidden overflow-y-auto max-h-64"
 		>
-			<thead>
-				<tr class="border-b">
-					<td class="w-48 text-sm font-semibold">Time worked</td>
-					<td class="w-24 text-sm font-semibold">Units</td>
-					<td class="w-24 text-sm font-semibold">Pay grade</td>
-					<td></td>
-				</tr>
-			</thead>
+			<ng-container
+				*ngFor="
+					let workerForm of budgetForm.controls['workers'].controls;
+					let i = index
+				"
+			>
+				<div [formGroup]="workerForm" class="flex gap-2">
+					<input
+						class="w-48 h-8 px-2 text-sm border rounded focus:z-10"
+						formControlName="timeWorked"
+						type="number"
+						placeholder="36"
+						min="1"
+						required
+					/>
 
-			<tbody formArrayName="workers">
-				<ng-container
-					*ngFor="
-						let workerForm of budgetForm.controls['workers'].controls;
-						let i = index
-					"
-				>
-					<tr [formGroup]="workerForm">
-						<td class="py-2">
-							<input
-								class="w-48 h-8 px-2 text-sm border rounded focus:z-10"
-								formControlName="timeWorked"
-								type="number"
-								placeholder="36"
-								min="1"
-								required
-							/>
-						</td>
+					<select
+						class="w-24 h-8 px-2 text-sm border rounded cursor-pointer"
+						formControlName="timeUnit"
+					>
+						<option *ngFor="let unit of timeUnits" [value]="unit">
+							{{ unit | titlecase }}
+						</option>
+					</select>
 
-						<td>
-							<select
-								class="w-24 h-8 px-2 text-sm border rounded cursor-pointer"
-								formControlName="timeUnit"
-							>
-								<option *ngFor="let unit of timeUnits" [value]="unit">
-									{{ unit | titlecase }}
-								</option>
-							</select>
-						</td>
+					<select
+						class="w-24 h-8 px-2 text-sm border rounded-md cursor-pointer"
+						formControlName="payGrade"
+						required
+					>
+						<option *ngFor="let grade of payGrades" [value]="grade">
+							{{ grade | titlecase }}
+						</option>
+					</select>
 
-						<td>
-							<select
-								class="w-24 h-8 px-2 text-sm border rounded-md cursor-pointer"
-								formControlName="payGrade"
-								required
-							>
-								<option *ngFor="let grade of payGrades" [value]="grade">
-									{{ grade | titlecase }}
-								</option>
-							</select>
-						</td>
-
-						<td *ngIf="i > 0">
-							<button
-								class="flex items-center justify-center h-8 gap-1 px-2 transition-colors rounded text-slate-50 bg-emerald-600 hover:bg-emerald-600/75 active:bg-emerald-700"
-								type="button"
-								(click)="removeWorker(i)"
-							>
-								<span class="text-sm font-semibold">Delete</span>
-							</button>
-						</td>
-					</tr>
-				</ng-container>
-			</tbody>
-		</table>
+					<button
+						*ngIf="i > 0"
+						class="flex items-center justify-center h-8 gap-1 px-2 transition-colors rounded text-slate-50 bg-emerald-600 hover:bg-emerald-600/75 active:bg-emerald-700"
+						type="button"
+						(click)="removeWorker(i)"
+					>
+						<span class="text-sm font-semibold">Delete</span>
+					</button>
+				</div>
+			</ng-container>
+		</div>
 	</div>
 
 	<hr class="w-full" />
