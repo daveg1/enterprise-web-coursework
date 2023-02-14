@@ -29,14 +29,18 @@
 		<hr class="w-full my-4" />
 	</ng-container>
 
-	<h2>Workers</h2>
+	<div class="flex items-center gap-4">
+		<h2 class="text-lg">Workers</h2>
+		<app-button text="Add worker" (click)="addWorker()"></app-button>
+	</div>
 
 	<table
-		class="border-separate table-fixed border-spacing-y-1 border-spacing-x-2"
+		class="-mx-2 border-separate table-fixed border-spacing-y-1 border-spacing-x-2"
+		*ngIf="budgetForm.controls['workers'].controls.length"
 	>
 		<thead>
 			<tr class="border-b">
-				<td class="w-32 text-sm font-semibold">Time worked</td>
+				<td class="w-48 text-sm font-semibold">Time worked</td>
 				<td class="w-24 text-sm font-semibold">Units</td>
 				<td class="w-24 text-sm font-semibold">Pay grade</td>
 				<td></td>
@@ -92,8 +96,6 @@
 			</ng-container>
 		</tbody>
 	</table>
-
-	<app-button text="Add worker" (click)="addWorker()"></app-button>
 
 	<hr class="w-full my-4" />
 
