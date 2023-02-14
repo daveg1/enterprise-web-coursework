@@ -9,9 +9,21 @@ export const budgetSchema = z.object({
 		}),
 	),
 
-	oneOffCost: z.number(),
-	ongoingCost: z.number(),
-	ongoingFrequency: z.union([z.literal('weekly'), z.literal('monthly')]),
+	oneOffCosts: z.array(
+		z.object({
+			itemName: z.string(),
+			cost: z.number(),
+		}),
+	),
+
+	ongoingCosts: z.array(
+		z.object({
+			itemName: z.string(),
+			cost: z.number(),
+			amount: z.number(),
+			frequency: z.union([z.literal('weekly'), z.literal('monthly')]),
+		}),
+	),
 })
 
 export type Budget = {
@@ -20,7 +32,16 @@ export type Budget = {
 		timeUnit?: 'hours' | 'days' | 'months'
 		payGrade?: 'junior' | 'standard' | 'senior'
 	}[]
-	oneOffCost?: number
-	ongoingCost?: number
-	ongoingFrequency?: 'weekly' | 'monthly'
+
+	oneOffCosts?: {
+		itemName?: string
+		cost?: number
+	}[]
+
+	ongoingCosts?: {
+		itemName?: string
+		cost?: number
+		amount?: number
+		frequency?: 'weekly' | 'monthly'
+	}[]
 }

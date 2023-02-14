@@ -15,11 +15,11 @@ const rates = {
 	},
 }
 
-export function calculateQuote(body: Budget) {
+export function calculateQuote(budget: Budget) {
 	let totalCostOfWorkers = 0
-	let overallProjectTime = 0
 
-	for (const worker of body.workers) {
+	// Tally up workers
+	for (const worker of budget.workers) {
 		let hoursNeeded = worker.timeWorked
 
 		// Convert alternative units into hours
@@ -32,22 +32,21 @@ export function calculateQuote(body: Budget) {
 		const hourlyRate = rates[worker.payGrade].hourly
 		const costOfPerson = hoursNeeded * hourlyRate
 		totalCostOfWorkers += costOfPerson
-
-		if (hoursNeeded > overallProjectTime) {
-			overallProjectTime = hoursNeeded
-		}
 	}
 
-	const oneOffCost = body.oneOffCost
-	let ongoingRate = body.ongoingCost
+	// Tally up one-off costs
+	let totalOneOffCost = 0
 
-	if (body.ongoingFrequency === 'weekly') {
-		const weeks = Math.ceil(overallProjectTime / 168)
-		ongoingRate *= weeks
-	} else {
-		const months = Math.ceil(overallProjectTime / 730)
-		ongoingRate *= months
+	for (const oneOffCost of budget.oneOffCosts) {
+		totalOneOffCost += oneOffCost.cost
 	}
 
-	return totalCostOfWorkers + oneOffCost + ongoingRate
+	// Tally up ongoing costs
+	let totalOngoingCosts = 0
+
+	for (const ongoingCost of budget.ongoingCosts) {
+		totalOngoingCosts += ongoingCost.cost * ongoingCost.amount
+	}
+
+	return totalCostOfWorkers + totalOneOffCost + totalOngoingCosts
 }
