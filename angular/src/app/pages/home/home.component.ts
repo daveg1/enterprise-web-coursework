@@ -35,7 +35,6 @@ export class HomeComponent {
 		this.isLoggedIn$ = this.authService.isLoggedIn$;
 
 		this.budgetForm = this.fb.group({
-			projectName: '',
 			workers: this.fb.array([this.fb.group(this.workerForm)]),
 			oneOffCost: 0,
 			ongoingCost: 0,
@@ -51,7 +50,7 @@ export class HomeComponent {
 					this.quote$.next(res.quote);
 				});
 		} else {
-			console.log('Form not valid', this.budgetForm.value);
+			this.budgetForm.markAllAsTouched();
 		}
 	}
 

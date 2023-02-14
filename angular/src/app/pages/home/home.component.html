@@ -8,26 +8,6 @@
 	method="post"
 	spellcheck="false"
 >
-	<ng-container *ngIf="isLoggedIn$ | async">
-		<div class="flex flex-col gap-2">
-			<label class="text-sm font-semibold cursor-pointer" for="projectName"
-				>Project name</label
-			>
-
-			<input
-				class="w-64 h-8 px-2 text-sm border rounded-md"
-				id="projectName"
-				formControlName="projectName"
-				type="text"
-				placeholder="My project"
-				maxlength="32"
-				required
-			/>
-		</div>
-
-		<hr class="w-full my-4" />
-	</ng-container>
-
 	<div class="flex items-center gap-4">
 		<h2 class="text-lg">Workers</h2>
 		<app-button text="Add worker" (click)="addWorker()"></app-button>

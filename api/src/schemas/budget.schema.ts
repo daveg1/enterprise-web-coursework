@@ -1,8 +1,6 @@
 import { z } from 'zod'
 
 export const budgetSchema = z.object({
-	projectName: z.string(),
-
 	workers: z.array(
 		z.object({
 			timeWorked: z.number(),
@@ -17,7 +15,6 @@ export const budgetSchema = z.object({
 })
 
 export type Budget = {
-	projectName?: string
 	workers?: {
 		timeWorked?: number
 		timeUnit?: 'hours' | 'days' | 'months'

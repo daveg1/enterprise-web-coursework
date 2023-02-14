@@ -1,5 +1,4 @@
 export type Budget = {
-	projectName: string;
 	workers: [
 		{
 			timeWorked: number;
