@@ -1,0 +1,28 @@
+<!-- Overlay -->
+<div class="fixed inset-0 bg-black/25" (click)="hide()"></div>
+
+<!-- Dialog -->
+<div
+	class="fixed flex flex-col gap-4 p-4 -translate-x-1/2 bg-white rounded shadow-md left-2/4 top-1/4 w-80"
+>
+	<!-- Header -->
+	<header class="flex items-center justify-between">
+		<h2 class="text-lg font-semibold">{{ header }}</h2>
+
+		<button
+			type="button"
+			class="flex items-center justify-center w-6 h-6 text-gray-400 border rounded hover:text-gray-700"
+			(click)="hide()"
+		>
+			<svg viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+				<path
+					d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"
+				/>
+			</svg>
+		</button>
+	</header>
+
+	<main>
+		<ng-content></ng-content>
+	</main>
+</div>
