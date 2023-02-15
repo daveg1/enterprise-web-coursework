@@ -15,6 +15,10 @@ const rates = {
 	},
 }
 
+function fudgeFactor(value: number) {
+	return value * Math.min(Math.random(), 0.7)
+}
+
 export function calculateQuote(budget: Budget) {
 	let totalCostOfWorkers = 0
 
@@ -31,7 +35,7 @@ export function calculateQuote(budget: Budget) {
 
 		const hourlyRate = rates[worker.payGrade].hourly
 		const costOfPerson = hoursNeeded * hourlyRate
-		totalCostOfWorkers += costOfPerson
+		totalCostOfWorkers += fudgeFactor(costOfPerson)
 	}
 
 	// Tally up one-off costs
