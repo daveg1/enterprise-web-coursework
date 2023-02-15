@@ -1,8 +1,13 @@
 <!-- Overlay -->
-<div class="fixed inset-0 bg-black/25" (click)="hide()"></div>
+<div
+	*ngIf="dialogService.visible"
+	class="fixed inset-0 bg-black/25"
+	(click)="hide()"
+></div>
 
 <!-- Dialog -->
 <div
+	*ngIf="dialogService.visible"
 	class="fixed flex flex-col gap-4 p-4 -translate-x-1/2 bg-white rounded shadow-md left-2/4 top-1/4 w-80"
 >
 	<!-- Header -->

@@ -333,24 +333,5 @@
 </ng-container>
 
 <app-dialog header="Save quote">
-	<div class="flex flex-col gap-4">
-		<div class="flex flex-col gap-1">
-			<input
-				class="h-8 px-2 text-sm border rounded focus:z-10"
-				name="projectName"
-				formControlName="projectName"
-				type="text"
-				placeholder="My project"
-				maxlength="48"
-				required
-			/>
-		</div>
-
-		<button
-			class="flex items-center justify-center h-8 gap-1 px-8 transition-colors rounded text-slate-50 bg-emerald-600 hover:bg-emerald-600/75 active:bg-emerald-700"
-			type="button"
-		>
-			<span class="text-sm font-semibold">Save</span>
-		</button>
-	</div>
+	<app-save-quote-dialog></app-save-quote-dialog>
 </app-dialog>

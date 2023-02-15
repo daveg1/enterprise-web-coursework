@@ -13,6 +13,7 @@ import { SignupComponent } from './pages/signup/signup.component';
 import { UserNoticeComponent } from './components/user-notice/user-notice.component';
 import { PageTitleComponent } from './components/page-title/page-title.component';
 import { DialogComponent } from './components/dialog/dialog.component';
+import { SaveQuoteDialogComponent } from './shared/save-quote-dialog/save-quote-dialog.component';
 
 @NgModule({
 	declarations: [
@@ -25,6 +26,7 @@ import { DialogComponent } from './components/dialog/dialog.component';
 		UserNoticeComponent,
 		PageTitleComponent,
   DialogComponent,
+  SaveQuoteDialogComponent,
 	],
 	imports: [
 		BrowserModule,

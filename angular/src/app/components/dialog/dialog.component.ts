@@ -1,4 +1,5 @@
 import { Component, ElementRef, Input } from '@angular/core';
+import { DialogService } from 'src/app/services/dialog.service';
 
 @Component({
 	selector: 'app-dialog',
@@ -6,18 +7,14 @@ import { Component, ElementRef, Input } from '@angular/core';
 })
 export class DialogComponent {
 	@Input() header = '';
-	private element: HTMLElement;
 
-	constructor(private readonly el: ElementRef) {
-		this.element = this.el.nativeElement;
-		this.hide();
-	}
+	constructor(readonly dialogService: DialogService) {}
 
 	show() {
-		this.element.removeAttribute('hidden');
+		this.dialogService.show();
 	}
 
 	hide() {
-		this.element.setAttribute('hidden', '');
+		this.dialogService.hide();
 	}
 }

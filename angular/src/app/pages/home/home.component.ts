@@ -4,6 +4,7 @@ import { QuoteService } from 'src/app/services/quote.service';
 import type { Budget } from 'src/app/types/Budget';
 import { Subject } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
+import { DialogService } from 'src/app/services/dialog.service';
 
 @Component({
 	selector: 'app-home',
@@ -43,7 +44,8 @@ export class HomeComponent {
 	constructor(
 		private readonly authService: AuthService,
 		private readonly quoteService: QuoteService,
-		readonly fb: NonNullableFormBuilder
+		readonly fb: NonNullableFormBuilder,
+		readonly dialog: DialogService
 	) {
 		this.isLoggedIn$ = this.authService.isLoggedIn$;
 
@@ -68,6 +70,7 @@ export class HomeComponent {
 
 	saveQuote() {
 		this.hasSaved = !this.hasSaved;
+		this.dialog.show();
 	}
 
 	addWorker() {
