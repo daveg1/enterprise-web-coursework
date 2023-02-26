@@ -1,7 +1,5 @@
 import { model, Schema } from 'mongoose'
-
-// TODO fill this in
-export type Quote = {}
+import type { Quote } from '../types/quote'
 
 export interface IUser {
 	username: string
