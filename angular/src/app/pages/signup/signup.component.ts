@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NonNullableFormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import type { AuthSignUp } from 'src/app/types/auth';
@@ -13,14 +14,19 @@ export class SignupComponent {
 	response$ = new BehaviorSubject<string>('');
 
 	constructor(
-		readonly formBuilder: NonNullableFormBuilder,
-		private readonly authService: AuthService
+		private readonly authService: AuthService,
+		readonly fb: NonNullableFormBuilder,
+		readonly router: Router
 	) {
-		this.signupForm = this.formBuilder.group({
-			firstname: this.formBuilder.control('', Validators.required),
-			lastname: this.formBuilder.control('', Validators.required),
-			username: this.formBuilder.control('', Validators.required),
-			password: this.formBuilder.control('', Validators.required),
+		if (this.authService.isLoggedIn$.value) {
+			this.router.navigate(['/account']);
+		}
+
+		this.signupForm = this.fb.group({
+			firstname: this.fb.control('', Validators.required),
+			lastname: this.fb.control('', Validators.required),
+			username: this.fb.control('', Validators.required),
+			password: this.fb.control('', Validators.required),
 		});
 	}
 

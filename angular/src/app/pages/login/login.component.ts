@@ -14,19 +14,17 @@ export class LoginComponent {
 	response$ = new BehaviorSubject<string>('');
 
 	constructor(
-		readonly formBuilder: NonNullableFormBuilder,
 		private readonly authService: AuthService,
+		readonly fb: NonNullableFormBuilder,
 		readonly router: Router
 	) {
-		this.authService.isLoggedIn$.subscribe((isLoggedIn) => {
-			if (isLoggedIn) {
-				this.router.navigate(['']);
-			}
-		});
+		if (this.authService.isLoggedIn$.value) {
+			this.router.navigate(['/account']);
+		}
 
-		this.loginForm = this.formBuilder.group({
-			username: this.formBuilder.control<string>('', Validators.required),
-			password: this.formBuilder.control<string>('', Validators.required),
+		this.loginForm = this.fb.group({
+			username: this.fb.control<string>('', Validators.required),
+			password: this.fb.control<string>('', Validators.required),
 		});
 
 		this.loginForm.controls['username'].errors;
