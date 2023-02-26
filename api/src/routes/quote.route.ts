@@ -5,6 +5,7 @@ import { User } from '../models/user.model'
 import { calculateQuote } from '../modules/calculateQuote'
 import { budgetSchema } from '../schemas/budget.schema'
 import { quoteSchema } from '../schemas/quotes.schema'
+import { tokenSchema } from '../schemas/token.schema'
 
 const quoteRoutes = Router()
 
@@ -40,6 +41,25 @@ quoteRoutes.post('/save', async (req, res) => {
 		await quote.save()
 
 		res.status(200).json({ message: 'success' })
+	} catch (error) {
+		console.log(error)
+		res.status(500).json({ error })
+	}
+})
+
+quoteRoutes.post('/user', async (req, res) => {
+	try {
+		const parsed = await tokenSchema.parseAsync(req.body)
+
+		// Find quotes saved under the given user id
+		const userId = jwt.decode(parsed.token)
+		const quotes = await Quote.find({ user: userId })
+
+		if (!quotes) {
+			res.status(401).json({ message: 'No quotes found' })
+		}
+
+		res.status(200).json({ quotes })
 	} catch (error) {
 		console.log(error)
 		res.status(500).json({ error })
