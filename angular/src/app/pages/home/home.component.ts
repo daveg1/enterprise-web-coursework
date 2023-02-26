@@ -5,6 +5,7 @@ import type { Budget } from 'src/app/types/Budget';
 import { Subject } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { DialogService } from 'src/app/services/dialog.service';
+import { BudgetService } from 'src/app/services/budget.service';
 
 @Component({
 	selector: 'app-home',
@@ -43,6 +44,7 @@ export class HomeComponent {
 
 	constructor(
 		private readonly authService: AuthService,
+		private readonly budgetService: BudgetService,
 		private readonly quoteService: QuoteService,
 		readonly fb: NonNullableFormBuilder,
 		readonly dialog: DialogService
@@ -70,6 +72,7 @@ export class HomeComponent {
 	}
 
 	saveQuote() {
+		this.budgetService.currentBudget = this.budgetForm.value as Budget;
 		this.dialog.show();
 	}
 
