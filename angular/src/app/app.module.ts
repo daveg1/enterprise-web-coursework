@@ -13,7 +13,7 @@ import { SignupComponent } from './pages/signup/signup.component';
 import { UserNoticeComponent } from './components/user-notice/user-notice.component';
 import { PageTitleComponent } from './components/page-title/page-title.component';
 import { DialogComponent } from './components/dialog/dialog.component';
-import { SaveQuoteDialogComponent } from './shared/save-quote-dialog/save-quote-dialog.component';
+import { SaveQuoteDialogComponent } from './components/dialog/save-quote-dialog/save-quote-dialog.component';
 
 @NgModule({
 	declarations: [
@@ -25,8 +25,8 @@ import { SaveQuoteDialogComponent } from './shared/save-quote-dialog/save-quote-
 		SignupComponent,
 		UserNoticeComponent,
 		PageTitleComponent,
-  DialogComponent,
-  SaveQuoteDialogComponent,
+		DialogComponent,
+		SaveQuoteDialogComponent,
 	],
 	imports: [
 		BrowserModule,
