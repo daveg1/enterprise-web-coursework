@@ -55,11 +55,12 @@ authRoutes.post('/login', async (req, res) => {
 		}
 
 		// Sign JWT using username and password
-		const { username, password } = user.toJSON()
-		const token = jwt.sign(username + password, process.env.ACCESS_TOKEN)
+		const { username } = user.toJSON()
+		const token = jwt.sign(user._id.toString(), process.env.ACCESS_TOKEN)
 
 		res.status(200).json({ username, token, quotes: user.quotes ?? [] })
 	} catch (error) {
+		console.error(error)
 		return res.status(500).json({ error })
 	}
 })
