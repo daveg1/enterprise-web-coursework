@@ -1,8 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import type { Budget } from '../types/Budget';
-import type { QuoteResponse } from '../types/Quote';
+import type { Budget } from '../types/budget';
+import type { QuoteResponse, QuotesResponse } from '../types/quote';
 
 @Injectable({
 	providedIn: 'root',
@@ -41,6 +41,10 @@ export class QuoteService {
 	}
 
 	getQuotesForUser(token: string) {
-		return this.http.post(`${this.endpoint}/user`, { token }, this.httpOptions);
+		return this.http.post<QuotesResponse>(
+			`${this.endpoint}/user`,
+			{ token },
+			this.httpOptions
+		);
 	}
 }
