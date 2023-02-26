@@ -19,11 +19,8 @@ import {
 export class AuthService {
 	private readonly endpoint = 'http://localhost:3934/auth';
 
-	private _userState$ = new BehaviorSubject<AuthState | null>(null);
-	userState$ = this._userState$.asObservable();
-
-	private _isLoggedIn$ = new BehaviorSubject<boolean>(false);
-	isLoggedIn$ = this._isLoggedIn$.asObservable();
+	readonly userState$ = new BehaviorSubject<AuthState | null>(null);
+	readonly isLoggedIn$ = new BehaviorSubject<boolean>(false);
 
 	private httpOptions = {
 		headers: new HttpHeaders({
@@ -35,8 +32,8 @@ export class AuthService {
 		const state = localStorage.getItem('state');
 
 		if (state) {
-			this._isLoggedIn$.next(true);
-			this._userState$.next(JSON.parse(state));
+			this.isLoggedIn$.next(true);
+			this.userState$.next(JSON.parse(state));
 		}
 	}
 
@@ -60,8 +57,8 @@ export class AuthService {
 					localStorage.setItem('state', JSON.stringify(response));
 
 					// Update app states
-					this._isLoggedIn$.next(true);
-					this._userState$.next(response);
+					this.isLoggedIn$.next(true);
+					this.userState$.next(response);
 				})
 			);
 	}
@@ -70,8 +67,8 @@ export class AuthService {
 		// Clear session and state
 		localStorage.removeItem('state');
 
-		this._isLoggedIn$.next(false);
-		this._userState$.next(null);
+		this.isLoggedIn$.next(false);
+		this.userState$.next(null);
 	}
 
 	private handleError(response: HttpErrorResponse) {

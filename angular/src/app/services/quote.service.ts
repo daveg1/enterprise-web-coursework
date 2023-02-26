@@ -32,10 +32,10 @@ export class QuoteService {
 		);
 	}
 
-	saveQuote(budget: Budget, projectName: string) {
+	saveQuote(budget: Budget, projectName: string, token: string) {
 		return this.http.post(
 			`${this.endpoint}/save`,
-			{ budget, projectName },
+			{ budget, projectName, token },
 			this.httpOptions
 		);
 	}
