@@ -1,20 +1,35 @@
 <div class="flex flex-col gap-4">
-	<div class="flex flex-col gap-1">
+	<form class="flex flex-col gap-1" [formGroup]="saveQuoteForm">
 		<input
 			class="h-8 px-2 text-sm border rounded focus:z-10"
 			name="projectName"
 			formControlName="projectName"
 			type="text"
-			placeholder="My project"
-			maxlength="48"
+			placeholder="My project name"
+			maxlength="64"
 			required
 		/>
-	</div>
+
+		<ng-container
+			*ngIf="
+				saveQuoteForm.controls['projectName'].invalid &&
+				saveQuoteForm.controls['projectName'].touched
+			"
+		>
+			<div
+				*ngIf="saveQuoteForm.controls['projectName'].errors?.['required']"
+				class="mt-1 text-sm italic text-red-700"
+			>
+				You must enter a name for your project
+			</div>
+		</ng-container>
+	</form>
 
 	<button
 		class="flex items-center justify-center h-8 gap-1 px-8 transition-colors rounded text-slate-50 bg-emerald-600 hover:bg-emerald-600/75 active:bg-emerald-700"
 		type="button"
+		(click)="submitForm()"
 	>
-		<span class="text-sm font-semibold">Save</span>
+		<span class="text-sm font-semibold">Save quote</span>
 	</button>
 </div>

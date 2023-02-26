@@ -39,7 +39,7 @@ export class HomeComponent {
 	// States
 	quote$ = new Subject<number>();
 	isLoggedIn$;
-	hasSaved = false;
+	currentQuote$;
 
 	constructor(
 		private readonly authService: AuthService,
@@ -48,6 +48,7 @@ export class HomeComponent {
 		readonly dialog: DialogService
 	) {
 		this.isLoggedIn$ = this.authService.isLoggedIn$;
+		this.currentQuote$ = this.quoteService.currentQuote$;
 
 		this.budgetForm = this.fb.group({
 			workers: this.fb.array([this.fb.group(this.workerForm)]),
@@ -69,7 +70,6 @@ export class HomeComponent {
 	}
 
 	saveQuote() {
-		this.hasSaved = !this.hasSaved;
 		this.dialog.show();
 	}
 
