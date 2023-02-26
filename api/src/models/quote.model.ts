@@ -29,6 +29,8 @@ const schema = new Schema<Quote>({
 	},
 
 	projectName: { type: String, required: true },
+
+	user: { type: Schema.Types.ObjectId, ref: 'User' },
 })
 
 const Quote = model('Quote', schema)
