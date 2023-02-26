@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { NonNullableFormBuilder, Validators } from '@angular/forms';
 import { QuoteService } from 'src/app/services/quote.service';
-import type { Budget } from 'src/app/types/Budget';
 import { Subject } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { DialogService } from 'src/app/services/dialog.service';
 import { BudgetService } from 'src/app/services/budget.service';
+import type { Budget } from 'src/app/types/budget';
 
 @Component({
 	selector: 'app-home',

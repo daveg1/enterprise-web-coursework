@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Budget } from '../types/Budget';
+import { Budget } from '../types/budget';
 
 /**
  * This service keeps track of the current values in the quote calculator form.
