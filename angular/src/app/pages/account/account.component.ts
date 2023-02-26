@@ -7,7 +7,6 @@ import { AuthService } from 'src/app/services/auth.service';
 	templateUrl: './account.component.html',
 })
 export class AccountComponent {
-	isLoggedIn$;
 	user$;
 
 	constructor(
@@ -15,14 +14,10 @@ export class AccountComponent {
 		readonly router: Router,
 		readonly route: ActivatedRoute
 	) {
-		this.authService.isLoggedIn$.subscribe((isLoggedIn) => {
-			// Redirect if no session
-			if (!isLoggedIn) {
-				this.router.navigate(['/']);
-			}
-		});
+		if (this.authService.isLoggedIn$.value) {
+			this.router.navigate(['/']);
+		}
 
-		this.isLoggedIn$ = this.authService.isLoggedIn$;
 		this.user$ = this.authService.userState$;
 	}
 }
