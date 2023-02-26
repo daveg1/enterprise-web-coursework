@@ -1,4 +1,4 @@
-import { Budget } from '../schemas/budget.schema'
+import type { Budget } from '../types/budget'
 
 const rates = {
 	junior: {
