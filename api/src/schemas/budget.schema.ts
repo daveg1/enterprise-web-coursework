@@ -11,14 +11,14 @@ export const budgetSchema = z.object({
 
 	oneOffCosts: z.array(
 		z.object({
-			itemName: z.string(),
+			itemName: z.string().max(64),
 			cost: z.number(),
 		}),
 	),
 
 	ongoingCosts: z.array(
 		z.object({
-			itemName: z.string(),
+			itemName: z.string().max(64),
 			cost: z.number(),
 			amount: z.number(),
 			frequency: z.union([z.literal('weekly'), z.literal('monthly')]),
