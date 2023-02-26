@@ -8,7 +8,7 @@ import type { QuoteResponse } from '../types/Quote';
 	providedIn: 'root',
 })
 export class QuoteService {
-	private readonly endpoint = 'http://localhost:3934/budget';
+	private readonly endpoint = 'http://localhost:3934/quote';
 	private _currentQuote = new BehaviorSubject<boolean>(false);
 	currentQuote$ = this._currentQuote.asObservable();
 
@@ -26,8 +26,16 @@ export class QuoteService {
 
 	calculateQuote(budget: Budget) {
 		return this.http.post<QuoteResponse>(
-			this.endpoint,
+			`${this.endpoint}/calculate`,
 			budget,
+			this.httpOptions
+		);
+	}
+
+	addQuote(budget: Budget, projectName: string) {
+		return this.http.post(
+			`${this.endpoint}/save`,
+			{ budget, projectName },
 			this.httpOptions
 		);
 	}
