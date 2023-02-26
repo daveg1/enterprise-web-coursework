@@ -39,4 +39,8 @@ export class QuoteService {
 			this.httpOptions
 		);
 	}
+
+	getQuotesForUser(token: string) {
+		return this.http.post(`${this.endpoint}/user`, { token }, this.httpOptions);
+	}
 }

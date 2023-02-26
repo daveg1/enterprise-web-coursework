@@ -5,7 +5,7 @@
 
 	<h2 class="my-4 text-lg font-semibold">Your quotes</h2>
 
-	<ng-container *ngIf="user.quotes.length; else noQuotes">
+	<ng-container *ngIf="quotes$ | async as quotes; else noQuotes">
 		<ul>
 			<li *ngFor="let quote of user.quotes">{{ quote.name }}</li>
 		</ul>
