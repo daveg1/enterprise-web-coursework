@@ -60,7 +60,7 @@ export class HomeComponent {
 	submitForm() {
 		if (this.budgetForm.valid) {
 			this.quoteService
-				.getQuote(this.budgetForm.value as Budget)
+				.calculateQuote(this.budgetForm.value as Budget)
 				.subscribe((res) => {
 					this.quote$.next(res.quote);
 				});

@@ -24,7 +24,7 @@ export class QuoteService {
 
 	constructor(private readonly http: HttpClient) {}
 
-	getQuote(budget: Budget) {
+	calculateQuote(budget: Budget) {
 		return this.http.post<QuoteResponse>(
 			this.endpoint,
 			budget,
