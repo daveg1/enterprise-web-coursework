@@ -8,7 +8,7 @@ The webapp follows a MEAN stack architecture (MongoDB, Express server, Angular f
 
 ### Frontend
 
-The frontend is built using [Angular v15](https://angular.io/). [Tailwind CSS](https://tailwindcss.com/) is used for styling components. Pages include:
+The frontend is built using [Angular v15](https://angular.io/). Components are styled using [Tailwind CSS](https://tailwindcss.com/). Pages include:
 
 - /
 - /login
@@ -30,6 +30,16 @@ MongoDB is used as the database.
 ### Platform
 
 The webapp and database are run on a server installed with Ubuntu 22.04 OS. The webapp processes are managed with [PM2](https://pm2.keymetrics.io/), while the database runs as a local MongoDB instance.
+
+## Usage
+
+In order to run this web app, please run the following start up script:
+[todo]
+
+Once the setup is completed, cd into each project (angular/ and api/) in separate terminal windows and run the following respectively:
+
+- angular: `ng serve`
+- api: `npm start`
 
 ## References
 
