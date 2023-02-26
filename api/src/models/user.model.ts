@@ -1,15 +1,7 @@
 import { model, Schema } from 'mongoose'
-import type { Quote } from '../types/quote'
+import type { User } from '../types/user'
 
-export interface IUser {
-	username: string
-	password: string
-	firstname: string
-	lastname: string
-	quotes: Quote[]
-}
-
-const schema = new Schema({
+const schema = new Schema<User>({
 	username: { type: String, required: true, unique: true },
 	password: { type: String, required: true },
 	firstname: { type: String, required: true },
