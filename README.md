@@ -17,7 +17,7 @@ The frontend is built using [Angular v15](https://angular.io/). Components are s
 
 ### Backend
 
-The API is a Node app running an Express server. [TypeScript](https://www.typescriptlang.org/) is used to enforce strict typing. [Zod](https://zod.dev/) is used to validate API requests. [Mongoose](https://mongoosejs.com/docs/) is used to validate requests to MongoDB. Routes include:
+The API is a Node app running an [Express](https://expressjs.com/) server. [TypeScript](https://www.typescriptlang.org/) is used to enforce strict typing. [Zod](https://zod.dev/) is used to validate API requests. [Mongoose](https://mongoosejs.com/docs/) is used to validate requests to MongoDB. Routes include:
 
 - /account
   - /new
