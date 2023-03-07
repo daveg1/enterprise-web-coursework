@@ -65,7 +65,7 @@ export class AuthService {
 
 	delete(token: string) {
 		return this.http
-			.post(this.endpoint + '/delete', token, this.httpOptions)
+			.post(this.endpoint + '/delete', { token }, this.httpOptions)
 			.pipe(
 				catchError(this.handleError),
 				tap(() => {
