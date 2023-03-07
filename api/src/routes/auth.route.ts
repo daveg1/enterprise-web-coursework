@@ -1,8 +1,9 @@
-import { Router, urlencoded } from 'express'
+import { Router, urlencoded, json } from 'express'
 import { User } from '../models/user.model'
 import { loginSchema, signUpSchema } from '../schemas/auth.schema'
 import jwt from 'jsonwebtoken'
 import { encrypt, verify } from '../modules/encrypt'
+import { tokenSchema } from '../schemas/token.schema'
 
 const authRoutes = Router()
 
@@ -59,6 +60,36 @@ authRoutes.post('/login', async (req, res) => {
 		const token = jwt.sign(user._id.toString(), process.env.ACCESS_TOKEN)
 
 		res.status(200).json({ username, token, quotes: user.quotes ?? [] })
+	} catch (error) {
+		console.error(error)
+		return res.status(500).json({ error })
+	}
+})
+
+authRoutes.post('/delete', async (req, res) => {
+	console.log(req.body)
+
+	try {
+		const parsed = await tokenSchema.parseAsync(req.body)
+
+		// Find user by id
+		const userId = jwt.decode(parsed.token)
+		const user = await User.findById(userId)
+
+		if (!user) {
+			return res.status(400).json({
+				reason: 'User not found while deleting account.',
+			})
+		}
+
+		// Remove their saved quotes
+		const quoteIds = user.quotes
+		await User.deleteMany({ _id: { $in: quoteIds } })
+
+		// Then remove their account
+		await user.delete()
+
+		res.status(200).json({})
 	} catch (error) {
 		console.error(error)
 		return res.status(500).json({ error })
