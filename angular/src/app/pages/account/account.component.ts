@@ -32,7 +32,10 @@ export class AccountComponent {
 			const { token } = this.user$.value;
 
 			this.authService.delete(token).subscribe({
-				next: (res) => {},
+				next: () => {
+					// Redirect to home page
+					this.router.navigate(['/']);
+				},
 				error: (err) => {},
 			});
 		}
