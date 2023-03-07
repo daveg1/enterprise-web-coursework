@@ -67,8 +67,6 @@ authRoutes.post('/login', async (req, res) => {
 })
 
 authRoutes.post('/delete', async (req, res) => {
-	console.log(req.body)
-
 	try {
 		const parsed = await tokenSchema.parseAsync(req.body)
 
