@@ -63,6 +63,18 @@ export class AuthService {
 			);
 	}
 
+	delete(token: string) {
+		return this.http
+			.post(this.endpoint + '/delete', token, this.httpOptions)
+			.pipe(
+				catchError(this.handleError),
+				tap(() => {
+					// If successful, clear session
+					this.logout();
+				})
+			);
+	}
+
 	logout() {
 		// Clear session and state
 		localStorage.removeItem('state');

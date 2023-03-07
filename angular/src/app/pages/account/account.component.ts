@@ -26,4 +26,15 @@ export class AccountComponent {
 		this.user$ = this.authService.userState$;
 		this.quotes$ = this.quoteService.getQuotesForUser(state.token);
 	}
+
+	deleteAccount() {
+		if (this.user$.value) {
+			const { token } = this.user$.value;
+
+			this.authService.delete(token).subscribe({
+				next: (res) => {},
+				error: (err) => {},
+			});
+		}
+	}
 }
