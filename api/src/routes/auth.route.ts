@@ -1,4 +1,4 @@
-import { Router, urlencoded, json } from 'express'
+import { Router, urlencoded } from 'express'
 import { User } from '../models/user.model'
 import { loginSchema, signUpSchema } from '../schemas/auth.schema'
 import jwt from 'jsonwebtoken'
