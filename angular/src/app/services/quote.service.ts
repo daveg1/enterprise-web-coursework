@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, tap } from 'rxjs';
 import type { Budget } from '../types/budget';
 import type { QuoteResponse, QuotesResponse } from '../types/quote';
 
@@ -8,21 +8,16 @@ import type { QuoteResponse, QuotesResponse } from '../types/quote';
 	providedIn: 'root',
 })
 export class QuoteService {
-	private readonly endpoint = 'http://localhost:3934/quote';
-	private _currentQuote = new BehaviorSubject<boolean>(false);
-	currentQuote$ = this._currentQuote.asObservable();
+	constructor(private readonly http: HttpClient) {}
 
-	setCurrentQuote(value: boolean) {
-		this._currentQuote.next(value);
-	}
+	private readonly endpoint = 'http://localhost:3934/quote';
+	currentQuote$ = new BehaviorSubject<boolean>(false);
 
 	private httpOptions = {
 		headers: new HttpHeaders({
 			'Content-Type': 'application/json',
 		}),
 	};
-
-	constructor(private readonly http: HttpClient) {}
 
 	calculateQuote(budget: Budget) {
 		return this.http.post<QuoteResponse>(
@@ -33,11 +28,17 @@ export class QuoteService {
 	}
 
 	saveQuote(budget: Budget, projectName: string, token: string) {
-		return this.http.post(
-			`${this.endpoint}/save`,
-			{ budget, projectName, token },
-			this.httpOptions
-		);
+		return this.http
+			.post(
+				`${this.endpoint}/save`,
+				{ budget, projectName, token },
+				this.httpOptions
+			)
+			.pipe(
+				tap((quote) => {
+					this.currentQuote$.next(true);
+				})
+			);
 	}
 
 	getQuotesForUser(token: string) {
