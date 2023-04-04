@@ -1,13 +1,15 @@
 <div class="mt-8 mb-4 px-6">
-	<app-page-title title="Quote calculator"></app-page-title>
+	<app-page-title title="New quote"></app-page-title>
 </div>
 
 <!-- Calculation Form -->
 <form
+	#form
 	[formGroup]="budgetForm"
 	class="flex flex-col items-start gap-4 bg-white border rounded-lg shadow-sm shadow-slate-300/50"
 	method="post"
 	spellcheck="false"
+	(keyup.enter)="submitForm()"
 >
 	<!-- Workers Form -->
 	<div class="flex justify-between items-center px-6 py-4 border-b w-full">
@@ -235,7 +237,7 @@
 
 	<div class="px-6 py-4 border-y w-full">
 		<button
-			class="flex items-center justify-center h-8 gap-1 px-8 transition-colors rounded text-slate-50 bg-emerald-600 hover:bg-emerald-600/75 active:bg-emerald-700"
+			class="flex items-center justify-center h-8 min-w-[6rem] px-4 gap-1 transition-colors rounded text-slate-50 bg-emerald-600 hover:bg-emerald-600/75 active:bg-emerald-700"
 			type="button"
 			(click)="submitForm()"
 		>
@@ -245,52 +247,69 @@
 </form>
 
 <!-- Calculation Output -->
-<div *ngIf="quote$ | async as quote" class="px-4 py-6">
-	<div class="flex flex-col">
-		<h2 class="text-gray-500">Estimated budget</h2>
-		<div class="text-4xl">{{ quote | currency : 'GBP' }}</div>
+<ng-container *ngIf="quote$ | async as quote">
+	<div class="mt-8 mb-4 px-6">
+		<h2 class="text-2xl font-bold">Breakdown</h2>
 	</div>
 
-	<ng-container *ngIf="isLoggedIn$ | async">
-		<div class="my-4">
-			<button
-				(click)="saveQuote()"
-				type="button"
-				class="flex items-center gap-2 p-2 border rounded"
-			>
-				<ng-container *ngIf="currentQuote$ | async; else saveQuoteIcon">
-					<svg viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-						<path
-							fill-rule="evenodd"
-							d="M6.32 2.577a49.255 49.255 0 0111.36 0c1.497.174 2.57 1.46 2.57 2.93V21a.75.75 0 01-1.085.67L12 18.089l-7.165 3.583A.75.75 0 013.75 21V5.507c0-1.47 1.073-2.756 2.57-2.93z"
-							clip-rule="evenodd"
-						/>
-					</svg>
+	<div
+		class="flex flex-col mb-16 bg-white border rounded-lg shadow-sm shadow-slate-300/50"
+	>
+		<div class="flex justify-between items-center px-6 py-4 border-b w-full">
+			<h2 class="text-lg font-semibold">Estimate</h2>
 
-					Quote saved
-				</ng-container>
+			<ng-container *ngIf="isLoggedIn$ | async">
+				<button
+					class="flex items-center h-8 px-2 gap-2 transition-colors rounded-l font-semibold text-sm text-emerald-600 hover:bg-emerald-50/75"
+					type="button"
+					(click)="saveQuote()"
+				>
+					<ng-container *ngIf="currentQuote$ | async; else saveQuoteIcon">
+						<svg viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+							<path
+								fill-rule="evenodd"
+								d="M6.32 2.577a49.255 49.255 0 0111.36 0c1.497.174 2.57 1.46 2.57 2.93V21a.75.75 0 01-1.085.67L12 18.089l-7.165 3.583A.75.75 0 013.75 21V5.507c0-1.47 1.073-2.756 2.57-2.93z"
+								clip-rule="evenodd"
+							/>
+						</svg>
 
-				<ng-template #saveQuoteIcon>
-					<svg
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke-width="1.5"
-						stroke="currentColor"
-						class="w-6 h-6"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z"
-						/>
-					</svg>
+						Quote saved
+					</ng-container>
 
-					Save this quote
-				</ng-template>
-			</button>
+					<ng-template #saveQuoteIcon>
+						<svg
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke-width="1.5"
+							stroke="currentColor"
+							class="w-6 h-6"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z"
+							/>
+						</svg>
+
+						Save this quote
+					</ng-template>
+				</button>
+			</ng-container>
 		</div>
-	</ng-container>
-</div>
+
+		<div class="flex flex-col px-6 py-4">
+			<div class="text-2xl">{{ quote | currency : 'GBP' }}</div>
+		</div>
+
+		<div class="flex justify-between items-center px-6 py-4 border-y w-full">
+			<h2 class="text-lg font-semibold">Details</h2>
+		</div>
+
+		<div class="flex flex-col px-6 py-4">
+			<span>Hi</span>
+		</div>
+	</div>
+</ng-container>
 
 <!-- "Sign in to save quote" -->
 <ng-container *ngIf="!(isLoggedIn$ | async)">

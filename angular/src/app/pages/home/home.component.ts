@@ -52,11 +52,16 @@ export class HomeComponent {
 		this.isLoggedIn$ = this.authService.isLoggedIn$;
 		this.currentQuote$ = this.quoteService.currentQuote$;
 
+		// Set form (this also lets this.budgetForm infer the types)
 		this.budgetForm = this.fb.group({
 			workers: this.fb.array([this.fb.group(this.workerForm)]),
 			oneOffCosts: this.fb.array([this.fb.group(this.oneOffCostForm)]),
 			ongoingCosts: this.fb.array([this.fb.group(this.ongoingCostForm)]),
 		});
+
+		// Remove one-off and ongoing cost rows (by default only have a worker row)
+		this.budgetForm.controls['oneOffCosts'].removeAt(0);
+		this.budgetForm.controls['ongoingCosts'].removeAt(0);
 	}
 
 	submitForm() {
@@ -96,6 +101,7 @@ export class HomeComponent {
 
 	addOngoingCost() {
 		const ongoingCost = this.fb.group(this.ongoingCostForm);
+
 		this.budgetForm.controls['ongoingCosts'].push(ongoingCost);
 	}
 
