@@ -15,8 +15,17 @@ const rates = {
 	},
 }
 
-function fudgeFactor(value: number) {
-	return value * Math.min(Math.random(), 0.7)
+/**
+ * Generates a fudge factor plus or minus the given percentage
+ *
+ * E.g. factor = 0.05, generates a number between 0.95 and 1.05
+ * @param factor Percentage
+ * @returns number
+ */
+function fudgeFactor(factor: number) {
+	const min = 1 - factor
+	const max = 1 + factor
+	return Math.random() * (max - min) + min
 }
 
 export function calculateQuote(budget: Budget) {
@@ -35,7 +44,7 @@ export function calculateQuote(budget: Budget) {
 
 		const hourlyRate = rates[worker.payGrade].hourly
 		const costOfPerson = hoursNeeded * hourlyRate
-		totalCostOfWorkers += fudgeFactor(costOfPerson)
+		totalCostOfWorkers += costOfPerson * fudgeFactor(0.05) // ±0.05%
 	}
 
 	// Tally up one-off costs
