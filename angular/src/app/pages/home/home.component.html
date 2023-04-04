@@ -1,16 +1,16 @@
-<div class="my-4">
+<div class="mt-8 mb-4 px-6">
 	<app-page-title title="Quote calculator"></app-page-title>
 </div>
 
 <!-- Calculation Form -->
 <form
 	[formGroup]="budgetForm"
-	class="flex flex-col items-start gap-4 p-4 bg-white border rounded-lg"
+	class="flex flex-col items-start gap-4 p-6 bg-white border rounded-lg"
 	method="post"
 	spellcheck="false"
 >
 	<div class="flex items-center gap-2">
-		<h2 class="text-lg">Workers</h2>
+		<h2 class="text-lg font-semibold">Workers</h2>
 
 		<button
 			class="flex items-center justify-center w-6 h-6 transition-colors border rounded text-emerald-600 border-emerald-600"
@@ -73,14 +73,7 @@
 						</option>
 					</select>
 
-					<button
-						*ngIf="i > 0"
-						class="flex items-center justify-center h-8 gap-1 px-2 transition-colors rounded text-slate-50 bg-emerald-600 hover:bg-emerald-600/75 active:bg-emerald-700"
-						type="button"
-						(click)="removeWorker(i)"
-					>
-						<span class="text-sm font-semibold">Delete</span>
-					</button>
+					<app-x-button *ngIf="i > 0" (click)="removeWorker(i)"></app-x-button>
 				</div>
 			</ng-container>
 		</div>
@@ -89,7 +82,7 @@
 	<hr class="w-full" />
 
 	<div class="flex items-center gap-2">
-		<h2 class="text-lg">One-off Costs</h2>
+		<h2 class="text-lg font-semibold">One-off Costs</h2>
 
 		<button
 			class="flex items-center justify-center w-6 h-6 transition-colors border rounded text-emerald-600 border-emerald-600"
@@ -150,13 +143,7 @@
 					</td>
 
 					<td>
-						<button
-							class="flex items-center justify-center h-8 gap-1 px-2 transition-colors rounded text-slate-50 bg-emerald-600 hover:bg-emerald-600/75 active:bg-emerald-700"
-							type="button"
-							(click)="removeOneOffCost(i)"
-						>
-							<span class="text-sm font-semibold">Delete</span>
-						</button>
+						<app-x-button (click)="removeOneOffCost(i)"></app-x-button>
 					</td>
 				</tr>
 			</ng-container>
@@ -170,7 +157,7 @@
 	<hr class="w-full" />
 
 	<div class="flex items-center gap-2">
-		<h2 class="text-lg">Ongoing Costs</h2>
+		<h2 class="text-lg font-semibold">Ongoing Costs</h2>
 
 		<button
 			class="flex items-center justify-center w-6 h-6 transition-colors border rounded text-emerald-600 border-emerald-600"
@@ -254,13 +241,7 @@
 					</td>
 
 					<td>
-						<button
-							class="flex items-center justify-center h-8 gap-1 px-2 transition-colors rounded text-slate-50 bg-emerald-600 hover:bg-emerald-600/75 active:bg-emerald-700"
-							type="button"
-							(click)="removeOngoingCost(i)"
-						>
-							<span class="text-sm font-semibold">Delete</span>
-						</button>
+						<app-x-button (click)="removeOngoingCost(i)"></app-x-button>
 					</td>
 				</tr>
 			</ng-container>

@@ -14,6 +14,7 @@ import { UserNoticeComponent } from './components/user-notice/user-notice.compon
 import { PageTitleComponent } from './components/page-title/page-title.component';
 import { DialogComponent } from './components/dialog/dialog.component';
 import { SaveQuoteDialogComponent } from './components/dialog/save-quote-dialog/save-quote-dialog.component';
+import { XButtonComponent } from './components/buttons/x-button/x-button.component';
 
 @NgModule({
 	declarations: [
@@ -27,6 +28,7 @@ import { SaveQuoteDialogComponent } from './components/dialog/save-quote-dialog/
 		PageTitleComponent,
 		DialogComponent,
 		SaveQuoteDialogComponent,
+  XButtonComponent,
 	],
 	imports: [
 		BrowserModule,
