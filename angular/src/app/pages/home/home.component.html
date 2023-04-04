@@ -9,21 +9,8 @@
 	method="post"
 	spellcheck="false"
 >
-	<div class="flex items-center gap-2">
-		<h2 class="text-lg font-semibold">Workers</h2>
-
-		<button
-			class="flex items-center justify-center w-6 h-6 transition-colors border rounded text-emerald-600 border-emerald-600"
-			type="button"
-			(click)="addWorker()"
-		>
-			<svg viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
-				<path
-					d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z"
-				/>
-			</svg>
-		</button>
-	</div>
+	<!-- Workers Form -->
+	<h2 class="text-lg font-semibold">Workers</h2>
 
 	<div class="flex flex-col gap-2">
 		<!-- Header -->
@@ -77,50 +64,46 @@
 				</div>
 			</ng-container>
 		</div>
-	</div>
-
-	<hr class="w-full" />
-
-	<div class="flex items-center gap-2">
-		<h2 class="text-lg font-semibold">One-off Costs</h2>
 
 		<button
-			class="flex items-center justify-center w-6 h-6 transition-colors border rounded text-emerald-600 border-emerald-600"
+			class="flex items-center h-6 transition-colors rounded font-semibold text-sm text-emerald-600"
 			type="button"
-			(click)="addOneOffCost()"
+			(click)="addWorker()"
 		>
 			<svg viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
 				<path
-					d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z"
+					d="M10.75 6.75a.75.75 0 00-1.5 0v2.5h-2.5a.75.75 0 000 1.5h2.5v2.5a.75.75 0 001.5 0v-2.5h2.5a.75.75 0 000-1.5h-2.5v-2.5z"
 				/>
 			</svg>
+
+			<span>Add Worker</span>
 		</button>
 	</div>
 
-	<table
-		class="-mx-2 border-separate table-fixed border-spacing-y-1 border-spacing-x-2"
-		*ngIf="
-			budgetForm.controls['oneOffCosts'].controls.length;
-			else noOneOffCosts
-		"
-	>
-		<thead>
-			<tr class="border-b">
-				<td class="w-48 text-sm font-semibold">Item name</td>
-				<td class="w-32 text-sm font-semibold">Cost</td>
-				<td></td>
-			</tr>
-		</thead>
+	<!-- One-off Costs Form -->
 
-		<tbody formArrayName="oneOffCosts">
-			<ng-container
-				*ngFor="
-					let oneOffCostForm of budgetForm.controls['oneOffCosts'].controls;
-					let i = index
-				"
+	<h2 class="text-lg font-semibold">One-off Costs</h2>
+
+	<div class="flex flex-col gap-2 items-start">
+		<ng-container *ngIf="budgetForm.controls['oneOffCosts'].controls.length">
+			<!-- Header -->
+			<div class="flex gap-2">
+				<div class="w-48 text-sm font-semibold">Item name</div>
+				<div class="w-24 text-sm font-semibold">Cost</div>
+			</div>
+
+			<!-- Body -->
+			<div
+				formArrayName="workers"
+				class="flex flex-col gap-2 pr-2 overflow-x-hidden overflow-y-auto max-h-64"
 			>
-				<tr [formGroup]="oneOffCostForm">
-					<td class="py-2">
+				<ng-container
+					*ngFor="
+						let oneOffCostForm of budgetForm.controls['oneOffCosts'].controls;
+						let i = index
+					"
+				>
+					<div [formGroup]="oneOffCostForm" class="flex gap-2">
 						<input
 							class="w-48 h-8 px-2 text-sm border rounded focus:z-10"
 							formControlName="itemName"
@@ -129,9 +112,7 @@
 							maxlength="64"
 							required
 						/>
-					</td>
 
-					<td class="py-2">
 						<input
 							class="w-48 h-8 px-2 text-sm border rounded focus:z-10"
 							formControlName="cost"
@@ -140,64 +121,54 @@
 							min="1"
 							required
 						/>
-					</td>
 
-					<td>
 						<app-x-button (click)="removeOneOffCost(i)"></app-x-button>
-					</td>
-				</tr>
-			</ng-container>
-		</tbody>
-	</table>
-
-	<ng-template #noOneOffCosts>
-		<div class="italic">No one-off costs added</div>
-	</ng-template>
-
-	<hr class="w-full" />
-
-	<div class="flex items-center gap-2">
-		<h2 class="text-lg font-semibold">Ongoing Costs</h2>
+					</div>
+				</ng-container>
+			</div>
+		</ng-container>
 
 		<button
-			class="flex items-center justify-center w-6 h-6 transition-colors border rounded text-emerald-600 border-emerald-600"
+			class="flex items-center h-6 transition-colors rounded font-semibold text-sm text-emerald-600"
 			type="button"
-			(click)="addOngoingCost()"
+			(click)="addOneOffCost()"
 		>
 			<svg viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
 				<path
-					d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z"
+					d="M10.75 6.75a.75.75 0 00-1.5 0v2.5h-2.5a.75.75 0 000 1.5h2.5v2.5a.75.75 0 001.5 0v-2.5h2.5a.75.75 0 000-1.5h-2.5v-2.5z"
 				/>
 			</svg>
+
+			<span>Add Item</span>
 		</button>
 	</div>
 
-	<table
-		class="-mx-2 border-separate table-fixed border-spacing-y-1 border-spacing-x-2"
-		*ngIf="
-			budgetForm.controls['ongoingCosts'].controls.length;
-			else noOngoingCosts
-		"
-	>
-		<thead>
-			<tr class="border-b">
-				<td class="w-64 text-sm font-semibold">Item name</td>
-				<td class="w-24 text-sm font-semibold">Cost</td>
-				<td class="w-24 text-sm font-semibold">How many</td>
-				<td class="w-24 text-sm font-semibold">How often</td>
-				<td></td>
-			</tr>
-		</thead>
+	<!-- Ongoing Costs Form -->
 
-		<tbody formArrayName="ongoingCosts">
-			<ng-container
-				*ngFor="
-					let ongoingCostForm of budgetForm.controls['ongoingCosts'].controls;
-					let i = index
-				"
+	<h2 class="text-lg font-semibold">Ongoing Costs</h2>
+
+	<div class="flex flex-col gap-2 items-start">
+		<ng-container *ngIf="budgetForm.controls['ongoingCosts'].controls.length">
+			<!-- Header -->
+			<div class="flex gap-2">
+				<div class="w-64 text-sm font-semibold">Item name</div>
+				<div class="w-24 text-sm font-semibold">Cost</div>
+				<div class="w-24 text-sm font-semibold">How many</div>
+				<div class="w-24 text-sm font-semibold">How often</div>
+			</div>
+
+			<!-- Body -->
+			<div
+				formArrayName="workers"
+				class="flex flex-col gap-2 pr-2 overflow-x-hidden overflow-y-auto max-h-64"
 			>
-				<tr [formGroup]="ongoingCostForm">
-					<td class="py-2">
+				<ng-container
+					*ngFor="
+						let ongoingCostForm of budgetForm.controls['ongoingCosts'].controls;
+						let i = index
+					"
+				>
+					<div [formGroup]="ongoingCostForm" class="flex gap-2">
 						<input
 							class="w-64 h-8 px-2 text-sm border rounded focus:z-10"
 							formControlName="itemName"
@@ -206,9 +177,7 @@
 							maxlength="64"
 							required
 						/>
-					</td>
 
-					<td class="py-2">
 						<input
 							class="w-24 h-8 px-2 text-sm border rounded focus:z-10"
 							formControlName="cost"
@@ -217,9 +186,7 @@
 							min="1"
 							required
 						/>
-					</td>
 
-					<td class="py-2">
 						<input
 							class="w-24 h-8 px-2 text-sm border rounded focus:z-10"
 							formControlName="amount"
@@ -227,9 +194,7 @@
 							min="1"
 							required
 						/>
-					</td>
 
-					<td>
 						<select
 							class="w-24 h-8 px-2 text-sm border rounded cursor-pointer"
 							formControlName="frequency"
@@ -238,21 +203,27 @@
 								{{ unit | titlecase }}
 							</option>
 						</select>
-					</td>
 
-					<td>
 						<app-x-button (click)="removeOngoingCost(i)"></app-x-button>
-					</td>
-				</tr>
-			</ng-container>
-		</tbody>
-	</table>
+					</div>
+				</ng-container>
+			</div>
+		</ng-container>
 
-	<ng-template #noOngoingCosts>
-		<div class="italic">No ongoing costs added</div>
-	</ng-template>
+		<button
+			class="flex items-center h-6 transition-colors rounded font-semibold text-sm text-emerald-600"
+			type="button"
+			(click)="addOngoingCost()"
+		>
+			<svg viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+				<path
+					d="M10.75 6.75a.75.75 0 00-1.5 0v2.5h-2.5a.75.75 0 000 1.5h2.5v2.5a.75.75 0 001.5 0v-2.5h2.5a.75.75 0 000-1.5h-2.5v-2.5z"
+				/>
+			</svg>
 
-	<hr class="w-full" />
+			<span>Add Item</span>
+		</button>
+	</div>
 
 	<button
 		class="flex items-center justify-center h-8 gap-1 px-8 transition-colors rounded text-slate-50 bg-emerald-600 hover:bg-emerald-600/75 active:bg-emerald-700"
