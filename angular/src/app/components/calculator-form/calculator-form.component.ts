@@ -68,7 +68,7 @@ export class CalculatorFormComponent {
 			this.budgetForm.controls['oneOffCosts'].push(row);
 		});
 
-		quote.budget.oneOffCosts.forEach((ongoingCost) => {
+		quote.budget.ongoingCosts.forEach((ongoingCost) => {
 			const row = this.fb.group(ongoingCostForm);
 			row.controls['cost'].setValue(ongoingCost.cost);
 			row.controls['itemName'].setValue(ongoingCost.itemName);
