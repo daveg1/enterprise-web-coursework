@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { QuoteService } from 'src/app/services/quote.service';
-import { QuoteWholeResponse } from 'src/app/types/quote';
 
 @Component({
 	selector: 'app-account',
@@ -11,7 +9,7 @@ import { QuoteWholeResponse } from 'src/app/types/quote';
 })
 export class AccountComponent {
 	user$;
-	quotes$ = new Subject<QuoteWholeResponse[]>();
+	quotes$;
 
 	constructor(
 		private readonly authService: AuthService,
@@ -24,10 +22,13 @@ export class AccountComponent {
 		}
 
 		const state = this.authService.userState$.value!;
+		this.quotes$ = this.quoteService.quotes$;
 
 		this.user$ = this.authService.userState$;
-		this.quoteService.getQuotesForUser(state.token).subscribe((quotes) => {
-			this.quotes$.next(quotes);
+		this.quoteService.getQuotesForUser(state.token).subscribe({
+			error: (err) => {
+				console.error(err);
+			},
 		});
 	}
 
@@ -37,9 +38,8 @@ export class AccountComponent {
 		this.quoteService.deleteQuote(quoteId).subscribe({
 			next: () => {
 				console.log('quote deleted');
-				// todo remove row
-				// store current quotes in quote service
-				// quotes.findIndex(quoteId) and remove it
+				const index = this.quotes$.value.findIndex((q) => q._id === quoteId);
+				this.quotes$.value.splice(index, 1);
 			},
 
 			error: (err) => {

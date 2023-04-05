@@ -47,11 +47,17 @@ export class QuoteService {
 	}
 
 	getQuotesForUser(token: string) {
-		return this.http.post<QuoteWholeResponse[]>(
-			`${this.endpoint}/user`,
-			{ token },
-			this.httpOptions
-		);
+		return this.http
+			.post<QuoteWholeResponse[]>(
+				`${this.endpoint}/user`,
+				{ token },
+				this.httpOptions
+			)
+			.pipe(
+				tap((quotes) => {
+					this.quotes$.next(quotes);
+				})
+			);
 	}
 
 	getQuoteById(id: string) {
