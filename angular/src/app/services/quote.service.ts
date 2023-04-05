@@ -64,4 +64,12 @@ export class QuoteService {
 			this.httpOptions
 		);
 	}
+
+	deleteQuote(id: string) {
+		return this.http.post<boolean>(
+			`${this.endpoint}/delete`,
+			{ id },
+			this.httpOptions
+		);
+	}
 }

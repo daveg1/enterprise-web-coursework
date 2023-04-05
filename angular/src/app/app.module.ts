@@ -18,6 +18,7 @@ import { XButtonComponent } from './components/buttons/x-button/x-button.compone
 import { CalculatorFormComponent } from './components/calculator-form/calculator-form.component';
 import { AdminComponent } from './pages/admin/admin.component';
 import { QuoteComponent } from './pages/quote/quote.component';
+import { ExpanderButtonComponent } from './components/buttons/expander-button/expander-button.component';
 
 @NgModule({
 	declarations: [
@@ -35,6 +36,7 @@ import { QuoteComponent } from './pages/quote/quote.component';
 		CalculatorFormComponent,
 		AdminComponent,
 		QuoteComponent,
+  ExpanderButtonComponent,
 	],
 	imports: [
 		BrowserModule,

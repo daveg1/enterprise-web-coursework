@@ -1,16 +1,63 @@
 <ng-container *ngIf="user$ | async as user">
-	<div class="my-4">
-		<app-page-title [title]="user.username"></app-page-title>
+	<div class="flex items-center border-b h-14">
+		<h1 class="text-2xl font-semibold">{{ user.username }}</h1>
 	</div>
 
-	<h2 class="my-4 text-lg font-semibold">Your quotes</h2>
+	<h2 class="my-4 text-lg font-semibold">Quotes</h2>
 
 	<ng-container *ngIf="quotes$ | async as quotes; else noQuotes">
-		<ul class="my-4">
-			<li *ngFor="let quote of quotes.quotes">
-				<a [routerLink]="'/quote/' + quote._id">{{ quote.projectName }}</a>
-			</li>
-		</ul>
+		<div class="flex flex-col">
+			<div class="flex gap-4 px-4 py-2 border rounded-t-lg bg-slate-100">
+				<div class="w-8"></div>
+				<div class="w-48 text-sm text-slate-500">Project name</div>
+				<div class="w-24 text-sm text-right text-slate-500">Amount</div>
+				<div class="ml-auto text-sm text-slate-500">Actions</div>
+			</div>
+
+			<ng-container *ngFor="let quote of quotes.quotes">
+				<div
+					class="flex items-center gap-4 px-4 py-2 border-b border-x last:rounded-b-lg"
+				>
+					<div class="w-8">
+						<app-expander-button #expander></app-expander-button>
+					</div>
+
+					<div class="w-48">
+						<a [routerLink]="'/quote/' + quote._id">
+							{{ quote.projectName }}
+						</a>
+					</div>
+
+					<div class="w-24 text-right">
+						<span>£10,000</span>
+					</div>
+
+					<div class="ml-auto">
+						<app-x-button (click)="deleteQuote(quote._id)"></app-x-button>
+					</div>
+				</div>
+
+				<div
+					*ngIf="expander.active"
+					class="flex flex-col px-4 py-2 pl-16 border-b border-x text-slate-500"
+				>
+					<div *ngIf="quote.budget.workers.length">
+						{{ quote.budget.workers.length }} x Workers
+					</div>
+
+					<div *ngIf="quote.budget.oneOffCosts.length">
+						{{ quote.budget.oneOffCosts.length }} x One-off Costs
+					</div>
+
+					<div *ngIf="quote.budget.ongoingCosts.length">
+						{{ quote.budget.ongoingCosts.length }} x Ongoing Costs
+					</div>
+					<!-- <div *ngFor="let worker of quote.budget.workers">
+
+					</div> -->
+				</div>
+			</ng-container>
+		</div>
 	</ng-container>
 
 	<ng-template #noQuotes>
@@ -19,7 +66,7 @@
 
 	<div class="py-4 border-t">
 		<button
-			class="flex items-center justify-center h-8 gap-1 px-4 text-red-500 text-red-600 transition-colors border border-red-600 rounded hover:bg-red-600 active:bg-red-700 hover:text-white active:text-white"
+			class="flex items-center justify-center h-8 gap-1 px-4 text-red-600 transition-colors border border-red-600 rounded hover:bg-red-600 active:bg-red-700 hover:text-white active:text-white"
 			type="button"
 			(click)="deleteAccount()"
 		>
