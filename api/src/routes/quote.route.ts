@@ -59,7 +59,7 @@ quoteRoutes.post('/user', async (req, res) => {
 			res.status(401).json({ message: 'No quotes found' })
 		}
 
-		res.status(200).json({ quotes })
+		res.status(200).json(quotes)
 	} catch (error) {
 		console.log(error)
 		res.status(500).json({ error })

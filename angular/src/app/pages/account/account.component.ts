@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { QuoteService } from 'src/app/services/quote.service';
-import { QuotesResponse } from 'src/app/types/quote';
+import { QuoteWholeResponse } from 'src/app/types/quote';
 
 @Component({
 	selector: 'app-account',
@@ -11,7 +11,7 @@ import { QuotesResponse } from 'src/app/types/quote';
 })
 export class AccountComponent {
 	user$;
-	quotes$ = new Subject<QuotesResponse>();
+	quotes$ = new Subject<QuoteWholeResponse[]>();
 
 	constructor(
 		private readonly authService: AuthService,

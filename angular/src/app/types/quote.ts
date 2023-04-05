@@ -9,14 +9,6 @@ export type QuoteWholeResponse = {
 	projectName: string;
 };
 
-export type QuotesResponse = {
-	quotes: {
-		_id: string;
-		budget: Budget;
-		projectName: string;
-	}[];
-};
-
 /**
  * @deprecated please remove this
  */
