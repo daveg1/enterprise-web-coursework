@@ -23,6 +23,8 @@
 
 				<a
 					class="text-sm font-semibold transition-opacity cursor-pointer hover:opacity-50"
+					tabindex="0"
+					(keydown)="logout()"
 					(click)="logout()"
 				>
 					Logout
