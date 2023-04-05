@@ -16,8 +16,8 @@ import { DialogComponent } from './components/dialog/dialog.component';
 import { SaveQuoteDialogComponent } from './components/dialog/save-quote-dialog/save-quote-dialog.component';
 import { XButtonComponent } from './components/buttons/x-button/x-button.component';
 import { CalculatorFormComponent } from './components/calculator-form/calculator-form.component';
-import { CalculatorComponent } from './pages/calculator/calculator.component';
 import { AdminComponent } from './pages/admin/admin.component';
+import { QuoteComponent } from './pages/quote/quote.component';
 
 @NgModule({
 	declarations: [
@@ -31,10 +31,10 @@ import { AdminComponent } from './pages/admin/admin.component';
 		PageTitleComponent,
 		DialogComponent,
 		SaveQuoteDialogComponent,
-  XButtonComponent,
-  CalculatorFormComponent,
-  CalculatorComponent,
-  AdminComponent,
+		XButtonComponent,
+		CalculatorFormComponent,
+		AdminComponent,
+		QuoteComponent,
 	],
 	imports: [
 		BrowserModule,
