@@ -6,3 +6,7 @@ export const quoteSchema = z.object({
 	projectName: z.string().max(64),
 	token: z.string(),
 })
+
+export const quoteIdSchema = z.object({
+	id: z.string().length(24),
+})

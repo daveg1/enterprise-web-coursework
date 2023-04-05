@@ -4,7 +4,7 @@ import { Quote } from '../models/quote.model'
 import { User } from '../models/user.model'
 import { calculateQuote } from '../modules/calculateQuote'
 import { budgetSchema } from '../schemas/budget.schema'
-import { quoteSchema } from '../schemas/quotes.schema'
+import { quoteIdSchema, quoteSchema } from '../schemas/quotes.schema'
 import { tokenSchema } from '../schemas/token.schema'
 
 const quoteRoutes = Router()
@@ -64,6 +64,19 @@ quoteRoutes.post('/user', async (req, res) => {
 		console.log(error)
 		res.status(500).json({ error })
 	}
+})
+
+quoteRoutes.post('/id', async (req, res) => {
+	const parsed = await quoteIdSchema.parseAsync(req.body)
+
+	const quoteId = parsed.id
+	const quote = await Quote.findById(quoteId)
+
+	if (!quote) {
+		res.status(401).json({ message: 'No quote found by that id' })
+	}
+
+	res.status(200).json(quote.toJSON())
 })
 
 export { quoteRoutes }
