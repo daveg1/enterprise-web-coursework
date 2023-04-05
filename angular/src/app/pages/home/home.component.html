@@ -71,14 +71,14 @@
 			<span>Hi</span>
 		</div>
 	</div>
+
+	<!-- Quote saving dialog -->
+	<app-dialog header="Enter a project name">
+		<app-save-quote-dialog></app-save-quote-dialog>
+	</app-dialog>
 </ng-container>
 
 <!-- "Sign in to save quote" -->
 <ng-container *ngIf="!(isLoggedIn$ | async)">
 	<app-user-notice></app-user-notice>
 </ng-container>
-
-<!-- Quote saving dialog -->
-<app-dialog header="Enter a project name">
-	<app-save-quote-dialog></app-save-quote-dialog>
-</app-dialog>

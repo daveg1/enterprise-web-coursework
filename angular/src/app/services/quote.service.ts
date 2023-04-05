@@ -2,7 +2,11 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, tap } from 'rxjs';
 import type { Budget } from '../types/budget';
-import type { QuoteResponse, QuotesResponse } from '../types/quote';
+import type {
+	QuoteResponse,
+	QuotesResponse,
+	QuoteWholeResponse,
+} from '../types/quote';
 
 @Injectable({
 	providedIn: 'root',
@@ -11,6 +15,10 @@ export class QuoteService {
 	constructor(private readonly http: HttpClient) {}
 
 	private readonly endpoint = 'http://localhost:3934/quote';
+
+	/**
+	 * @todo refactor to use QuoteWholeResponse
+	 */
 	currentQuote$ = new BehaviorSubject<boolean>(false);
 
 	private httpOptions = {
@@ -45,6 +53,14 @@ export class QuoteService {
 		return this.http.post<QuotesResponse>(
 			`${this.endpoint}/user`,
 			{ token },
+			this.httpOptions
+		);
+	}
+
+	getQuoteById(id: string) {
+		return this.http.post<QuoteWholeResponse>(
+			`${this.endpoint}/id`,
+			{ id },
 			this.httpOptions
 		);
 	}

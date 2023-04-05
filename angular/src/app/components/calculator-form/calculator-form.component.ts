@@ -12,6 +12,7 @@ import {
 	timeUnits,
 	workerForm,
 } from './calculator-form-fields';
+import { QuoteWholeResponse } from 'src/app/types/quote';
 
 @Component({
 	selector: 'app-calculator-form',
@@ -41,6 +42,39 @@ export class CalculatorFormComponent {
 		// Remove one-off and ongoing cost rows (by default only have a worker row)
 		this.budgetForm.controls['oneOffCosts'].removeAt(0);
 		this.budgetForm.controls['ongoingCosts'].removeAt(0);
+	}
+
+	/**
+	 * Allows an existing quote is to be loaded by this form.
+	 * Generates rows based on the fields in the provided quote object.
+	 */
+	setQuote(quote: QuoteWholeResponse) {
+		this.budgetForm.controls['workers'].removeAt(0);
+
+		quote.budget.workers.forEach((worker) => {
+			const row = this.fb.group(workerForm);
+			row.controls['payGrade'].setValue(worker.payGrade);
+			row.controls['timeUnit'].setValue(worker.timeUnit);
+			row.controls['timeWorked'].setValue(worker.timeWorked);
+
+			this.budgetForm.controls['workers'].push(row);
+		});
+
+		quote.budget.oneOffCosts.forEach((oneOffCost) => {
+			const row = this.fb.group(oneOffCostForm);
+			row.controls['cost'].setValue(oneOffCost.cost);
+			row.controls['itemName'].setValue(oneOffCost.itemName);
+
+			this.budgetForm.controls['oneOffCosts'].push(row);
+		});
+
+		quote.budget.oneOffCosts.forEach((ongoingCost) => {
+			const row = this.fb.group(ongoingCostForm);
+			row.controls['cost'].setValue(ongoingCost.cost);
+			row.controls['itemName'].setValue(ongoingCost.itemName);
+
+			this.budgetForm.controls['ongoingCosts'].push(row);
+		});
 	}
 
 	submitForm() {

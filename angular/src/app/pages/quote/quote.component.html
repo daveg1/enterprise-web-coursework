@@ -1,1 +1,10 @@
-<p>quote works!</p>
+<ng-container *ngIf="quote$ | async as quote">
+	<div class="px-6 mt-8 mb-4">
+		<app-page-title [title]="quote.projectName"></app-page-title>
+	</div>
+
+	<app-calculator-form
+		#calculatorForm
+		(quoteCalculated)="onQuoteCalculated($event)"
+	></app-calculator-form>
+</ng-container>
