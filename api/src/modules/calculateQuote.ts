@@ -19,6 +19,8 @@ const rates = {
  * Generates a fudge factor plus or minus the given percentage
  *
  * E.g. factor = 0.05, generates a number between 0.95 and 1.05
+ *
+ * Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random#getting_a_random_number_between_two_values
  * @param factor Percentage
  * @returns number
  */
