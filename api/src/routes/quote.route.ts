@@ -79,4 +79,17 @@ quoteRoutes.post('/id', async (req, res) => {
 	res.status(200).json(quote.toJSON())
 })
 
+quoteRoutes.post('/delete', async (req, res) => {
+	const parsed = await quoteIdSchema.parseAsync(req.body)
+
+	const quoteId = parsed.id
+	const quote = await Quote.deleteOne({ _id: quoteId })
+
+	if (!quote.deletedCount) {
+		res.status(401).json({ message: 'Failed to delete quote with that id' })
+	}
+
+	res.status(200).json({ message: 'Successfully deleted quote', deletedCount: quote.deletedCount })
+})
+
 export { quoteRoutes }
