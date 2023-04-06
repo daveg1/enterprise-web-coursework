@@ -10,7 +10,7 @@
 			<div class="flex gap-4 px-4 py-2 border rounded-t-lg bg-slate-100">
 				<div class="w-8"></div>
 				<div class="w-48 text-sm text-slate-500">Project name</div>
-				<div class="w-24 text-sm text-right text-slate-500">Amount</div>
+				<div class="w-24 text-sm text-right text-slate-500">Estimate</div>
 				<div class="ml-auto text-sm text-slate-500">Actions</div>
 			</div>
 
@@ -29,7 +29,7 @@
 					</div>
 
 					<div class="w-24 text-right">
-						<span>£10,000</span>
+						<span>{{ quote.estimate | currency : 'GBP' }}</span>
 					</div>
 
 					<div class="ml-auto">
