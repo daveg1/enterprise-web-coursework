@@ -21,7 +21,7 @@ import { QuoteWholeResponse } from 'src/app/types/quote';
 export class CalculatorFormComponent {
 	@Output() quoteCalculated = new EventEmitter<number>();
 
-	readonly budgetForm;
+	readonly form;
 	// the following are used in the template
 	readonly timeUnits = timeUnits;
 	readonly payGrades = payGrades;
@@ -33,15 +33,15 @@ export class CalculatorFormComponent {
 		readonly fb: NonNullableFormBuilder,
 		readonly dialog: DialogService
 	) {
-		this.budgetForm = this.fb.group({
+		this.form = this.fb.group({
 			workers: this.fb.array([this.fb.group(workerForm)]),
 			oneOffCosts: this.fb.array([this.fb.group(oneOffCostForm)]),
 			ongoingCosts: this.fb.array([this.fb.group(ongoingCostForm)]),
 		});
 
 		// Remove one-off and ongoing cost rows (by default only have a worker row)
-		this.budgetForm.controls['oneOffCosts'].removeAt(0);
-		this.budgetForm.controls['ongoingCosts'].removeAt(0);
+		this.form.controls['oneOffCosts'].removeAt(0);
+		this.form.controls['ongoingCosts'].removeAt(0);
 	}
 
 	/**
@@ -49,7 +49,7 @@ export class CalculatorFormComponent {
 	 * Generates rows based on the fields in the provided quote object.
 	 */
 	setQuote(quote: QuoteWholeResponse) {
-		this.budgetForm.controls['workers'].removeAt(0);
+		this.form.controls['workers'].removeAt(0);
 
 		quote.budget.workers.forEach((worker) => {
 			const row = this.fb.group(workerForm);
@@ -57,7 +57,7 @@ export class CalculatorFormComponent {
 			row.controls['timeUnit'].setValue(worker.timeUnit);
 			row.controls['timeWorked'].setValue(worker.timeWorked);
 
-			this.budgetForm.controls['workers'].push(row);
+			this.form.controls['workers'].push(row);
 		});
 
 		quote.budget.oneOffCosts.forEach((oneOffCost) => {
@@ -65,7 +65,7 @@ export class CalculatorFormComponent {
 			row.controls['cost'].setValue(oneOffCost.cost);
 			row.controls['itemName'].setValue(oneOffCost.itemName);
 
-			this.budgetForm.controls['oneOffCosts'].push(row);
+			this.form.controls['oneOffCosts'].push(row);
 		});
 
 		quote.budget.ongoingCosts.forEach((ongoingCost) => {
@@ -73,52 +73,52 @@ export class CalculatorFormComponent {
 			row.controls['cost'].setValue(ongoingCost.cost);
 			row.controls['itemName'].setValue(ongoingCost.itemName);
 
-			this.budgetForm.controls['ongoingCosts'].push(row);
+			this.form.controls['ongoingCosts'].push(row);
 		});
 	}
 
 	submitForm() {
-		if (this.budgetForm.valid) {
+		if (this.form.valid) {
 			this.quoteService
-				.calculateQuote(this.budgetForm.value as Budget)
+				.calculateQuote(this.form.value as Budget)
 				.subscribe((res) => {
 					this.quoteCalculated.emit(res.quote);
 				});
 		} else {
-			this.budgetForm.markAllAsTouched();
+			this.form.markAllAsTouched();
 		}
 	}
 
 	saveQuote() {
-		this.budgetService.currentBudget = this.budgetForm.value as Budget;
+		this.budgetService.currentBudget = this.form.value as Budget;
 		this.dialog.show();
 	}
 
 	addWorker() {
 		const worker = this.fb.group(workerForm);
-		this.budgetForm.controls['workers'].push(worker);
+		this.form.controls['workers'].push(worker);
 	}
 
 	removeWorker(index: number) {
-		this.budgetForm.controls['workers'].removeAt(index);
+		this.form.controls['workers'].removeAt(index);
 	}
 
 	addOneOffCost() {
 		const oneOffCost = this.fb.group(oneOffCostForm);
-		this.budgetForm.controls['oneOffCosts'].push(oneOffCost);
+		this.form.controls['oneOffCosts'].push(oneOffCost);
 	}
 
 	removeOneOffCost(index: number) {
-		this.budgetForm.controls['oneOffCosts'].removeAt(index);
+		this.form.controls['oneOffCosts'].removeAt(index);
 	}
 
 	addOngoingCost() {
 		const ongoingCost = this.fb.group(ongoingCostForm);
 
-		this.budgetForm.controls['ongoingCosts'].push(ongoingCost);
+		this.form.controls['ongoingCosts'].push(ongoingCost);
 	}
 
 	removeOngoingCost(index: number) {
-		this.budgetForm.controls['ongoingCosts'].removeAt(index);
+		this.form.controls['ongoingCosts'].removeAt(index);
 	}
 }
