@@ -7,6 +7,7 @@
 	(keyup.enter)="submitForm()"
 >
 	<!-- Workers Form -->
+
 	<div class="flex items-center justify-between w-full px-6 py-4 border-b">
 		<h2 class="text-lg font-semibold">Workers</h2>
 
@@ -34,10 +35,7 @@
 		</div>
 
 		<!-- Rows -->
-		<div
-			formArrayName="workers"
-			class="flex flex-col gap-2 pr-2 overflow-x-hidden overflow-y-auto max-h-64"
-		>
+		<div formArrayName="workers" class="flex flex-col gap-2">
 			<ng-container
 				*ngFor="
 					let workerForm of budgetForm.controls['workers'].controls;
@@ -110,10 +108,7 @@
 		</div>
 
 		<!-- Rows -->
-		<div
-			formArrayName="workers"
-			class="flex flex-col gap-2 pr-2 overflow-x-hidden overflow-y-auto max-h-64"
-		>
+		<div formArrayName="workers" class="flex flex-col gap-2">
 			<ng-container
 				*ngFor="
 					let oneOffCostForm of budgetForm.controls['oneOffCosts'].controls;
@@ -178,10 +173,7 @@
 		</div>
 
 		<!-- Rows -->
-		<div
-			formArrayName="workers"
-			class="flex flex-col gap-2 pr-2 overflow-x-hidden overflow-y-auto max-h-64"
-		>
+		<div formArrayName="workers" class="flex flex-col gap-2">
 			<ng-container
 				*ngFor="
 					let ongoingCostForm of budgetForm.controls['ongoingCosts'].controls;
