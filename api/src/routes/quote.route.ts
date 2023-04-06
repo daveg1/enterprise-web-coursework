@@ -12,6 +12,7 @@ const quoteRoutes = Router()
 quoteRoutes.post('/calculate', async (req, res) => {
 	try {
 		const parsed = await budgetSchema.parseAsync(req.body)
+		// todo rename to 'estimate'
 		const quote = calculateQuote(parsed)
 
 		res.status(200).json({ quote })
@@ -32,8 +33,11 @@ quoteRoutes.post('/save', async (req, res) => {
 			res.status(401).json({ message: 'quote/save POST No user by that id' })
 		}
 
+		const estimate = calculateQuote(parsed.budget)
+
 		const quote = new Quote({
 			budget: parsed.budget,
+			estimate,
 			projectName: parsed.projectName,
 			user: userId,
 		})
@@ -53,7 +57,7 @@ quoteRoutes.post('/user', async (req, res) => {
 
 		// Find quotes saved under the given user id
 		const userId = jwt.decode(parsed.token)
-		const quotes = await Quote.find({ user: userId })
+		const quotes = await Quote.find({ user: userId }, { user: 0 })
 
 		if (!quotes) {
 			res.status(401).json({ message: 'No quotes found' })
@@ -70,7 +74,7 @@ quoteRoutes.post('/id', async (req, res) => {
 	const parsed = await quoteIdSchema.parseAsync(req.body)
 
 	const quoteId = parsed.id
-	const quote = await Quote.findById(quoteId)
+	const quote = await Quote.findById(quoteId, { user: 0 })
 
 	if (!quote) {
 		res.status(401).json({ message: 'No quote found by that id' })
