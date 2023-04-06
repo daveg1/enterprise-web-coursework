@@ -6,6 +6,7 @@ import type { Budget } from './budget';
 export type QuoteWholeResponse = {
 	_id: string;
 	budget: Budget;
+	estimate: number;
 	projectName: string;
 };
 

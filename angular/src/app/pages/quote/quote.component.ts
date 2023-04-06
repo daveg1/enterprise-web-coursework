@@ -1,12 +1,6 @@
-import {
-	AfterViewInit,
-	Component,
-	QueryList,
-	ViewChild,
-	ViewChildren,
-} from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { CalculatorFormComponent } from 'src/app/components/calculator-form/calculator-form.component';
 import { AuthService } from 'src/app/services/auth.service';
 import { QuoteService } from 'src/app/services/quote.service';
@@ -16,12 +10,17 @@ import { QuoteWholeResponse } from 'src/app/types/quote';
 	selector: 'app-quote',
 	templateUrl: './quote.component.html',
 })
-export class QuoteComponent implements AfterViewInit {
-	@ViewChildren(CalculatorFormComponent)
-	calculatorForm!: QueryList<CalculatorFormComponent>;
+export class QuoteComponent implements AfterViewInit, OnDestroy {
+	@ViewChild(CalculatorFormComponent)
+	calculatorForm!: CalculatorFormComponent;
+
+	baseValue?: typeof this.calculatorForm.budgetForm.value;
 
 	isLoggedIn$;
 	quote$ = new BehaviorSubject<QuoteWholeResponse | null>(null);
+	hasChanged$ = new BehaviorSubject<boolean>(false);
+
+	private readonly unsubscribe$ = new Subject<void>();
 
 	constructor(
 		private readonly authService: AuthService,
@@ -43,6 +42,8 @@ export class QuoteComponent implements AfterViewInit {
 			this.quoteService.getQuoteById(quoteId).subscribe({
 				next: (quote) => {
 					this.quote$.next(quote);
+					this.calculatorForm.setQuote(quote);
+					this.baseValue = this.calculatorForm.budgetForm.value;
 				},
 
 				error: () => {
@@ -52,21 +53,34 @@ export class QuoteComponent implements AfterViewInit {
 		});
 	}
 
-	/**
-	 * Currently causes state inconsistencies
-	 * @todo use quoteSerice.currentQuote$
-	 */
 	ngAfterViewInit() {
-		this.calculatorForm.changes.subscribe(() => {
-			console.log('form', this.calculatorForm.first);
+		this.calculatorForm.budgetForm.valueChanges
+			.pipe(takeUntil(this.unsubscribe$))
+			.subscribe({
+				next: (changedValue) => {
+					// Value isn't set yet, ignore
+					if (!this.baseValue) {
+						return;
+					}
 
-			if (this.quote$.value) {
-				this.calculatorForm.first.setQuote(this.quote$.value);
-			}
-		});
+					// Compare baseline to changed value
+					if (!Object.is(this.baseValue, changedValue)) {
+						this.hasChanged$.next(true);
+					} else {
+						this.hasChanged$.next(false);
+					}
+				},
+			});
 	}
 
-	onQuoteCalculated(quote: number) {
-		console.log(quote);
+	ngOnDestroy() {
+		this.unsubscribe$.next();
+		this.unsubscribe$.complete();
+	}
+
+	onQuoteCalculated(estimate: number) {
+		if (this.quote$.value) {
+			this.quote$.value.estimate = estimate;
+		}
 	}
 }

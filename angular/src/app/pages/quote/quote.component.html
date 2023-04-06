@@ -1,10 +1,40 @@
-<ng-container *ngIf="quote$ | async as quote">
-	<div class="px-6 mt-8 mb-4">
+<div class="px-6 mt-8 mb-4">
+	<ng-container *ngIf="quote$ | async as quote; else titleLoading">
 		<app-page-title [title]="quote.projectName"></app-page-title>
+	</ng-container>
+
+	<ng-template #titleLoading>
+		<app-page-title title="Loading"></app-page-title>
+	</ng-template>
+</div>
+
+<app-calculator-form
+	#calculatorForm
+	(quoteCalculated)="onQuoteCalculated($event)"
+></app-calculator-form>
+
+<!-- Calculation Output -->
+<ng-container *ngIf="quote$ | async as quote">
+	<div
+		class="flex flex-col mt-8 mb-16 bg-white border rounded-lg shadow-sm shadow-slate-300/50"
+	>
+		<div class="flex items-center justify-between w-full px-6 py-4 border-b">
+			<h2 class="text-lg font-semibold">Estimate</h2>
+			<div
+				*ngIf="hasChanged$ | async"
+				class="px-1 text-sm font-semibold leading-6 text-white rounded bg-slate-400"
+			>
+				Form has changed
+			</div>
+		</div>
+
+		<div class="flex flex-col px-6 py-4">
+			<div class="text-2xl">{{ quote.estimate | currency : 'GBP' }}</div>
+		</div>
 	</div>
 
-	<app-calculator-form
-		#calculatorForm
-		(quoteCalculated)="onQuoteCalculated($event)"
-	></app-calculator-form>
+	<!-- Quote saving dialog -->
+	<app-dialog header="Enter a project name">
+		<app-save-quote-dialog></app-save-quote-dialog>
+	</app-dialog>
 </ng-container>
