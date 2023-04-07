@@ -20,6 +20,8 @@ import { AdminComponent } from './pages/admin/admin.component';
 import { QuoteComponent } from './pages/quote/quote.component';
 import { ExpanderButtonComponent } from './components/buttons/expander-button/expander-button.component';
 import { ButtonDirective } from './directives/app-button.directive';
+import { ProjectNameDialogComponent } from './components/dialogs/project-name-dialog/project-name-dialog.component';
+import { Dialog, DialogModule } from '@angular/cdk/dialog';
 
 @NgModule({
 	declarations: [
@@ -39,14 +41,16 @@ import { ButtonDirective } from './directives/app-button.directive';
 		QuoteComponent,
 		ExpanderButtonComponent,
 		ButtonDirective,
+		ProjectNameDialogComponent,
 	],
 	imports: [
 		BrowserModule,
 		AppRoutingModule,
 		HttpClientModule,
 		ReactiveFormsModule,
+		DialogModule,
 	],
-	providers: [],
+	providers: [Dialog],
 	bootstrap: [AppComponent],
 })
 export class AppModule {}

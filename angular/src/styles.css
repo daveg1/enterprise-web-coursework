@@ -5,3 +5,34 @@
 input.ng-invalid.ng-touched {
 	@apply border-red-500
 }
+
+/* @angular/CDK stuff */
+
+.cdk-overlay-container {
+	@apply
+	fixed
+	inset-0
+}
+
+.cdk-overlay-container:empty {
+	@apply
+	hidden
+}
+
+.cdk-overlay-backdrop {
+	@apply
+	absolute
+	bg-black/25
+	inset-0
+	z-[1000]
+}
+
+.cdk-global-overlay-wrapper {
+	@apply
+	absolute
+	flex
+	inset-0
+	items-center
+	justify-center
+	z-[1000]
+}
