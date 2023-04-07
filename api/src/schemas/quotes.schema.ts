@@ -10,3 +10,9 @@ export const quoteSchema = z.object({
 export const quoteIdSchema = z.object({
 	id: z.string().length(24),
 })
+
+export const updateQuoteSchema = z.object({
+	id: z.string().length(24),
+	budget: budgetSchema,
+	token: z.string(),
+})

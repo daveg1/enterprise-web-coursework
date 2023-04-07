@@ -4,7 +4,7 @@ import { Quote } from '../models/quote.model'
 import { User } from '../models/user.model'
 import { calculateQuote } from '../modules/calculateQuote'
 import { budgetSchema } from '../schemas/budget.schema'
-import { quoteIdSchema, quoteSchema } from '../schemas/quotes.schema'
+import { quoteIdSchema, quoteSchema, updateQuoteSchema } from '../schemas/quotes.schema'
 import { tokenSchema } from '../schemas/token.schema'
 
 const quoteRoutes = Router()
@@ -45,6 +45,40 @@ quoteRoutes.post('/save', async (req, res) => {
 		await quote.save()
 
 		res.status(200).json({ message: 'success' })
+	} catch (error) {
+		console.log(error)
+		res.status(500).json({ error })
+	}
+})
+
+quoteRoutes.post('/update', async (req, res) => {
+	try {
+		const parsed = await updateQuoteSchema.parseAsync(req.body)
+
+		// Verify user token
+		const userId = jwt.decode(parsed.token)
+		const user = await User.findById(userId)
+
+		if (!user) {
+			res.status(401).json({ message: 'quote/update POST No user by that id' })
+		}
+
+		const estimate = calculateQuote(parsed.budget)
+
+		const result = await Quote.findByIdAndUpdate(
+			parsed.id,
+			{
+				budget: parsed.budget,
+				estimate,
+			},
+			{ rawResult: true },
+		)
+
+		if (result.ok) {
+			res.status(200).json({ message: 'success', estimate })
+		} else {
+			res.status(500).json({ message: 'failed to update quote' })
+		}
 	} catch (error) {
 		console.log(error)
 		res.status(500).json({ error })
