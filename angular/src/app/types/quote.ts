@@ -1,9 +1,9 @@
 import type { Budget } from './budget';
 
 /**
- * @todo rename this to QuoteReponse
+ * Represents a quote object from the database
  */
-export type QuoteWholeResponse = {
+export type QuoteResponse = {
 	_id: string;
 	budget: Budget;
 	estimate: number;
@@ -11,8 +11,8 @@ export type QuoteWholeResponse = {
 };
 
 /**
- * @deprecated please remove this
+ * Represents a simple numerical of the calculated quote value
  */
-export type QuoteResponse = {
-	quote: number;
+export type EstimateResponse = {
+	estimate: number;
 };

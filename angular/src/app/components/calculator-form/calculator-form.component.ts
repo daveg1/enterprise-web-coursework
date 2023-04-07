@@ -12,8 +12,8 @@ import {
 	timeUnits,
 	workerForm,
 } from './calculator-form-fields';
-import { QuoteWholeResponse } from 'src/app/types/quote';
-import { Subject, of, takeUntil } from 'rxjs';
+import { QuoteResponse } from 'src/app/types/quote';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
 	selector: 'app-calculator-form',
@@ -51,7 +51,7 @@ export class CalculatorFormComponent implements OnDestroy {
 	 * Allows an existing quote is to be loaded by this form.
 	 * Generates rows based on the fields in the provided quote object.
 	 */
-	setQuote(quote: QuoteWholeResponse) {
+	setQuote(quote: QuoteResponse) {
 		this.budgetForm.controls['workers'].clear();
 		this.budgetForm.controls['oneOffCosts'].clear();
 		this.budgetForm.controls['ongoingCosts'].clear();
@@ -90,9 +90,9 @@ export class CalculatorFormComponent implements OnDestroy {
 				.calculateQuote(this.budgetForm.value as Budget)
 				.pipe(takeUntil(this.unsubscribe$))
 				.subscribe((res) => {
-					this.quoteCalculated.emit(res.quote);
+					this.quoteCalculated.emit(res.estimate);
 					if (this.quoteService.currentQuote$.value) {
-						this.quoteService.currentQuote$.value.estimate = res.quote;
+						this.quoteService.currentQuote$.value.estimate = res.estimate;
 					}
 				});
 		} else {

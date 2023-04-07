@@ -1,8 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Subject, of, tap } from 'rxjs';
+import { BehaviorSubject, tap } from 'rxjs';
 import type { Budget } from '../types/budget';
-import type { QuoteResponse, QuoteWholeResponse } from '../types/quote';
+import type { EstimateResponse, QuoteResponse } from '../types/quote';
 import { AuthService } from './auth.service';
 
 @Injectable({
@@ -19,8 +19,8 @@ export class QuoteService {
 	/**
 	 * @todo refactor to use QuoteWholeResponse
 	 */
-	currentQuote$ = new BehaviorSubject<QuoteWholeResponse | null>(null);
-	quotes$ = new BehaviorSubject<QuoteWholeResponse[]>([]);
+	currentQuote$ = new BehaviorSubject<QuoteResponse | null>(null);
+	quotes$ = new BehaviorSubject<QuoteResponse[]>([]);
 	editing$ = new BehaviorSubject<string>('');
 
 	private httpOptions = {
@@ -30,7 +30,7 @@ export class QuoteService {
 	};
 
 	calculateQuote(budget: Budget) {
-		return this.http.post<QuoteResponse>(
+		return this.http.post<EstimateResponse>(
 			`${this.endpoint}/calculate`,
 			budget,
 			this.httpOptions
@@ -41,7 +41,7 @@ export class QuoteService {
 		const state = this.authService.userState$.value;
 
 		return this.http
-			.post<QuoteWholeResponse>(
+			.post<QuoteResponse>(
 				`${this.endpoint}/save`,
 				{ budget, projectName, token: state!.token },
 				this.httpOptions
@@ -57,7 +57,7 @@ export class QuoteService {
 		const state = this.authService.userState$.value;
 
 		return this.http
-			.post<QuoteWholeResponse>(`${this.endpoint}/update`, {
+			.post<QuoteResponse>(`${this.endpoint}/update`, {
 				id,
 				budget,
 				token: state!.token,
@@ -71,7 +71,7 @@ export class QuoteService {
 
 	getQuotesForUser(token: string) {
 		return this.http
-			.post<QuoteWholeResponse[]>(
+			.post<QuoteResponse[]>(
 				`${this.endpoint}/user`,
 				{ token },
 				this.httpOptions
@@ -85,7 +85,7 @@ export class QuoteService {
 
 	getQuoteById(id: string) {
 		return this.http
-			.post<QuoteWholeResponse>(`${this.endpoint}/id`, { id }, this.httpOptions)
+			.post<QuoteResponse>(`${this.endpoint}/id`, { id }, this.httpOptions)
 			.pipe(
 				tap((quote) => {
 					this.currentQuote$.next(quote);
