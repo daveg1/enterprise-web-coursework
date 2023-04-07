@@ -12,10 +12,9 @@ const quoteRoutes = Router()
 quoteRoutes.post('/calculate', async (req, res) => {
 	try {
 		const parsed = await budgetSchema.parseAsync(req.body)
-		// todo rename to 'estimate'
-		const quote = calculateQuote(parsed)
+		const estimate = calculateQuote(parsed)
 
-		res.status(200).json({ quote })
+		res.status(200).json({ estimate })
 	} catch (error) {
 		res.status(500).json({ error })
 	}
