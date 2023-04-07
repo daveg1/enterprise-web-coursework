@@ -95,25 +95,39 @@ export class CalculatorFormComponent implements OnDestroy {
 	}
 
 	saveQuote() {
-		const quoteId = this.quoteService.editing$.value;
-
-		this.quoteService
-			.updateQuote(quoteId, this.budgetForm.value as Budget)
-			.subscribe({
-				next: (res) => {
-					console.log('Quote updated', res);
-				},
-
-				error: (err) => {
-					console.error(err);
-				},
-			});
-
-		// Check if saving new quote or updating existing
+		// If editing, update the existing quote
 		if (this.quoteService.editing$.value) {
-		} else {
-			this.budgetService.currentBudget = this.budgetForm.value as Budget;
-			this.dialog.show();
+			const quoteId = this.quoteService.editing$.value;
+
+			this.quoteService
+				.updateQuote(quoteId, this.budgetForm.value as Budget)
+				.subscribe({
+					next: (res) => {
+						console.log('Quote updated', res);
+					},
+
+					error: (err) => {
+						console.error(err);
+					},
+				});
+		}
+
+		// Otherwise, save a new one
+		else {
+			const projectName = 'Project name'; // TODO get this from dialog box
+
+			this.quoteService
+				.saveQuote(this.budgetForm.value as Budget, projectName)
+				.subscribe({
+					next: () => {
+						this.dialog.hide();
+						this.budgetForm.reset();
+					},
+
+					error: (err) => {
+						console.error('There was an error saving the quote', err);
+					},
+				});
 		}
 	}
 

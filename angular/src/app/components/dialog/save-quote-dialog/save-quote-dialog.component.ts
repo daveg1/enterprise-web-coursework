@@ -35,8 +35,7 @@ export class SaveQuoteDialogComponent {
 						this.saveQuoteForm.value.projectName
 					)
 					.subscribe({
-						next: () => {
-							this.quoteService.currentQuote$.next(true);
+						next: (quote) => {
 							this.dialog.hide();
 							this.saveQuoteForm.reset();
 						},

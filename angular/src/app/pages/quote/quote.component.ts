@@ -4,7 +4,6 @@ import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { CalculatorFormComponent } from 'src/app/components/calculator-form/calculator-form.component';
 import { AuthService } from 'src/app/services/auth.service';
 import { QuoteService } from 'src/app/services/quote.service';
-import { QuoteWholeResponse } from 'src/app/types/quote';
 
 @Component({
 	selector: 'app-quote',
@@ -17,7 +16,7 @@ export class QuoteComponent implements AfterViewInit, OnDestroy {
 	baseValue?: typeof this.calculatorForm.budgetForm.value;
 
 	isLoggedIn$;
-	quote$ = new BehaviorSubject<QuoteWholeResponse | null>(null);
+	quote$;
 	hasChanged$ = new BehaviorSubject<boolean>(false);
 
 	private readonly unsubscribe$ = new Subject<void>();
@@ -29,6 +28,7 @@ export class QuoteComponent implements AfterViewInit, OnDestroy {
 		readonly route: ActivatedRoute
 	) {
 		this.isLoggedIn$ = this.authService.isLoggedIn$;
+		this.quote$ = this.quoteService.currentQuote$;
 
 		this.route.paramMap.subscribe((paramMap) => {
 			const quoteId = paramMap.get('id') ?? '';
@@ -41,7 +41,6 @@ export class QuoteComponent implements AfterViewInit, OnDestroy {
 
 			this.quoteService.getQuoteById(quoteId).subscribe({
 				next: (quote) => {
-					this.quote$.next(quote);
 					this.calculatorForm.setQuote(quote);
 					this.baseValue = this.calculatorForm.budgetForm.value;
 				},
@@ -76,11 +75,5 @@ export class QuoteComponent implements AfterViewInit, OnDestroy {
 	ngOnDestroy() {
 		this.unsubscribe$.next();
 		this.unsubscribe$.complete();
-	}
-
-	onQuoteCalculated(estimate: number) {
-		if (this.quote$.value) {
-			this.quote$.value.estimate = estimate;
-		}
 	}
 }

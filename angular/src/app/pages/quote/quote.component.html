@@ -8,10 +8,7 @@
 	</ng-template>
 </div>
 
-<app-calculator-form
-	#calculatorForm
-	(quoteCalculated)="onQuoteCalculated($event)"
-></app-calculator-form>
+<app-calculator-form></app-calculator-form>
 
 <!-- Calculation Output -->
 <ng-container *ngIf="quote$ | async as quote">

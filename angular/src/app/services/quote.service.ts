@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, of, tap } from 'rxjs';
+import { BehaviorSubject, Subject, of, tap } from 'rxjs';
 import type { Budget } from '../types/budget';
 import type { QuoteResponse, QuoteWholeResponse } from '../types/quote';
 import { AuthService } from './auth.service';
@@ -19,7 +19,7 @@ export class QuoteService {
 	/**
 	 * @todo refactor to use QuoteWholeResponse
 	 */
-	currentQuote$ = new BehaviorSubject<boolean>(false);
+	currentQuote$ = new Subject<QuoteWholeResponse>();
 	quotes$ = new BehaviorSubject<QuoteWholeResponse[]>([]);
 	editing$ = new BehaviorSubject<string>('');
 
@@ -40,19 +40,15 @@ export class QuoteService {
 	saveQuote(budget: Budget, projectName: string) {
 		const state = this.authService.userState$.value;
 
-		if (!state) {
-			return of('No state');
-		}
-
 		return this.http
-			.post(
+			.post<QuoteWholeResponse>(
 				`${this.endpoint}/save`,
-				{ budget, projectName, token: state.token },
+				{ budget, projectName, token: state!.token },
 				this.httpOptions
 			)
 			.pipe(
 				tap((quote) => {
-					this.currentQuote$.next(true);
+					this.currentQuote$.next(quote);
 				})
 			);
 	}
@@ -60,11 +56,17 @@ export class QuoteService {
 	updateQuote(id: string, budget: Budget) {
 		const state = this.authService.userState$.value;
 
-		return this.http.post<QuoteWholeResponse>(`${this.endpoint}/update`, {
-			id,
-			budget,
-			token: state!.token,
-		});
+		return this.http
+			.post<QuoteWholeResponse>(`${this.endpoint}/update`, {
+				id,
+				budget,
+				token: state!.token,
+			})
+			.pipe(
+				tap((quote) => {
+					this.currentQuote$.next(quote);
+				})
+			);
 	}
 
 	getQuotesForUser(token: string) {
@@ -82,11 +84,13 @@ export class QuoteService {
 	}
 
 	getQuoteById(id: string) {
-		return this.http.post<QuoteWholeResponse>(
-			`${this.endpoint}/id`,
-			{ id },
-			this.httpOptions
-		);
+		return this.http
+			.post<QuoteWholeResponse>(`${this.endpoint}/id`, { id }, this.httpOptions)
+			.pipe(
+				tap((quote) => {
+					this.currentQuote$.next(quote);
+				})
+			);
 	}
 
 	deleteQuote(id: string) {
