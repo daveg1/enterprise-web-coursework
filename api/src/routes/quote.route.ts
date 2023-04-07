@@ -44,7 +44,7 @@ quoteRoutes.post('/save', async (req, res) => {
 
 		await quote.save()
 
-		res.status(200).json({ message: 'success' })
+		res.status(200).json(quote.toJSON())
 	} catch (error) {
 		console.log(error)
 		res.status(500).json({ error })
@@ -75,7 +75,7 @@ quoteRoutes.post('/update', async (req, res) => {
 		)
 
 		if (result.ok) {
-			res.status(200).json({ message: 'success', estimate })
+			res.status(200).json(result.value)
 		} else {
 			res.status(500).json({ message: 'failed to update quote' })
 		}
