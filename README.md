@@ -57,3 +57,4 @@ Once the setup is completed, cd into each project (angular/ and api/) in separat
 - [Angular Authentication using JWTs (playlist)](https://youtube.com/playlist?list=PLhzRPVQgdM8XDD5abg0helsgs_o5nEF06)
 - [Dynamic Form Groups in Angular using FormArray](https://blog.angular-university.io/angular-form-array/)
 - [Unsubscribe from http observables](https://stackoverflow.com/a/57274287)
+- [@angular/cdk dialogs](https://material.angular.io/cdk/dialog/overview)
