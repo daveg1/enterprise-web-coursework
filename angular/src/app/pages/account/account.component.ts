@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { QuoteService } from 'src/app/services/quote.service';
 
@@ -7,9 +8,11 @@ import { QuoteService } from 'src/app/services/quote.service';
 	selector: 'app-account',
 	templateUrl: './account.component.html',
 })
-export class AccountComponent {
+export class AccountComponent implements OnDestroy {
 	user$;
 	quotes$;
+
+	private readonly unsubscribe$ = new Subject<void>();
 
 	constructor(
 		private readonly authService: AuthService,
@@ -25,27 +28,33 @@ export class AccountComponent {
 		this.quotes$ = this.quoteService.quotes$;
 
 		this.user$ = this.authService.userState$;
-		this.quoteService.getQuotesForUser(state.token).subscribe({
-			error: (err) => {
-				console.error(err);
-			},
-		});
+		this.quoteService
+			.getQuotesForUser(state.token)
+			.pipe(takeUntil(this.unsubscribe$))
+			.subscribe({
+				error: (err) => {
+					console.error(err);
+				},
+			});
 	}
 
 	// Quotes
 
 	deleteQuote(quoteId: string) {
-		this.quoteService.deleteQuote(quoteId).subscribe({
-			next: () => {
-				console.log('quote deleted');
-				const index = this.quotes$.value.findIndex((q) => q._id === quoteId);
-				this.quotes$.value.splice(index, 1);
-			},
+		this.quoteService
+			.deleteQuote(quoteId)
+			.pipe(takeUntil(this.unsubscribe$))
+			.subscribe({
+				next: () => {
+					console.log('quote deleted');
+					const index = this.quotes$.value.findIndex((q) => q._id === quoteId);
+					this.quotes$.value.splice(index, 1);
+				},
 
-			error: (err) => {
-				console.error(err);
-			},
-		});
+				error: (err) => {
+					console.error(err);
+				},
+			});
 	}
 
 	// Account
@@ -54,13 +63,23 @@ export class AccountComponent {
 		if (this.user$.value) {
 			const { token } = this.user$.value;
 
-			this.authService.delete(token).subscribe({
-				next: () => {
-					// Redirect to home page
-					this.router.navigate(['/']);
-				},
-				error: (err) => {},
-			});
+			this.authService
+				.delete(token)
+				.pipe(takeUntil(this.unsubscribe$))
+				.subscribe({
+					next: () => {
+						// Redirect to home page
+						this.router.navigate(['/']);
+					},
+					error: (err) => {},
+				});
 		}
+	}
+
+	// Lifecycle
+
+	ngOnDestroy() {
+		this.unsubscribe$.next();
+		this.unsubscribe$.complete();
 	}
 }

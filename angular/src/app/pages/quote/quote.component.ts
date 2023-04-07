@@ -39,16 +39,19 @@ export class QuoteComponent implements AfterViewInit, OnDestroy {
 				this.router.navigate(['/']);
 			}
 
-			this.quoteService.getQuoteById(quoteId).subscribe({
-				next: (quote) => {
-					this.calculatorForm.setQuote(quote);
-					this.baseValue = this.calculatorForm.budgetForm.value;
-				},
+			this.quoteService
+				.getQuoteById(quoteId)
+				.pipe(takeUntil(this.unsubscribe$))
+				.subscribe({
+					next: (quote) => {
+						this.calculatorForm.setQuote(quote);
+						this.baseValue = this.calculatorForm.budgetForm.value;
+					},
 
-				error: () => {
-					console.error('Failed to load quote:', quoteId);
-				},
-			});
+					error: () => {
+						console.error('Failed to load quote:', quoteId);
+					},
+				});
 		});
 	}
 
