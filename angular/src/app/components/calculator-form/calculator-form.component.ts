@@ -2,8 +2,6 @@ import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { NonNullableFormBuilder } from '@angular/forms';
 import { QuoteService } from 'src/app/services/quote.service';
 import type { Budget } from 'src/app/types/budget';
-import { BudgetService } from 'src/app/services/budget.service';
-import { DialogService } from 'src/app/services/dialog.service';
 import {
 	frequencies,
 	oneOffCostForm,
@@ -14,6 +12,9 @@ import {
 } from './calculator-form-fields';
 import { QuoteResponse } from 'src/app/types/quote';
 import { Subject, takeUntil } from 'rxjs';
+import { Dialog } from '@angular/cdk/dialog';
+import { ProjectNameDialogComponent } from '../dialogs/project-name-dialog/project-name-dialog.component';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'app-calculator-form',
@@ -33,10 +34,10 @@ export class CalculatorFormComponent implements OnDestroy {
 	private readonly unsubscribe$ = new Subject<void>();
 
 	constructor(
-		private readonly budgetService: BudgetService,
 		private readonly quoteService: QuoteService,
 		readonly fb: NonNullableFormBuilder,
-		readonly dialog: DialogService
+		readonly dialog: Dialog,
+		readonly router: Router
 	) {
 		this.hasChanges$ = this.quoteService.hasChanges$;
 
@@ -125,21 +126,30 @@ export class CalculatorFormComponent implements OnDestroy {
 
 		// Otherwise, save a new one
 		else {
-			const projectName = 'Project name'; // TODO get this from dialog box
+			const dialogRef = this.dialog.open<string>(ProjectNameDialogComponent, {
+				width: '20rem',
+			});
 
-			this.quoteService
-				.saveQuote(this.budgetForm.value as Budget, projectName)
-				.pipe(takeUntil(this.unsubscribe$))
-				.subscribe({
-					next: () => {
-						this.dialog.hide();
-						this.budgetForm.reset();
-					},
+			dialogRef.closed.subscribe({
+				next: (projectName) => {
+					if (!projectName) {
+						return;
+					}
 
-					error: (err) => {
-						console.error('There was an error saving the quote', err);
-					},
-				});
+					this.quoteService
+						.saveQuote(this.budgetForm.value as Budget, projectName)
+						.pipe(takeUntil(this.unsubscribe$))
+						.subscribe({
+							next: (quote) => {
+								// navigate to the /quote version
+								this.router.navigate(['/quote', quote._id]);
+							},
+							error: (err) => {
+								console.error('There was an error saving the quote', err);
+							},
+						});
+				},
+			});
 		}
 	}
 
