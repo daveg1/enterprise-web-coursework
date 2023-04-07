@@ -19,8 +19,7 @@ import { CalculatorFormComponent } from './components/calculator-form/calculator
 import { AdminComponent } from './pages/admin/admin.component';
 import { QuoteComponent } from './pages/quote/quote.component';
 import { ExpanderButtonComponent } from './components/buttons/expander-button/expander-button.component';
-import { PrimaryButtonComponent } from './components/buttons/primary-button/primary-button.component';
-import { SecondaryButtonComponent } from './components/buttons/secondary-button/secondary-button.component';
+import { ButtonDirective } from './directives/app-button.directive';
 
 @NgModule({
 	declarations: [
@@ -38,9 +37,8 @@ import { SecondaryButtonComponent } from './components/buttons/secondary-button/
 		CalculatorFormComponent,
 		AdminComponent,
 		QuoteComponent,
-  ExpanderButtonComponent,
-  PrimaryButtonComponent,
-  SecondaryButtonComponent,
+		ExpanderButtonComponent,
+		ButtonDirective,
 	],
 	imports: [
 		BrowserModule,
