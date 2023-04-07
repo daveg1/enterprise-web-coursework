@@ -4,6 +4,7 @@ import { loginSchema, signUpSchema } from '../schemas/auth.schema'
 import jwt from 'jsonwebtoken'
 import { encrypt, verify } from '../modules/encrypt'
 import { tokenSchema } from '../schemas/token.schema'
+import { Admin } from '../models/admin.model'
 
 const authRoutes = Router()
 
@@ -91,6 +92,23 @@ authRoutes.post('/delete', async (req, res) => {
 	} catch (error) {
 		console.error(error)
 		return res.status(500).json({ error })
+	}
+})
+
+authRoutes.post('/is-admin', async (req, res) => {
+	try {
+		const parsed = await tokenSchema.parseAsync(req.body)
+
+		const userId = jwt.decode(parsed.token)
+		const adminUser = await Admin.findById(userId)
+
+		if (adminUser) {
+			res.status(200).json({ isAdmin: 1 })
+		} else {
+			res.status(200).json({ isAdmin: 0 })
+		}
+	} catch (err) {
+		console.log(err)
 	}
 })
 
