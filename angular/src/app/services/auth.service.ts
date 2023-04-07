@@ -21,6 +21,7 @@ export class AuthService {
 
 	readonly userState$ = new BehaviorSubject<AuthState | null>(null);
 	readonly isLoggedIn$ = new BehaviorSubject<boolean>(false);
+	readonly isAdmin$ = new BehaviorSubject<boolean>(false);
 
 	private httpOptions = {
 		headers: new HttpHeaders({
@@ -32,8 +33,10 @@ export class AuthService {
 		const state = localStorage.getItem('state');
 
 		if (state) {
+			const parsed = JSON.parse(state);
 			this.isLoggedIn$.next(true);
-			this.userState$.next(JSON.parse(state));
+			this.isAdmin$.next(Boolean(parsed.isAdmin));
+			this.userState$.next(parsed);
 		}
 	}
 
@@ -58,6 +61,7 @@ export class AuthService {
 
 					// Update app states
 					this.isLoggedIn$.next(true);
+					this.isAdmin$.next(Boolean(response.isAdmin));
 					this.userState$.next(response);
 				})
 			);
@@ -79,6 +83,7 @@ export class AuthService {
 		// Clear session and state
 		localStorage.removeItem('state');
 
+		this.isAdmin$.next(false);
 		this.isLoggedIn$.next(false);
 		this.userState$.next(null);
 	}

@@ -57,10 +57,15 @@ authRoutes.post('/login', async (req, res) => {
 		}
 
 		// Sign JWT using username and password
-		const { username } = user.toJSON()
+		const { _id: userId, username } = user
 		const token = jwt.sign(user._id.toString(), process.env.ACCESS_TOKEN)
 
-		res.status(200).json({ username, token, quotes: user.quotes ?? [] })
+		// Check if user is an admin
+		const admin = await Admin.find({ user: userId })
+		console.log(admin)
+		const isAdmin = admin ? 1 : 0
+
+		res.status(200).json({ username, token, quotes: user.quotes ?? [], isAdmin })
 	} catch (error) {
 		console.error(error)
 		return res.status(500).json({ error })

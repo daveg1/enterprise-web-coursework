@@ -8,12 +8,14 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class NavbarComponent {
 	isLoggedIn$;
+	isAdmin$;
 
 	constructor(
 		private readonly authService: AuthService,
 		readonly router: Router
 	) {
 		this.isLoggedIn$ = this.authService.isLoggedIn$;
+		this.isAdmin$ = this.authService.isAdmin$;
 	}
 
 	logout() {

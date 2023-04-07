@@ -15,6 +15,13 @@
 		<div class="flex items-center gap-4">
 			<ng-container *ngIf="isLoggedIn$ | async; else noSession">
 				<a
+					*ngIf="isAdmin$ | async"
+					class="text-sm font-semibold transition-opacity hover:opacity-50"
+					routerLink="/admin"
+					>Admin</a
+				>
+
+				<a
 					class="text-sm font-semibold transition-opacity hover:opacity-50"
 					routerLink="/account"
 				>
