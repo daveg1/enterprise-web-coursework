@@ -12,9 +12,9 @@ const baseStyles = [
 	'disabled:hover:bg-white',
 ];
 
-type buttonTypes = 'primary' | 'secondary';
+type buttonVariants = 'primary' | 'secondary';
 
-const typeStyles = {
+const variantStyles = {
 	primary: [
 		'text-slate-50',
 		'bg-emerald-600',
@@ -37,21 +37,21 @@ const sizeStyles = {
 	selector: '[appButton]',
 })
 export class ButtonDirective {
-	private type_: buttonTypes = 'primary';
+	private variant_: buttonVariants = 'primary';
 	private size_: buttonSizes = 'normal';
 
 	@Input()
-	set type(value: buttonTypes) {
+	set variant(value: buttonVariants) {
 		const elem = this.el.nativeElement as Element;
 
-		elem.classList.remove(...typeStyles[this.type_]);
+		elem.classList.remove(...variantStyles[this.variant_]);
 
-		this.type_ = value;
-		elem.classList.add(...typeStyles[this.type_]);
+		this.variant_ = value;
+		elem.classList.add(...variantStyles[this.variant_]);
 	}
 
-	get type() {
-		return this.type_;
+	get variant() {
+		return this.variant_;
 	}
 
 	@Input()
@@ -73,7 +73,7 @@ export class ButtonDirective {
 
 		// Add base styles
 		elem.classList.add(...baseStyles);
-		elem.classList.add(...typeStyles[this.type_]);
+		elem.classList.add(...variantStyles[this.variant_]);
 		elem.classList.add(...sizeStyles[this.size_]);
 	}
 }
