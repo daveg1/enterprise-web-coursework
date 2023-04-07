@@ -17,7 +17,7 @@ export class QuoteComponent implements AfterViewInit, OnDestroy {
 
 	isLoggedIn$;
 	quote$;
-	hasChanged$ = new BehaviorSubject<boolean>(false);
+	hasChanges$;
 
 	private readonly unsubscribe$ = new Subject<void>();
 
@@ -29,6 +29,7 @@ export class QuoteComponent implements AfterViewInit, OnDestroy {
 	) {
 		this.isLoggedIn$ = this.authService.isLoggedIn$;
 		this.quote$ = this.quoteService.currentQuote$;
+		this.hasChanges$ = this.quoteService.hasChanges$;
 
 		this.route.paramMap.subscribe((paramMap) => {
 			const quoteId = paramMap.get('id') ?? '';
@@ -67,9 +68,9 @@ export class QuoteComponent implements AfterViewInit, OnDestroy {
 
 					// Compare baseline to changed value
 					if (!Object.is(this.baseValue, changedValue)) {
-						this.hasChanged$.next(true);
+						this.hasChanges$.next(true);
 					} else {
-						this.hasChanged$.next(false);
+						this.hasChanges$.next(false);
 					}
 				},
 			});

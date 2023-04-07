@@ -22,6 +22,7 @@ export class QuoteService {
 	currentQuote$ = new BehaviorSubject<QuoteResponse | null>(null);
 	quotes$ = new BehaviorSubject<QuoteResponse[]>([]);
 	editing$ = new BehaviorSubject<string>('');
+	hasChanges$ = new BehaviorSubject<boolean>(false);
 
 	private httpOptions = {
 		headers: new HttpHeaders({

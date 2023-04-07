@@ -28,6 +28,8 @@ export class CalculatorFormComponent implements OnDestroy {
 	readonly payGrades = payGrades;
 	readonly frequencies = frequencies;
 
+	readonly hasChanges$;
+
 	private readonly unsubscribe$ = new Subject<void>();
 
 	constructor(
@@ -36,6 +38,8 @@ export class CalculatorFormComponent implements OnDestroy {
 		readonly fb: NonNullableFormBuilder,
 		readonly dialog: DialogService
 	) {
+		this.hasChanges$ = this.quoteService.hasChanges$;
+
 		this.budgetForm = this.fb.group({
 			workers: this.fb.array([this.fb.group(workerForm)]),
 			oneOffCosts: this.fb.array([this.fb.group(oneOffCostForm)]),
@@ -43,8 +47,8 @@ export class CalculatorFormComponent implements OnDestroy {
 		});
 
 		// Remove one-off and ongoing cost rows (by default only have a worker row)
-		this.budgetForm.controls['oneOffCosts'].removeAt(0);
-		this.budgetForm.controls['ongoingCosts'].removeAt(0);
+		this.budgetForm.controls['oneOffCosts'].clear();
+		this.budgetForm.controls['ongoingCosts'].clear();
 	}
 
 	/**

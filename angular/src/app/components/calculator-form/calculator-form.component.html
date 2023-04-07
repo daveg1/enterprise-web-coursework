@@ -210,7 +210,11 @@
 			text="Calculate"
 		></app-primary-button>
 
-		<app-secondary-button text="Save" (click)="saveQuote()">
+		<app-secondary-button
+			[disabled]="!hasChanges$.value"
+			text="Save"
+			(click)="saveQuote()"
+		>
 			<svg
 				fill="none"
 				viewBox="0 0 24 24"
