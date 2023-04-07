@@ -1,14 +1,18 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, tap } from 'rxjs';
+import { BehaviorSubject, of, tap } from 'rxjs';
 import type { Budget } from '../types/budget';
 import type { QuoteResponse, QuoteWholeResponse } from '../types/quote';
+import { AuthService } from './auth.service';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class QuoteService {
-	constructor(private readonly http: HttpClient) {}
+	constructor(
+		private readonly http: HttpClient,
+		private readonly authService: AuthService
+	) {}
 
 	private readonly endpoint = 'http://localhost:3934/quote';
 
@@ -17,6 +21,7 @@ export class QuoteService {
 	 */
 	currentQuote$ = new BehaviorSubject<boolean>(false);
 	quotes$ = new BehaviorSubject<QuoteWholeResponse[]>([]);
+	editing$ = new BehaviorSubject<string>('');
 
 	private httpOptions = {
 		headers: new HttpHeaders({
@@ -32,11 +37,17 @@ export class QuoteService {
 		);
 	}
 
-	saveQuote(budget: Budget, projectName: string, token: string) {
+	saveQuote(budget: Budget, projectName: string) {
+		const state = this.authService.userState$.value;
+
+		if (!state) {
+			return of('No state');
+		}
+
 		return this.http
 			.post(
 				`${this.endpoint}/save`,
-				{ budget, projectName, token },
+				{ budget, projectName, token: state.token },
 				this.httpOptions
 			)
 			.pipe(
@@ -44,6 +55,16 @@ export class QuoteService {
 					this.currentQuote$.next(true);
 				})
 			);
+	}
+
+	updateQuote(id: string, budget: Budget) {
+		const state = this.authService.userState$.value;
+
+		return this.http.post<QuoteWholeResponse>(`${this.endpoint}/update`, {
+			id,
+			budget,
+			token: state!.token,
+		});
 	}
 
 	getQuotesForUser(token: string) {

@@ -20,11 +20,14 @@
 	>
 		<div class="flex items-center justify-between w-full px-6 py-4 border-b">
 			<h2 class="text-lg font-semibold">Estimate</h2>
-			<div
-				*ngIf="hasChanged$ | async"
-				class="px-1 text-sm font-semibold leading-6 text-white rounded bg-slate-400"
-			>
-				Form has changed
+
+			<div class="flex gap-2">
+				<div
+					*ngIf="hasChanged$ | async"
+					class="px-1 text-sm font-semibold leading-6 text-white rounded bg-slate-400"
+				>
+					Form has changed
+				</div>
 			</div>
 		</div>
 
@@ -32,9 +35,4 @@
 			<div class="text-2xl">{{ quote.estimate | currency : 'GBP' }}</div>
 		</div>
 	</div>
-
-	<!-- Quote saving dialog -->
-	<app-dialog header="Enter a project name">
-		<app-save-quote-dialog></app-save-quote-dialog>
-	</app-dialog>
 </ng-container>

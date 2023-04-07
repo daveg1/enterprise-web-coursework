@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { NonNullableFormBuilder } from '@angular/forms';
 import { QuoteService } from 'src/app/services/quote.service';
 import type { Budget } from 'src/app/types/budget';
@@ -13,12 +13,13 @@ import {
 	workerForm,
 } from './calculator-form-fields';
 import { QuoteWholeResponse } from 'src/app/types/quote';
+import { of } from 'rxjs';
 
 @Component({
 	selector: 'app-calculator-form',
 	templateUrl: './calculator-form.component.html',
 })
-export class CalculatorFormComponent {
+export class CalculatorFormComponent implements OnDestroy {
 	@Output() quoteCalculated = new EventEmitter<number>();
 
 	readonly budgetForm;
@@ -49,7 +50,9 @@ export class CalculatorFormComponent {
 	 * Generates rows based on the fields in the provided quote object.
 	 */
 	setQuote(quote: QuoteWholeResponse) {
-		this.budgetForm.controls['workers'].removeAt(0);
+		this.budgetForm.controls['workers'].clear();
+		this.budgetForm.controls['oneOffCosts'].clear();
+		this.budgetForm.controls['ongoingCosts'].clear();
 
 		quote.budget.workers.forEach((worker) => {
 			const row = this.fb.group(workerForm);
@@ -75,6 +78,8 @@ export class CalculatorFormComponent {
 
 			this.budgetForm.controls['ongoingCosts'].push(row);
 		});
+
+		this.quoteService.editing$.next(quote._id);
 	}
 
 	submitForm() {
@@ -90,8 +95,26 @@ export class CalculatorFormComponent {
 	}
 
 	saveQuote() {
-		this.budgetService.currentBudget = this.budgetForm.value as Budget;
-		this.dialog.show();
+		const quoteId = this.quoteService.editing$.value;
+
+		this.quoteService
+			.updateQuote(quoteId, this.budgetForm.value as Budget)
+			.subscribe({
+				next: (res) => {
+					console.log('Quote updated', res);
+				},
+
+				error: (err) => {
+					console.error(err);
+				},
+			});
+
+		// Check if saving new quote or updating existing
+		if (this.quoteService.editing$.value) {
+		} else {
+			this.budgetService.currentBudget = this.budgetForm.value as Budget;
+			this.dialog.show();
+		}
 	}
 
 	addWorker() {
@@ -120,5 +143,9 @@ export class CalculatorFormComponent {
 
 	removeOngoingCost(index: number) {
 		this.budgetForm.controls['ongoingCosts'].removeAt(index);
+	}
+
+	ngOnDestroy() {
+		this.quoteService.editing$.next('');
 	}
 }
