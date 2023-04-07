@@ -13,7 +13,7 @@ import {
 	workerForm,
 } from './calculator-form-fields';
 import { QuoteWholeResponse } from 'src/app/types/quote';
-import { of } from 'rxjs';
+import { Subject, of, takeUntil } from 'rxjs';
 
 @Component({
 	selector: 'app-calculator-form',
@@ -27,6 +27,8 @@ export class CalculatorFormComponent implements OnDestroy {
 	readonly timeUnits = timeUnits;
 	readonly payGrades = payGrades;
 	readonly frequencies = frequencies;
+
+	private readonly unsubscribe$ = new Subject<void>();
 
 	constructor(
 		private readonly budgetService: BudgetService,
@@ -86,8 +88,12 @@ export class CalculatorFormComponent implements OnDestroy {
 		if (this.budgetForm.valid) {
 			this.quoteService
 				.calculateQuote(this.budgetForm.value as Budget)
+				.pipe(takeUntil(this.unsubscribe$))
 				.subscribe((res) => {
 					this.quoteCalculated.emit(res.quote);
+					if (this.quoteService.currentQuote$.value) {
+						this.quoteService.currentQuote$.value.estimate = res.quote;
+					}
 				});
 		} else {
 			this.budgetForm.markAllAsTouched();
@@ -101,6 +107,7 @@ export class CalculatorFormComponent implements OnDestroy {
 
 			this.quoteService
 				.updateQuote(quoteId, this.budgetForm.value as Budget)
+				.pipe(takeUntil(this.unsubscribe$))
 				.subscribe({
 					next: (res) => {
 						console.log('Quote updated', res);
@@ -118,6 +125,7 @@ export class CalculatorFormComponent implements OnDestroy {
 
 			this.quoteService
 				.saveQuote(this.budgetForm.value as Budget, projectName)
+				.pipe(takeUntil(this.unsubscribe$))
 				.subscribe({
 					next: () => {
 						this.dialog.hide();
@@ -161,5 +169,7 @@ export class CalculatorFormComponent implements OnDestroy {
 
 	ngOnDestroy() {
 		this.quoteService.editing$.next('');
+		this.unsubscribe$.next();
+		this.unsubscribe$.complete();
 	}
 }

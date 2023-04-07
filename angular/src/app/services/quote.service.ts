@@ -19,7 +19,7 @@ export class QuoteService {
 	/**
 	 * @todo refactor to use QuoteWholeResponse
 	 */
-	currentQuote$ = new Subject<QuoteWholeResponse>();
+	currentQuote$ = new BehaviorSubject<QuoteWholeResponse | null>(null);
 	quotes$ = new BehaviorSubject<QuoteWholeResponse[]>([]);
 	editing$ = new BehaviorSubject<string>('');
 
