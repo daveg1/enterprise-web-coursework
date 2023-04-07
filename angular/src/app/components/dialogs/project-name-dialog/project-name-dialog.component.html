@@ -1,0 +1,57 @@
+<div class="flex flex-col bg-white rounded shadow-md">
+	<header class="flex items-center justify-between px-4 py-3 border-b">
+		<h2 class="text-lg font-semibold">Save quote</h2>
+
+		<button
+			type="button"
+			class="flex items-center justify-center w-6 h-6 text-gray-400 border rounded hover:text-gray-700"
+			(click)="dialogRef.close()"
+		>
+			<svg viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+				<path
+					d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"
+				/>
+			</svg>
+		</button>
+	</header>
+
+	<main>
+		<form class="flex flex-col p-4" [formGroup]="form">
+			<input
+				class="h-8 px-2 text-sm border rounded focus:z-10"
+				name="projectName"
+				formControlName="projectName"
+				type="text"
+				placeholder="Project name"
+				maxlength="64"
+				required
+			/>
+
+			<ng-container
+				*ngIf="
+					form.controls['projectName'].invalid &&
+					form.controls['projectName'].touched
+				"
+			>
+				<div
+					*ngIf="form.controls['projectName'].errors?.['required']"
+					class="mt-1 text-sm italic text-red-700"
+				>
+					You must enter a name
+				</div>
+			</ng-container>
+		</form>
+	</main>
+
+	<footer class="flex justify-end gap-2 px-4 py-3 border-t">
+		<button
+			appButton
+			size="small"
+			variant="secondary"
+			(click)="dialogRef.close()"
+		>
+			Cancel
+		</button>
+		<button appButton size="small" (click)="submit()">Submit</button>
+	</footer>
+</div>

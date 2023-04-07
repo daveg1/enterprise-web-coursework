@@ -12,8 +12,6 @@ import { LoginComponent } from './pages/login/login.component';
 import { SignupComponent } from './pages/signup/signup.component';
 import { UserNoticeComponent } from './components/user-notice/user-notice.component';
 import { PageTitleComponent } from './components/page-title/page-title.component';
-import { DialogComponent } from './components/dialog/dialog.component';
-import { SaveQuoteDialogComponent } from './components/dialog/save-quote-dialog/save-quote-dialog.component';
 import { XButtonComponent } from './components/buttons/x-button/x-button.component';
 import { CalculatorFormComponent } from './components/calculator-form/calculator-form.component';
 import { AdminComponent } from './pages/admin/admin.component';
@@ -33,8 +31,6 @@ import { Dialog, DialogModule } from '@angular/cdk/dialog';
 		SignupComponent,
 		UserNoticeComponent,
 		PageTitleComponent,
-		DialogComponent,
-		SaveQuoteDialogComponent,
 		XButtonComponent,
 		CalculatorFormComponent,
 		AdminComponent,
