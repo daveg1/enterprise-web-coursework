@@ -1,3 +1,4 @@
+<!-- Calculation Form -->
 <form
 	#form
 	[formGroup]="budgetForm"
@@ -249,3 +250,27 @@
 		</button>
 	</div>
 </form>
+
+<!-- Calculation Output -->
+<ng-container *ngIf="currentEstimate$ | async as estimate">
+	<div
+		class="flex flex-col mt-8 mb-16 bg-white border rounded-lg shadow-sm shadow-slate-300/50"
+	>
+		<div class="flex items-center justify-between w-full px-6 py-4 border-b">
+			<h2 class="text-lg font-semibold">Estimate</h2>
+
+			<div class="flex gap-2">
+				<div
+					*ngIf="hasChanges$ | async"
+					class="px-1 text-sm font-semibold leading-6 text-white rounded bg-slate-400"
+				>
+					Form has changed
+				</div>
+			</div>
+		</div>
+
+		<div class="flex flex-col px-6 py-4">
+			<div class="text-2xl">{{ estimate | currency : 'GBP' }}</div>
+		</div>
+	</div>
+</ng-container>

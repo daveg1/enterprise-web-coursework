@@ -20,6 +20,7 @@ export class QuoteService {
 	 * @todo refactor to use QuoteWholeResponse
 	 */
 	currentQuote$ = new BehaviorSubject<QuoteResponse | null>(null);
+	currentEstimate$ = new BehaviorSubject<number>(0);
 	quotes$ = new BehaviorSubject<QuoteResponse[]>([]);
 	editing$ = new BehaviorSubject<string>('');
 	hasChanges$ = new BehaviorSubject<boolean>(false);

@@ -30,6 +30,8 @@ export class CalculatorFormComponent implements OnDestroy {
 	readonly frequencies = frequencies;
 
 	readonly hasChanges$;
+	readonly quote$;
+	readonly currentEstimate$;
 
 	private readonly unsubscribe$ = new Subject<void>();
 
@@ -40,6 +42,8 @@ export class CalculatorFormComponent implements OnDestroy {
 		readonly router: Router
 	) {
 		this.hasChanges$ = this.quoteService.hasChanges$;
+		this.quote$ = this.quoteService.currentQuote$;
+		this.currentEstimate$ = this.quoteService.currentEstimate$;
 
 		this.budgetForm = this.fb.group({
 			workers: this.fb.array([this.fb.group(workerForm)]),
@@ -96,9 +100,8 @@ export class CalculatorFormComponent implements OnDestroy {
 				.pipe(takeUntil(this.unsubscribe$))
 				.subscribe((res) => {
 					this.quoteCalculated.emit(res.estimate);
-					if (this.quoteService.currentQuote$.value) {
-						this.quoteService.currentQuote$.value.estimate = res.estimate;
-					}
+					this.quoteService.currentEstimate$.next(res.estimate);
+					console.log(res.estimate);
 				});
 		} else {
 			this.budgetForm.markAllAsTouched();
@@ -183,6 +186,7 @@ export class CalculatorFormComponent implements OnDestroy {
 
 	ngOnDestroy() {
 		this.quoteService.editing$.next('');
+		this.quoteService.currentEstimate$.next(0);
 		this.unsubscribe$.next();
 		this.unsubscribe$.complete();
 	}
