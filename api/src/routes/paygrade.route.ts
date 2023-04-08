@@ -4,7 +4,7 @@ import { paygradeSchema } from '../schemas/paygrade.schema'
 
 const paygradeRoutes = Router()
 
-paygradeRoutes.get('/', async (_, res) => {
+paygradeRoutes.get('/all', async (_, res) => {
 	try {
 		const paygrades = await Paygrade.find()
 

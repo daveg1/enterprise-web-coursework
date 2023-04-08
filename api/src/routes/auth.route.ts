@@ -62,7 +62,6 @@ authRoutes.post('/login', async (req, res) => {
 
 		// Check if user is an admin
 		const admin = await Admin.find({ user: userId })
-		console.log(admin)
 		const isAdmin = admin ? 1 : 0
 
 		res.status(200).json({ username, token, quotes: user.quotes ?? [], isAdmin })
@@ -105,7 +104,7 @@ authRoutes.post('/is-admin', async (req, res) => {
 		const parsed = await tokenSchema.parseAsync(req.body)
 
 		const userId = jwt.decode(parsed.token)
-		const adminUser = await Admin.findById(userId)
+		const adminUser = await Admin.find({ user: userId })
 
 		if (adminUser) {
 			res.status(200).json({ isAdmin: 1 })
