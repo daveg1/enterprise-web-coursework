@@ -1,1 +1,66 @@
-<p>admin works!</p>
+<h2 class="my-4 text-lg font-semibold">Paygrades</h2>
+
+<form
+	[formGroup]="paygradeForm"
+	class="flex flex-col items-start gap-4 bg-white border rounded-lg shadow-sm shadow-slate-300/50"
+	method="post"
+	spellcheck="false"
+	(keyup.enter)="submitForm()"
+>
+	<div class="flex items-center justify-between w-full px-6 py-4 border-b">
+		<h2 class="text-lg font-semibold">Paygrades</h2>
+
+		<button appButton variant="secondary" size="small" (click)="addPaygrade()">
+			<svg viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 -ml-1">
+				<path
+					d="M10.75 6.75a.75.75 0 00-1.5 0v2.5h-2.5a.75.75 0 000 1.5h2.5v2.5a.75.75 0 001.5 0v-2.5h2.5a.75.75 0 000-1.5h-2.5v-2.5z"
+				/>
+			</svg>
+
+			<span>Add paygrade</span>
+		</button>
+	</div>
+
+	<div class="flex flex-col items-start gap-2 px-6">
+		<!-- Headers -->
+		<div class="flex gap-2">
+			<div class="w-48 text-sm font-semibold">Role</div>
+			<div class="w-24 text-sm font-semibold">Hourly Rate</div>
+		</div>
+
+		<!-- Rows -->
+		<div formArrayName="paygrades" class="flex flex-col gap-2">
+			<ng-container
+				*ngFor="
+					let paygradesForm of paygradeForm.controls['paygrades'].controls;
+					let i = index
+				"
+			>
+				<div [formGroup]="paygradesForm" class="flex gap-2">
+					<input
+						class="w-48 h-8 px-2 text-sm border rounded focus:z-10"
+						formControlName="role"
+						placeholder="e.g. developer"
+						maxlength="64"
+						required
+					/>
+
+					<input
+						class="w-48 h-8 px-2 text-sm border rounded focus:z-10"
+						formControlName="hourlyRate"
+						type="number"
+						placeholder="e.g. 10"
+						min="1"
+						required
+					/>
+
+					<app-x-button (click)="removePaygrade(i)"></app-x-button>
+				</div>
+			</ng-container>
+		</div>
+	</div>
+
+	<div class="flex w-full gap-2 px-6 py-4 border-y">
+		<button appButton (click)="submitForm()">Save</button>
+	</div>
+</form>
