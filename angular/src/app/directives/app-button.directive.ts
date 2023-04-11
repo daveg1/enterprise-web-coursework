@@ -33,12 +33,20 @@ const sizeStyles = {
 	normal: ['min-w-[6rem]', 'justify-center', 'px-4'],
 };
 
+type buttonOutlined = 'outlined' | 'none';
+
+const outlinedStyles = {
+	outlined: ['border', 'border-emerald-600'],
+	none: [],
+};
+
 @Directive({
 	selector: '[appButton]',
 })
 export class ButtonDirective {
 	private variant_: buttonVariants = 'primary';
 	private size_: buttonSizes = 'normal';
+	private outlined_: buttonOutlined = 'none';
 
 	@Input()
 	set variant(value: buttonVariants) {
@@ -68,6 +76,20 @@ export class ButtonDirective {
 		return this.size_;
 	}
 
+	@Input()
+	set outlined(value: buttonOutlined) {
+		const elem = this.el.nativeElement as Element;
+
+		elem.classList.remove(...outlinedStyles[this.outlined_]);
+
+		this.outlined_ = value;
+		elem.classList.add(...outlinedStyles[this.outlined_]);
+	}
+
+	get outlined() {
+		return this.outlined_;
+	}
+
 	constructor(private el: ElementRef) {
 		const elem = this.el.nativeElement as Element;
 
@@ -75,5 +97,6 @@ export class ButtonDirective {
 		elem.classList.add(...baseStyles);
 		elem.classList.add(...variantStyles[this.variant_]);
 		elem.classList.add(...sizeStyles[this.size_]);
+		elem.classList.add(...outlinedStyles[this.outlined_]);
 	}
 }
