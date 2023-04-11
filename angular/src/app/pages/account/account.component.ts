@@ -11,6 +11,8 @@ import { QuoteService } from 'src/app/services/quote.service';
 export class AccountComponent implements OnDestroy {
 	user$;
 	quotes$;
+	isMerging = false;
+	selectedQuotes: string[] = [];
 
 	private readonly unsubscribe$ = new Subject<void>();
 
@@ -47,12 +49,43 @@ export class AccountComponent implements OnDestroy {
 			.subscribe({
 				next: () => {
 					console.log('quote deleted');
-					const index = this.quotes$.value.findIndex((q) => q._id === quoteId);
-					this.quotes$.value.splice(index, 1);
 				},
 
 				error: (err) => {
 					console.error(err);
+				},
+			});
+	}
+
+	toggleMergeView() {
+		this.selectedQuotes = []; // reset on toggle
+		this.isMerging = !this.isMerging;
+	}
+
+	selectQuote(quoteId: string) {
+		// Ignore if not merging
+		if (!this.isMerging) {
+			return;
+		}
+
+		const index = this.selectedQuotes.findIndex((val) => val === quoteId);
+
+		// If exists, remove it
+		if (index !== -1) {
+			this.selectedQuotes.splice(index, 1);
+		} else {
+			this.selectedQuotes.push(quoteId);
+		}
+	}
+
+	mergeQuotes() {
+		this.quoteService
+			.mergeQuotes(this.selectedQuotes)
+			.pipe(takeUntil(this.unsubscribe$))
+			.subscribe({
+				next: (quotes) => {
+					console.log(quotes);
+					// TODO: update list of quotes
 				},
 			});
 	}

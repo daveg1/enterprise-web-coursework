@@ -16,9 +16,6 @@ export class QuoteService {
 
 	private readonly endpoint = 'http://localhost:3934/quote';
 
-	/**
-	 * @todo refactor to use QuoteWholeResponse
-	 */
 	currentQuote$ = new BehaviorSubject<QuoteResponse | null>(null);
 	currentEstimate$ = new BehaviorSubject<number>(0);
 	quotes$ = new BehaviorSubject<QuoteResponse[]>([]);
@@ -101,5 +98,19 @@ export class QuoteService {
 			{ id },
 			this.httpOptions
 		);
+	}
+
+	mergeQuotes(quoteIds: string[]) {
+		return this.http
+			.post<QuoteResponse[]>(
+				`${this.endpoint}/merge`,
+				{ quoteIds },
+				this.httpOptions
+			)
+			.pipe(
+				tap((quotes) => {
+					this.quotes$.next(quotes);
+				})
+			);
 	}
 }

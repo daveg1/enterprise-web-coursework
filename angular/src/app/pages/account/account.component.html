@@ -3,7 +3,27 @@
 		<h1 class="text-2xl font-semibold">{{ user.username }}</h1>
 	</div>
 
-	<h2 class="my-4 text-lg font-semibold">Quotes</h2>
+	<div class="flex items-center justify-between my-4">
+		<h2 class="text-lg font-semibold">Quotes</h2>
+
+		<div class="flex gap-2">
+			<button *ngIf="isMerging" appButton size="small" (click)="mergeQuotes()">
+				Save
+			</button>
+
+			<button
+				appButton
+				variant="secondary"
+				outlined="outlined"
+				size="small"
+				class="gap-2"
+				(click)="toggleMergeView()"
+			>
+				<div *ngIf="!isMerging">Merge quotes</div>
+				<div *ngIf="isMerging">Stop merging</div>
+			</button>
+		</div>
+	</div>
 
 	<ng-container *ngIf="quotes$ | async as quotes; else noQuotes">
 		<div class="flex flex-col my-4">
@@ -16,8 +36,18 @@
 
 			<ng-container *ngFor="let quote of quotes">
 				<div
+					#quoteEntry
 					class="flex items-center gap-4 px-4 py-2 border-b border-x last:rounded-b-lg"
+					[ngClass]="selectedQuotes.includes(quote._id) ? 'bg-blue-100' : ''"
+					(click)="selectQuote(quote._id)"
 				>
+					<div class="w-8" *ngIf="isMerging">
+						<input
+							type="checkbox"
+							[checked]="selectedQuotes.includes(quote._id)"
+						/>
+					</div>
+
 					<div class="w-8">
 						<app-expander-button #expander></app-expander-button>
 					</div>
@@ -55,9 +85,6 @@
 					<div *ngIf="quote.budget.ongoingCosts.length">
 						{{ quote.budget.ongoingCosts.length }} x Ongoing Costs
 					</div>
-					<!-- <div *ngFor="let worker of quote.budget.workers">
-
-					</div> -->
 				</div>
 			</ng-container>
 		</div>
