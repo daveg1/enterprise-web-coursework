@@ -20,6 +20,7 @@ import { ExpanderButtonComponent } from './components/buttons/expander-button/ex
 import { ButtonDirective } from './directives/app-button.directive';
 import { ProjectNameDialogComponent } from './components/dialogs/project-name-dialog/project-name-dialog.component';
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
+import { NewPaygradeDialogComponent } from './components/dialogs/new-paygrade-dialog/new-paygrade-dialog.component';
 
 const pages = [
 	AccountComponent,
@@ -43,7 +44,7 @@ const components = [
 const directives = [ButtonDirective];
 
 @NgModule({
-	declarations: [AppComponent, ...pages, ...components, ...directives],
+	declarations: [AppComponent, ...pages, ...components, ...directives, NewPaygradeDialogComponent],
 	imports: [
 		BrowserModule,
 		AppRoutingModule,
