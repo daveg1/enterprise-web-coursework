@@ -1,23 +1,36 @@
 import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
-import { NonNullableFormBuilder } from '@angular/forms';
+import { NonNullableFormBuilder, Validators } from '@angular/forms';
 import { QuoteService } from 'src/app/services/quote.service';
 import type { Budget } from 'src/app/types/budget';
-import {
-	frequencies,
-	oneOffCostForm,
-	ongoingCostForm,
-	payGrades,
-	timeUnits,
-	workerForm,
-} from './calculator-form-fields';
 import { QuoteResponse } from 'src/app/types/quote';
-import { BehaviorSubject, Subject, map, takeUntil } from 'rxjs';
+import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { Dialog } from '@angular/cdk/dialog';
 import { ProjectNameDialogComponent } from '../dialogs/project-name-dialog/project-name-dialog.component';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { PaygradeService } from 'src/app/services/paygrade.service';
 import { Paygrade } from 'src/app/types/paygrade';
+
+const timeUnits = ['hours', 'days', 'months'];
+const frequencies = ['weekly', 'monthly'];
+
+const workerForm = {
+	timeWorked: 0,
+	timeUnit: timeUnits[0],
+	payGrade: '',
+};
+
+const oneOffCostForm = {
+	itemName: ['', Validators.maxLength(64)],
+	cost: 0,
+};
+
+const ongoingCostForm = {
+	itemName: '',
+	cost: 0,
+	amount: 0,
+	frequency: frequencies[0],
+};
 
 @Component({
 	selector: 'app-calculator-form',
@@ -28,7 +41,6 @@ export class CalculatorFormComponent implements OnDestroy {
 
 	readonly budgetForm;
 	// the following are used in the template
-	// TODO pull these from DB
 	readonly timeUnits = timeUnits;
 	readonly roles$ = new BehaviorSubject<Paygrade['role'][]>([]);
 	readonly frequencies = frequencies;
@@ -61,8 +73,8 @@ export class CalculatorFormComponent implements OnDestroy {
 			.pipe(takeUntil(this.unsubscribe$))
 			.subscribe({
 				next: (roles) => {
-					console.log(roles);
 					this.roles$.next(roles);
+					workerForm.payGrade = roles[0];
 				},
 			});
 
