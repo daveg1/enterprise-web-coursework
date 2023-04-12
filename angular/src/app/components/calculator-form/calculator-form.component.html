@@ -62,9 +62,11 @@
 						formControlName="payGrade"
 						required
 					>
-						<option *ngFor="let grade of payGrades" [value]="grade">
-							{{ grade | titlecase }}
-						</option>
+						<ng-container *ngIf="roles$ | async as roles">
+							<option *ngFor="let role of roles" [value]="role">
+								{{ role | titlecase }}
+							</option>
+						</ng-container>
 					</select>
 
 					<app-x-button *ngIf="i > 0" (click)="removeWorker(i)"></app-x-button>

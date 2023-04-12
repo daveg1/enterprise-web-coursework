@@ -5,6 +5,9 @@ import { isAdminUser } from '../modules/validateUser'
 
 const paygradeRoutes = Router()
 
+/**
+ * Gets all the paygrades
+ */
 paygradeRoutes.get('/all', async (_, res) => {
 	try {
 		const paygrades = await Paygrade.find()
@@ -14,6 +17,25 @@ paygradeRoutes.get('/all', async (_, res) => {
 		}
 
 		res.status(200).json(paygrades)
+	} catch (error) {
+		res.status(500).json({ error })
+	}
+})
+
+/**
+ * Gets only the roles. This avoids exposing the hourlyRates
+ */
+paygradeRoutes.get('/roles', async (_, res) => {
+	try {
+		const paygrades = await Paygrade.find({}, { role: 1 })
+
+		if (!paygrades) {
+			throw new Error('No roles found')
+		}
+
+		const roles = paygrades.map((pg) => pg.role)
+
+		res.status(200).json(roles)
 	} catch (error) {
 		res.status(500).json({ error })
 	}

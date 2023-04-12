@@ -11,11 +11,13 @@ import {
 	workerForm,
 } from './calculator-form-fields';
 import { QuoteResponse } from 'src/app/types/quote';
-import { Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, Subject, map, takeUntil } from 'rxjs';
 import { Dialog } from '@angular/cdk/dialog';
 import { ProjectNameDialogComponent } from '../dialogs/project-name-dialog/project-name-dialog.component';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
+import { PaygradeService } from 'src/app/services/paygrade.service';
+import { Paygrade } from 'src/app/types/paygrade';
 
 @Component({
 	selector: 'app-calculator-form',
@@ -28,7 +30,7 @@ export class CalculatorFormComponent implements OnDestroy {
 	// the following are used in the template
 	// TODO pull these from DB
 	readonly timeUnits = timeUnits;
-	readonly payGrades = payGrades;
+	readonly roles$ = new BehaviorSubject<Paygrade['role'][]>([]);
 	readonly frequencies = frequencies;
 
 	readonly hasChanges$;
@@ -42,6 +44,7 @@ export class CalculatorFormComponent implements OnDestroy {
 
 	constructor(
 		private readonly authService: AuthService,
+		private readonly paygradeService: PaygradeService,
 		private readonly quoteService: QuoteService,
 		readonly fb: NonNullableFormBuilder,
 		readonly dialog: Dialog,
@@ -51,6 +54,17 @@ export class CalculatorFormComponent implements OnDestroy {
 		this.quote$ = this.quoteService.currentQuote$;
 		this.currentEstimate$ = this.quoteService.currentEstimate$;
 		this.isAdmin$ = this.authService.isAdmin$;
+
+		// Paygrades
+		this.paygradeService
+			.getRoles()
+			.pipe(takeUntil(this.unsubscribe$))
+			.subscribe({
+				next: (roles) => {
+					console.log(roles);
+					this.roles$.next(roles);
+				},
+			});
 
 		this.budgetForm = this.fb.group({
 			workers: this.fb.array([this.fb.group(workerForm)]),

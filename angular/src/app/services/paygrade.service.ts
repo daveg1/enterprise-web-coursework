@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Paygrade, PaygradeDialogForm } from '../types/paygrade';
 import { AuthService } from './auth.service';
 import { BehaviorSubject, Subject, takeUntil, tap } from 'rxjs';
@@ -7,9 +7,11 @@ import { BehaviorSubject, Subject, takeUntil, tap } from 'rxjs';
 @Injectable({
 	providedIn: 'root',
 })
-export class PaygradeService {
-	private readonly userState$;
+export class PaygradeService implements OnDestroy {
 	private readonly endpoint = 'http://localhost:3934/paygrade';
+	private readonly userState$;
+	private readonly unsubscribe$ = new Subject<void>();
+
 	readonly paygrades$ = new BehaviorSubject<Paygrade[]>([]);
 
 	private httpOptions = {
@@ -23,6 +25,16 @@ export class PaygradeService {
 		private readonly authService: AuthService
 	) {
 		this.userState$ = this.authService.userState$;
+		this.getPaygrades().pipe(takeUntil(this.unsubscribe$)).subscribe();
+	}
+
+	ngOnDestroy() {
+		this.unsubscribe$.next();
+		this.unsubscribe$.complete();
+	}
+
+	getRoles() {
+		return this.http.get<Paygrade['role'][]>(`${this.endpoint}/roles`);
 	}
 
 	getPaygrades() {
