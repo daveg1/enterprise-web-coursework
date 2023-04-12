@@ -55,7 +55,8 @@ export class AccountComponent implements OnDestroy {
 			.pipe(takeUntil(this.unsubscribe$))
 			.subscribe({
 				next: () => {
-					console.log('quote deleted');
+					// Update quotes list
+					this.getQuotes();
 				},
 
 				error: (err) => {
