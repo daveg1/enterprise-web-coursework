@@ -15,6 +15,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { Dialog } from '@angular/cdk/dialog';
 import { ProjectNameDialogComponent } from '../dialogs/project-name-dialog/project-name-dialog.component';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
 	selector: 'app-calculator-form',
@@ -25,6 +26,7 @@ export class CalculatorFormComponent implements OnDestroy {
 
 	readonly budgetForm;
 	// the following are used in the template
+	// TODO pull these from DB
 	readonly timeUnits = timeUnits;
 	readonly payGrades = payGrades;
 	readonly frequencies = frequencies;
@@ -32,10 +34,14 @@ export class CalculatorFormComponent implements OnDestroy {
 	readonly hasChanges$;
 	readonly quote$;
 	readonly currentEstimate$;
+	readonly isAdmin$;
+
+	useFudge = true;
 
 	private readonly unsubscribe$ = new Subject<void>();
 
 	constructor(
+		private readonly authService: AuthService,
 		private readonly quoteService: QuoteService,
 		readonly fb: NonNullableFormBuilder,
 		readonly dialog: Dialog,
@@ -44,6 +50,7 @@ export class CalculatorFormComponent implements OnDestroy {
 		this.hasChanges$ = this.quoteService.hasChanges$;
 		this.quote$ = this.quoteService.currentQuote$;
 		this.currentEstimate$ = this.quoteService.currentEstimate$;
+		this.isAdmin$ = this.authService.isAdmin$;
 
 		this.budgetForm = this.fb.group({
 			workers: this.fb.array([this.fb.group(workerForm)]),
@@ -96,12 +103,11 @@ export class CalculatorFormComponent implements OnDestroy {
 	submitForm() {
 		if (this.budgetForm.valid) {
 			this.quoteService
-				.calculateQuote(this.budgetForm.value as Budget)
+				.calculateQuote(this.budgetForm.value as Budget, this.useFudge)
 				.pipe(takeUntil(this.unsubscribe$))
 				.subscribe((res) => {
 					this.quoteCalculated.emit(res.estimate);
 					this.quoteService.currentEstimate$.next(res.estimate);
-					console.log(res.estimate);
 				});
 		} else {
 			this.budgetForm.markAllAsTouched();

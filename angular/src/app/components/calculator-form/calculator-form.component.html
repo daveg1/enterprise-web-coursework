@@ -220,33 +220,53 @@
 		</div>
 	</div>
 
-	<div class="flex w-full gap-2 px-6 py-4 border-y">
-		<button appButton (click)="submitForm()">Calculate</button>
+	<div class="flex justify-between w-full px-6 py-4 border-y">
+		<div class="flex gap-2">
+			<button appButton (click)="submitForm()">Calculate</button>
 
-		<button
-			[disabled]="hasChanges$.value"
-			(click)="saveQuote()"
-			appButton
-			type="button"
-			size="small"
-			variant="secondary"
-		>
-			<svg
-				fill="none"
-				viewBox="0 0 24 24"
-				stroke-width="1.5"
-				stroke="currentColor"
-				class="w-5 h-5 mr-1"
+			<button
+				[disabled]="hasChanges$.value"
+				(click)="saveQuote()"
+				appButton
+				type="button"
+				size="small"
+				variant="secondary"
 			>
-				<path
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z"
-				/>
-			</svg>
+				<svg
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke-width="1.5"
+					stroke="currentColor"
+					class="w-5 h-5 mr-1"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z"
+					/>
+				</svg>
 
-			<span>Save</span>
-		</button>
+				<span>Save</span>
+			</button>
+		</div>
+
+		<div class="flex">
+			<label
+				*ngIf="isAdmin$ | async"
+				appButton
+				variant="secondary"
+				outlined="outlined"
+				size="small"
+				class="gap-1"
+			>
+				<input
+					type="checkbox"
+					[checked]="useFudge"
+					(change)="useFudge = !useFudge"
+				/>
+				Fudge factor
+			</label>
+		</div>
 	</div>
 </form>
 

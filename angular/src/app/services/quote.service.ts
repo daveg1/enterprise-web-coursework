@@ -9,10 +9,14 @@ import { AuthService } from './auth.service';
 	providedIn: 'root',
 })
 export class QuoteService {
+	private readonly userState$;
+
 	constructor(
 		private readonly http: HttpClient,
 		private readonly authService: AuthService
-	) {}
+	) {
+		this.userState$ = this.authService.userState$;
+	}
 
 	private readonly endpoint = 'http://localhost:3934/quote';
 
@@ -28,10 +32,10 @@ export class QuoteService {
 		}),
 	};
 
-	calculateQuote(budget: Budget) {
+	calculateQuote(budget: Budget, useFudge: boolean) {
 		return this.http.post<EstimateResponse>(
 			`${this.endpoint}/calculate`,
-			budget,
+			{ budget, token: this.userState$.value?.token, useFudge },
 			this.httpOptions
 		);
 	}

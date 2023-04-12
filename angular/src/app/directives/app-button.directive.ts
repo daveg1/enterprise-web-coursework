@@ -1,6 +1,7 @@
 import { Directive, ElementRef, Input } from '@angular/core';
 
 const baseStyles = [
+	'cursor-pointer',
 	'flex',
 	'items-center',
 	'h-8',
