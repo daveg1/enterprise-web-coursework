@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
-import { NonNullableFormBuilder, Validators } from '@angular/forms';
+import { FormArray, NonNullableFormBuilder, Validators } from '@angular/forms';
 import { QuoteService } from 'src/app/services/quote.service';
 import type { Budget } from 'src/app/types/budget';
 import { QuoteResponse } from 'src/app/types/quote';
@@ -39,7 +39,7 @@ const ongoingCostForm = {
 export class CalculatorFormComponent implements OnDestroy {
 	@Output() quoteCalculated = new EventEmitter<number>();
 
-	readonly budgetForm;
+	readonly subtasks;
 	// the following are used in the template
 	readonly timeUnits = timeUnits;
 	readonly roles$ = new BehaviorSubject<Paygrade['role'][]>([]);
@@ -78,15 +78,18 @@ export class CalculatorFormComponent implements OnDestroy {
 				},
 			});
 
-		this.budgetForm = this.fb.group({
-			workers: this.fb.array([this.fb.group(workerForm)]),
-			oneOffCosts: this.fb.array([this.fb.group(oneOffCostForm)]),
-			ongoingCosts: this.fb.array([this.fb.group(ongoingCostForm)]),
-		});
+		// Infer the types
+		this.subtasks = this.fb.array([
+			this.fb.group({
+				workers: this.fb.array([this.fb.group(workerForm)]),
+				oneOffCosts: this.fb.array([this.fb.group(oneOffCostForm)]),
+				ongoingCosts: this.fb.array([this.fb.group(ongoingCostForm)]),
+			}),
+		]);
 
 		// Remove one-off and ongoing cost rows (by default only have a worker row)
-		this.budgetForm.controls['oneOffCosts'].clear();
-		this.budgetForm.controls['ongoingCosts'].clear();
+		this.subtasks.controls[0].controls['oneOffCosts'].clear();
+		this.subtasks.controls[0].controls['ongoingCosts'].clear();
 	}
 
 	/**
@@ -94,59 +97,91 @@ export class CalculatorFormComponent implements OnDestroy {
 	 * Generates rows based on the fields in the provided quote object.
 	 */
 	setQuote(quote: QuoteResponse) {
-		this.budgetForm.controls['workers'].clear();
-		this.budgetForm.controls['oneOffCosts'].clear();
-		this.budgetForm.controls['ongoingCosts'].clear();
+		this.subtasks.clear();
 
-		quote.budget.workers.forEach((worker) => {
-			const row = this.fb.group(workerForm);
-			row.controls['payGrade'].setValue(worker.payGrade);
-			row.controls['timeUnit'].setValue(worker.timeUnit);
-			row.controls['timeWorked'].setValue(worker.timeWorked);
+		quote.budgets.forEach((budget) => {
+			const subtask = this.fb.group({
+				workers: this.fb.array([this.fb.group(workerForm)]),
+				oneOffCosts: this.fb.array([this.fb.group(oneOffCostForm)]),
+				ongoingCosts: this.fb.array([this.fb.group(ongoingCostForm)]),
+			});
 
-			this.budgetForm.controls['workers'].push(row);
-		});
+			subtask.controls['workers'].clear();
+			subtask.controls['oneOffCosts'].clear();
+			subtask.controls['ongoingCosts'].clear();
 
-		quote.budget.oneOffCosts.forEach((oneOffCost) => {
-			const row = this.fb.group(oneOffCostForm);
-			row.controls['cost'].setValue(oneOffCost.cost);
-			row.controls['itemName'].setValue(oneOffCost.itemName);
+			budget.workers.forEach((worker) => {
+				const row = this.fb.group(workerForm);
+				row.controls['payGrade'].setValue(worker.payGrade);
+				row.controls['timeUnit'].setValue(worker.timeUnit);
+				row.controls['timeWorked'].setValue(worker.timeWorked);
 
-			this.budgetForm.controls['oneOffCosts'].push(row);
-		});
+				subtask.controls['workers'].push(row);
+			});
 
-		quote.budget.ongoingCosts.forEach((ongoingCost) => {
-			const row = this.fb.group(ongoingCostForm);
-			row.controls['cost'].setValue(ongoingCost.cost);
-			row.controls['itemName'].setValue(ongoingCost.itemName);
+			budget.oneOffCosts.forEach((oneOffCost) => {
+				const row = this.fb.group(oneOffCostForm);
+				row.controls['cost'].setValue(oneOffCost.cost);
+				row.controls['itemName'].setValue(oneOffCost.itemName);
 
-			this.budgetForm.controls['ongoingCosts'].push(row);
+				subtask.controls['oneOffCosts'].push(row);
+			});
+
+			budget.ongoingCosts.forEach((ongoingCost) => {
+				const row = this.fb.group(ongoingCostForm);
+				row.controls['cost'].setValue(ongoingCost.cost);
+				row.controls['itemName'].setValue(ongoingCost.itemName);
+
+				subtask.controls['ongoingCosts'].push(row);
+			});
+
+			this.subtasks.controls.push(subtask);
 		});
 
 		this.quoteService.editing$.next(quote._id);
 	}
 
-	submitForm() {
-		if (this.budgetForm.valid) {
+	calculateSubtask(subtask: (typeof this.subtasks.controls)[0]) {
+		console.log('calculate');
+		if (subtask && subtask.valid) {
 			this.quoteService
-				.calculateQuote(this.budgetForm.value as Budget, this.useFudge)
+				.calculateQuote(subtask.value as Budget, this.useFudge)
 				.pipe(takeUntil(this.unsubscribe$))
 				.subscribe((res) => {
 					this.quoteCalculated.emit(res.estimate);
 					this.quoteService.currentEstimate$.next(res.estimate);
 				});
 		} else {
-			this.budgetForm.markAllAsTouched();
+			this.subtasks.markAllAsTouched();
 		}
 	}
 
+	submitForm() {
+		console.log('submit');
+		this.subtasks.controls.forEach((subtask) => {
+			if (subtask && subtask.valid) {
+				this.quoteService
+					.calculateQuote(subtask.value as Budget, this.useFudge)
+					.pipe(takeUntil(this.unsubscribe$))
+					.subscribe((res) => {
+						this.quoteCalculated.emit(res.estimate);
+						this.quoteService.currentEstimate$.next(res.estimate);
+					});
+			} else {
+				this.subtasks.markAllAsTouched();
+			}
+		});
+	}
+
 	saveQuote() {
+		const budgets = this.subtasks.controls.map((form) => form.value as Budget);
+
 		// If editing, update the existing quote
 		if (this.quoteService.editing$.value) {
 			const quoteId = this.quoteService.editing$.value;
 
 			this.quoteService
-				.updateQuote(quoteId, this.budgetForm.value as Budget)
+				.updateQuote(quoteId, budgets)
 				.pipe(takeUntil(this.unsubscribe$))
 				.subscribe({
 					next: (res) => {
@@ -172,7 +207,7 @@ export class CalculatorFormComponent implements OnDestroy {
 					}
 
 					this.quoteService
-						.saveQuote(this.budgetForm.value as Budget, projectName)
+						.saveQuote(budgets, projectName)
 						.pipe(takeUntil(this.unsubscribe$))
 						.subscribe({
 							next: (quote) => {
@@ -188,32 +223,35 @@ export class CalculatorFormComponent implements OnDestroy {
 		}
 	}
 
-	addWorker() {
+	addWorker(subtask: (typeof this.subtasks.controls)[0]) {
 		const worker = this.fb.group(workerForm);
-		this.budgetForm.controls['workers'].push(worker);
+		subtask.controls['workers'].push(worker);
 	}
 
-	removeWorker(index: number) {
-		this.budgetForm.controls['workers'].removeAt(index);
+	removeWorker(subtask: (typeof this.subtasks.controls)[0], index: number) {
+		subtask.controls['workers'].removeAt(index);
 	}
 
-	addOneOffCost() {
+	addOneOffCost(subtask: (typeof this.subtasks.controls)[0]) {
 		const oneOffCost = this.fb.group(oneOffCostForm);
-		this.budgetForm.controls['oneOffCosts'].push(oneOffCost);
+		subtask.controls['oneOffCosts'].push(oneOffCost);
 	}
 
-	removeOneOffCost(index: number) {
-		this.budgetForm.controls['oneOffCosts'].removeAt(index);
+	removeOneOffCost(subtask: (typeof this.subtasks.controls)[0], index: number) {
+		subtask.controls['oneOffCosts'].removeAt(index);
 	}
 
-	addOngoingCost() {
+	addOngoingCost(subtask: (typeof this.subtasks.controls)[0]) {
 		const ongoingCost = this.fb.group(ongoingCostForm);
 
-		this.budgetForm.controls['ongoingCosts'].push(ongoingCost);
+		subtask.controls['ongoingCosts'].push(ongoingCost);
 	}
 
-	removeOngoingCost(index: number) {
-		this.budgetForm.controls['ongoingCosts'].removeAt(index);
+	removeOngoingCost(
+		subtask: (typeof this.subtasks.controls)[0],
+		index: number
+	) {
+		subtask.controls['ongoingCosts'].removeAt(index);
 	}
 
 	ngOnDestroy() {

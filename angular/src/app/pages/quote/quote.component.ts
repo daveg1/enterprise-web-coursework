@@ -13,7 +13,7 @@ export class QuoteComponent implements AfterViewInit, OnDestroy {
 	@ViewChild(CalculatorFormComponent)
 	calculatorForm!: CalculatorFormComponent;
 
-	baseValue?: typeof this.calculatorForm.budgetForm.value;
+	baseValue?: typeof this.calculatorForm.subtasks.value;
 
 	isLoggedIn$;
 	quote$;
@@ -46,7 +46,7 @@ export class QuoteComponent implements AfterViewInit, OnDestroy {
 				.subscribe({
 					next: (quote) => {
 						this.calculatorForm.setQuote(quote);
-						this.baseValue = this.calculatorForm.budgetForm.value;
+						this.baseValue = this.calculatorForm.subtasks.value;
 					},
 
 					error: () => {
@@ -57,7 +57,7 @@ export class QuoteComponent implements AfterViewInit, OnDestroy {
 	}
 
 	ngAfterViewInit() {
-		this.calculatorForm.budgetForm.valueChanges
+		this.calculatorForm.subtasks.valueChanges
 			.pipe(takeUntil(this.unsubscribe$))
 			.subscribe({
 				next: (changedValue) => {

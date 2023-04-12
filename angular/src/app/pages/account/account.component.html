@@ -81,16 +81,18 @@
 						*ngIf="expander.active"
 						class="flex flex-col px-4 py-2 pl-16 border-b border-x text-slate-500 last:rounded-b-lg"
 					>
-						<div *ngIf="quote.budget.workers.length">
-							{{ quote.budget.workers.length }} x Workers
-						</div>
+						<div *ngFor="let budget of quote.budgets">
+							<div *ngIf="budget.workers.length">
+								{{ budget.workers.length }} x Workers
+							</div>
 
-						<div *ngIf="quote.budget.oneOffCosts.length">
-							{{ quote.budget.oneOffCosts.length }} x One-off Costs
-						</div>
+							<div *ngIf="budget.oneOffCosts.length">
+								{{ budget.oneOffCosts.length }} x One-off Costs
+							</div>
 
-						<div *ngIf="quote.budget.ongoingCosts.length">
-							{{ quote.budget.ongoingCosts.length }} x Ongoing Costs
+							<div *ngIf="budget.ongoingCosts.length">
+								{{ budget.ongoingCosts.length }} x Ongoing Costs
+							</div>
 						</div>
 					</div>
 				</ng-container>

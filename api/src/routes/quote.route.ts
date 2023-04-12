@@ -11,7 +11,6 @@ import {
 	updateQuoteSchema,
 } from '../schemas/quotes.schema'
 import { tokenSchema } from '../schemas/token.schema'
-import type { Budget } from '../types/budget'
 import { isAdminUser } from '../modules/validateUser'
 
 const quoteRoutes = Router()
@@ -51,11 +50,15 @@ quoteRoutes.post('/save', async (req, res) => {
 			res.status(401).json({ message: 'quote/save POST No user by that id' })
 		}
 
-		const estimate = calculateQuote(parsed.budget)
+		let estimates = 0
+
+		parsed.budgets.forEach((budget) => {
+			estimates += calculateQuote(budget)
+		})
 
 		const quote = new Quote({
-			budget: parsed.budget,
-			estimate,
+			budgets: parsed.budgets,
+			estimate: estimates,
 			projectName: parsed.projectName,
 			user: userId,
 		})
@@ -81,13 +84,17 @@ quoteRoutes.post('/update', async (req, res) => {
 			res.status(401).json({ message: 'quote/update POST No user by that id' })
 		}
 
-		const estimate = calculateQuote(parsed.budget)
+		let estimates = 0
+
+		parsed.budgets.forEach((budget) => {
+			estimates += calculateQuote(budget)
+		})
 
 		const result = await Quote.findByIdAndUpdate(
 			parsed.id,
 			{
-				budget: parsed.budget,
-				estimate,
+				budget: parsed.budgets,
+				estimate: estimates,
 			},
 			{ rawResult: true },
 		)
@@ -160,35 +167,23 @@ quoteRoutes.post('/merge', async (req, res) => {
 			res.status(401).json({ message: 'quote/update POST No user by that id' })
 		}
 
-		// Collect all the budget-related arrays
-		let workers: Budget['workers'] = []
-		let oneOffCosts: Budget['oneOffCosts'] = []
-		let ongoingCosts: Budget['ongoingCosts'] = []
+		const subtasks = []
+		let estimates = 0
 
 		// Tally everything up
 		for (const quoteId of parsed.quoteIds) {
 			const quote = await Quote.findById(quoteId)
-
-			workers = [...workers, ...quote.budget.workers]
-			oneOffCosts = [...oneOffCosts, ...quote.budget.oneOffCosts]
-			ongoingCosts = [...ongoingCosts, ...quote.budget.ongoingCosts]
+			subtasks.push(quote.budgets)
+			estimates += quote.estimate
 		}
 
 		// Remove the individual quotes
 		await Quote.deleteMany({ _id: { $in: parsed.quoteIds } })
 
-		// Build and calculate new quote entry
-		const budget = {
-			workers,
-			oneOffCosts,
-			ongoingCosts,
-		}
-
-		const estimate = calculateQuote(budget)
-
+		// Create new combined quote
 		const quote = new Quote({
-			budget,
-			estimate,
+			budgets: subtasks,
+			estimate: estimates,
 			projectName: parsed.projectName,
 			user: userId,
 		})

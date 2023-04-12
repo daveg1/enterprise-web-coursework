@@ -8,7 +8,7 @@ export const calculateQuoteSchema = z.object({
 })
 
 export const quoteSchema = z.object({
-	budget: budgetSchema,
+	budgets: z.array(budgetSchema),
 	projectName: z.string().max(64),
 	token: z.string(),
 })
@@ -19,7 +19,7 @@ export const quoteIdSchema = z.object({
 
 export const updateQuoteSchema = z.object({
 	id: z.string().length(24),
-	budget: budgetSchema,
+	budgets: z.array(budgetSchema),
 	token: z.string(),
 })
 

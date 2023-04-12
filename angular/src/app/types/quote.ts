@@ -5,7 +5,7 @@ import type { Budget } from './budget';
  */
 export type QuoteResponse = {
 	_id: string;
-	budget: Budget;
+	budgets: Budget[];
 	estimate: number;
 	projectName: string;
 };

@@ -2,31 +2,33 @@ import { model, Schema } from 'mongoose'
 import type { Quote } from '../types/quote'
 
 const schema = new Schema<Quote>({
-	budget: {
-		workers: [
-			{
-				timeWorked: { type: Number, required: true },
-				timeUnit: { type: String, required: true, trim: true },
-				payGrade: { type: String, required: true, trim: true },
-			},
-		],
+	budgets: [
+		{
+			workers: [
+				{
+					timeWorked: { type: Number, required: true },
+					timeUnit: { type: String, required: true, trim: true },
+					payGrade: { type: String, required: true, trim: true },
+				},
+			],
 
-		oneOffCosts: [
-			{
-				itemName: { type: String, required: true, trim: true },
-				cost: { type: Number, required: true },
-			},
-		],
+			oneOffCosts: [
+				{
+					itemName: { type: String, required: true, trim: true },
+					cost: { type: Number, required: true },
+				},
+			],
 
-		ongoingCosts: [
-			{
-				itemName: { type: String, required: true, trim: true },
-				cost: { type: Number, required: true },
-				amount: { type: Number, required: true },
-				frequency: { type: String, required: true, trim: true },
-			},
-		],
-	},
+			ongoingCosts: [
+				{
+					itemName: { type: String, required: true, trim: true },
+					cost: { type: Number, required: true },
+					amount: { type: Number, required: true },
+					frequency: { type: String, required: true, trim: true },
+				},
+			],
+		},
+	],
 
 	estimate: { type: Number, required: true },
 
