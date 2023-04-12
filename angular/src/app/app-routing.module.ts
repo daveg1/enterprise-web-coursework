@@ -6,11 +6,12 @@ import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
 import { QuoteComponent } from './pages/quote/quote.component';
 import { SignupComponent } from './pages/signup/signup.component';
+import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
 	{ path: '', component: HomeComponent },
 	{ path: 'account', component: AccountComponent },
-	{ path: 'admin', component: AdminComponent }, // TODO add route guard
+	{ path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
 	{ path: 'login', component: LoginComponent },
 	{ path: 'signup', component: SignupComponent },
 	{ path: 'quote/:id', component: QuoteComponent },
