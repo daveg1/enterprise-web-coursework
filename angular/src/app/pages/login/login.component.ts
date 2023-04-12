@@ -20,10 +20,6 @@ export class LoginComponent implements OnDestroy {
 		readonly fb: NonNullableFormBuilder,
 		readonly router: Router
 	) {
-		if (this.authService.isLoggedIn$.value) {
-			this.router.navigate(['/account']);
-		}
-
 		this.loginForm = this.fb.group({
 			username: this.fb.control<string>('', Validators.required),
 			password: this.fb.control<string>('', Validators.required),
