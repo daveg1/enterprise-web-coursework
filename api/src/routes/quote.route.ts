@@ -12,7 +12,7 @@ import {
 } from '../schemas/quotes.schema'
 import { tokenSchema } from '../schemas/token.schema'
 import type { Budget } from '../types/budget'
-import { isAdminUser, validateUser } from '../modules/validateUser'
+import { isAdminUser } from '../modules/validateUser'
 
 const quoteRoutes = Router()
 
