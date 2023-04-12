@@ -21,24 +21,29 @@ import { ButtonDirective } from './directives/app-button.directive';
 import { ProjectNameDialogComponent } from './components/dialogs/project-name-dialog/project-name-dialog.component';
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
 
+const pages = [
+	AccountComponent,
+	AdminComponent,
+	HomeComponent,
+	LoginComponent,
+	QuoteComponent,
+	SignupComponent,
+];
+
+const components = [
+	ExpanderButtonComponent,
+	XButtonComponent,
+	CalculatorFormComponent,
+	ProjectNameDialogComponent,
+	NavbarComponent,
+	PageTitleComponent,
+	UserNoticeComponent,
+];
+
+const directives = [ButtonDirective];
+
 @NgModule({
-	declarations: [
-		AppComponent,
-		HomeComponent,
-		NavbarComponent,
-		AccountComponent,
-		LoginComponent,
-		SignupComponent,
-		UserNoticeComponent,
-		PageTitleComponent,
-		XButtonComponent,
-		CalculatorFormComponent,
-		AdminComponent,
-		QuoteComponent,
-		ExpanderButtonComponent,
-		ButtonDirective,
-		ProjectNameDialogComponent,
-	],
+	declarations: [AppComponent, ...pages, ...components, ...directives],
 	imports: [
 		BrowserModule,
 		AppRoutingModule,
