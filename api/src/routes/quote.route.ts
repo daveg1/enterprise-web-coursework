@@ -4,8 +4,14 @@ import { Quote } from '../models/quote.model'
 import { User } from '../models/user.model'
 import { calculateQuote } from '../modules/calculateQuote'
 import { budgetSchema } from '../schemas/budget.schema'
-import { quoteIdSchema, quoteSchema, updateQuoteSchema } from '../schemas/quotes.schema'
+import {
+	mergeQuoteSchema,
+	quoteIdSchema,
+	quoteSchema,
+	updateQuoteSchema,
+} from '../schemas/quotes.schema'
 import { tokenSchema } from '../schemas/token.schema'
+import type { Budget } from '../types/budget'
 
 const quoteRoutes = Router()
 
@@ -127,6 +133,59 @@ quoteRoutes.post('/delete', async (req, res) => {
 	}
 
 	res.status(200).json({ message: 'Successfully deleted quote', deletedCount: quote.deletedCount })
+})
+
+quoteRoutes.post('/merge', async (req, res) => {
+	try {
+		const parsed = await mergeQuoteSchema.parseAsync(req.body)
+
+		// Verify user token
+		const userId = jwt.decode(parsed.token)
+		const user = await User.findById(userId)
+
+		if (!user) {
+			res.status(401).json({ message: 'quote/update POST No user by that id' })
+		}
+
+		// Collect all the budget-related arrays
+		let workers: Budget['workers'] = []
+		let oneOffCosts: Budget['oneOffCosts'] = []
+		let ongoingCosts: Budget['ongoingCosts'] = []
+
+		// Tally everything up
+		for (const quoteId of parsed.quoteIds) {
+			const quote = await Quote.findById(quoteId)
+
+			workers = [...workers, ...quote.budget.workers]
+			oneOffCosts = [...oneOffCosts, ...quote.budget.oneOffCosts]
+			ongoingCosts = [...ongoingCosts, ...quote.budget.ongoingCosts]
+		}
+
+		// Remove the individual quotes
+		await Quote.deleteMany({ _id: { $in: parsed.quoteIds } })
+
+		// Build and calculate new quote entry
+		const budget = {
+			workers,
+			oneOffCosts,
+			ongoingCosts,
+		}
+
+		const estimate = calculateQuote(budget)
+
+		const quote = new Quote({
+			budget,
+			estimate,
+			projectName: parsed.projectName,
+			user: userId,
+		})
+
+		await quote.save()
+
+		res.status(200).json(quote.toJSON())
+	} catch (error) {
+		res.status(500).json({ error })
+	}
 })
 
 export { quoteRoutes }

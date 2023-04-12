@@ -16,3 +16,9 @@ export const updateQuoteSchema = z.object({
 	budget: budgetSchema,
 	token: z.string(),
 })
+
+export const mergeQuoteSchema = z.object({
+	quoteIds: z.array(z.string().length(24)),
+	projectName: z.string().max(64),
+	token: z.string(),
+})
