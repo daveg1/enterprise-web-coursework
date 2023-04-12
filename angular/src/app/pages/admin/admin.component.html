@@ -1,11 +1,8 @@
-<h2 class="my-4 text-lg font-semibold">Paygrades</h2>
-
 <form
 	[formGroup]="paygradeForm"
-	class="flex flex-col items-start gap-4 bg-white border rounded-lg shadow-sm shadow-slate-300/50"
+	class="flex flex-col items-start gap-4 mt-8 bg-white border rounded-lg shadow-sm shadow-slate-300/50"
 	method="post"
 	spellcheck="false"
-	(keyup.enter)="submitForm()"
 >
 	<div class="flex items-center justify-between w-full px-6 py-4 border-b">
 		<h2 class="text-lg font-semibold">Paygrades</h2>
@@ -21,7 +18,10 @@
 		</button>
 	</div>
 
-	<div class="flex flex-col items-start gap-2 px-6">
+	<div
+		*ngIf="paygradeForm.controls['paygrades'].controls.length"
+		class="flex flex-col items-start gap-2 px-6 pb-4"
+	>
 		<!-- Headers -->
 		<div class="flex gap-2">
 			<div class="w-48 text-sm font-semibold">Role</div>
@@ -37,6 +37,8 @@
 				"
 			>
 				<div [formGroup]="paygradesForm" class="flex gap-2">
+					<input type="hidden" formControlName="id" />
+
 					<input
 						class="w-48 h-8 px-2 text-sm border rounded focus:z-10"
 						formControlName="role"
@@ -58,9 +60,5 @@
 				</div>
 			</ng-container>
 		</div>
-	</div>
-
-	<div class="flex w-full gap-2 px-6 py-4 border-y">
-		<button appButton (click)="submitForm()">Save</button>
 	</div>
 </form>
