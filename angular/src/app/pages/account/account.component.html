@@ -31,69 +31,71 @@
 		</div>
 	</div>
 
-	<ng-container *ngIf="quotes$ | async as quotes; else noQuotes">
-		<div class="flex flex-col my-4">
-			<div class="flex gap-4 px-4 py-2 border rounded-t-lg bg-slate-100">
-				<div class="w-8"></div>
-				<div class="w-48 text-sm text-slate-500">Project name</div>
-				<div class="w-24 text-sm text-right text-slate-500">Estimate</div>
-				<div class="ml-auto text-sm text-slate-500">Actions</div>
+	<ng-container *ngIf="quotes$ | async as quotes">
+		<ng-container *ngIf="quotes.length; else noQuotes">
+			<div class="flex flex-col my-4">
+				<div class="flex gap-4 px-4 py-2 border rounded-t-lg bg-slate-100">
+					<div class="w-8"></div>
+					<div class="w-48 text-sm text-slate-500">Project name</div>
+					<div class="w-24 text-sm text-right text-slate-500">Estimate</div>
+					<div class="ml-auto text-sm text-slate-500">Actions</div>
+				</div>
+
+				<ng-container *ngFor="let quote of quotes">
+					<div
+						#quoteEntry
+						class="flex items-center gap-4 px-4 py-2 border-b border-x last:rounded-b-lg"
+						[ngClass]="selectedQuotes.includes(quote._id) ? 'bg-blue-100' : ''"
+						(click)="selectQuote(quote._id)"
+					>
+						<div class="w-8" *ngIf="isMerging">
+							<input
+								type="checkbox"
+								[checked]="selectedQuotes.includes(quote._id)"
+							/>
+						</div>
+
+						<div class="w-8">
+							<app-expander-button #expander></app-expander-button>
+						</div>
+
+						<div class="w-48">
+							<a
+								[routerLink]="'/quote/' + quote._id"
+								class="text-blue-600 hover:underline"
+							>
+								{{ quote.projectName }}
+							</a>
+						</div>
+
+						<div class="w-24 text-right">
+							<span>{{ quote.estimate | currency : 'GBP' }}</span>
+						</div>
+
+						<div class="ml-auto">
+							<app-x-button (click)="deleteQuote(quote._id)"></app-x-button>
+						</div>
+					</div>
+
+					<div
+						*ngIf="expander.active"
+						class="flex flex-col px-4 py-2 pl-16 border-b border-x text-slate-500 last:rounded-b-lg"
+					>
+						<div *ngIf="quote.budget.workers.length">
+							{{ quote.budget.workers.length }} x Workers
+						</div>
+
+						<div *ngIf="quote.budget.oneOffCosts.length">
+							{{ quote.budget.oneOffCosts.length }} x One-off Costs
+						</div>
+
+						<div *ngIf="quote.budget.ongoingCosts.length">
+							{{ quote.budget.ongoingCosts.length }} x Ongoing Costs
+						</div>
+					</div>
+				</ng-container>
 			</div>
-
-			<ng-container *ngFor="let quote of quotes">
-				<div
-					#quoteEntry
-					class="flex items-center gap-4 px-4 py-2 border-b border-x last:rounded-b-lg"
-					[ngClass]="selectedQuotes.includes(quote._id) ? 'bg-blue-100' : ''"
-					(click)="selectQuote(quote._id)"
-				>
-					<div class="w-8" *ngIf="isMerging">
-						<input
-							type="checkbox"
-							[checked]="selectedQuotes.includes(quote._id)"
-						/>
-					</div>
-
-					<div class="w-8">
-						<app-expander-button #expander></app-expander-button>
-					</div>
-
-					<div class="w-48">
-						<a
-							[routerLink]="'/quote/' + quote._id"
-							class="text-blue-600 hover:underline"
-						>
-							{{ quote.projectName }}
-						</a>
-					</div>
-
-					<div class="w-24 text-right">
-						<span>{{ quote.estimate | currency : 'GBP' }}</span>
-					</div>
-
-					<div class="ml-auto">
-						<app-x-button (click)="deleteQuote(quote._id)"></app-x-button>
-					</div>
-				</div>
-
-				<div
-					*ngIf="expander.active"
-					class="flex flex-col px-4 py-2 pl-16 border-b border-x text-slate-500 last:rounded-b-lg"
-				>
-					<div *ngIf="quote.budget.workers.length">
-						{{ quote.budget.workers.length }} x Workers
-					</div>
-
-					<div *ngIf="quote.budget.oneOffCosts.length">
-						{{ quote.budget.oneOffCosts.length }} x One-off Costs
-					</div>
-
-					<div *ngIf="quote.budget.ongoingCosts.length">
-						{{ quote.budget.ongoingCosts.length }} x Ongoing Costs
-					</div>
-				</div>
-			</ng-container>
-		</div>
+		</ng-container>
 	</ng-container>
 
 	<ng-template #noQuotes>
