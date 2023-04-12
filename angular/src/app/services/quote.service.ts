@@ -68,11 +68,13 @@ export class QuoteService {
 			);
 	}
 
-	getQuotesForUser(token: string) {
+	getQuotes() {
+		const state = this.authService.userState$.value;
+
 		return this.http
 			.post<QuoteResponse[]>(
 				`${this.endpoint}/user`,
-				{ token },
+				{ token: state!.token },
 				this.httpOptions
 			)
 			.pipe(
@@ -100,17 +102,13 @@ export class QuoteService {
 		);
 	}
 
-	mergeQuotes(quoteIds: string[]) {
-		return this.http
-			.post<QuoteResponse[]>(
-				`${this.endpoint}/merge`,
-				{ quoteIds },
-				this.httpOptions
-			)
-			.pipe(
-				tap((quotes) => {
-					this.quotes$.next(quotes);
-				})
-			);
+	mergeQuotes(quoteIds: string[], projectName: string) {
+		const state = this.authService.userState$.value;
+
+		return this.http.post<QuoteResponse>(
+			`${this.endpoint}/merge`,
+			{ token: state!.token, quoteIds, projectName },
+			this.httpOptions
+		);
 	}
 }

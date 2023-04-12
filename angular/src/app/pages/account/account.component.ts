@@ -26,12 +26,18 @@ export class AccountComponent implements OnDestroy {
 			this.router.navigate(['/']);
 		}
 
-		const state = this.authService.userState$.value!;
 		this.quotes$ = this.quoteService.quotes$;
-
 		this.user$ = this.authService.userState$;
+
+		// Pulls latest list of quotes
+		this.getQuotes();
+	}
+
+	// Quotes
+
+	getQuotes() {
 		this.quoteService
-			.getQuotesForUser(state.token)
+			.getQuotes()
 			.pipe(takeUntil(this.unsubscribe$))
 			.subscribe({
 				error: (err) => {
@@ -39,8 +45,6 @@ export class AccountComponent implements OnDestroy {
 				},
 			});
 	}
-
-	// Quotes
 
 	deleteQuote(quoteId: string) {
 		this.quoteService
@@ -80,12 +84,14 @@ export class AccountComponent implements OnDestroy {
 
 	mergeQuotes() {
 		this.quoteService
-			.mergeQuotes(this.selectedQuotes)
+			.mergeQuotes(this.selectedQuotes, 'Merged') // get project name from dialog box
 			.pipe(takeUntil(this.unsubscribe$))
 			.subscribe({
-				next: (quotes) => {
-					console.log(quotes);
-					// TODO: update list of quotes
+				next: (quote) => {
+					console.log(quote);
+
+					// Update quotes list
+					this.getQuotes();
 				},
 			});
 	}
