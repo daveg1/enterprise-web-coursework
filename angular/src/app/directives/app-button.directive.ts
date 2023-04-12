@@ -8,8 +8,6 @@ const baseStyles = [
 	'rounded',
 	'text-sm',
 	'font-semibold',
-	'disabled:opacity-50',
-	'disabled:hover:bg-white',
 ];
 
 type buttonVariants = 'primary' | 'secondary';
@@ -20,9 +18,15 @@ const variantStyles = {
 		'bg-emerald-600',
 		'hover:bg-emerald-600/75',
 		'active:bg-emerald-700',
+		'disabled:opacity-50',
 	],
 
-	secondary: ['text-emerald-600', 'hover:bg-emerald-50/75'],
+	secondary: [
+		'text-emerald-600',
+		'hover:bg-emerald-50/75',
+		'disabled:opacity-50',
+		'disabled:hover:bg-white',
+	],
 };
 
 type buttonSizes = 'small' | 'normal';
