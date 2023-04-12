@@ -23,7 +23,7 @@ export async function isAdminUser(token: string) {
 	}
 
 	const userId = jwt.decode(token)
-	const adminUser = await Admin.find({ user: userId })
+	const adminUser = await Admin.findOne({ user: userId })
 
-	return adminUser
+	return !!adminUser
 }
