@@ -3,8 +3,8 @@ import jwt from 'jsonwebtoken'
 import { Quote } from '../models/quote.model'
 import { User } from '../models/user.model'
 import { calculateQuote } from '../modules/calculateQuote'
-import { budgetSchema } from '../schemas/budget.schema'
 import {
+	calculateQuoteSchema,
 	mergeQuoteSchema,
 	quoteIdSchema,
 	quoteSchema,
@@ -12,13 +12,26 @@ import {
 } from '../schemas/quotes.schema'
 import { tokenSchema } from '../schemas/token.schema'
 import type { Budget } from '../types/budget'
+import { isAdminUser, validateUser } from '../modules/validateUser'
 
 const quoteRoutes = Router()
 
 quoteRoutes.post('/calculate', async (req, res) => {
 	try {
-		const parsed = await budgetSchema.parseAsync(req.body)
-		const estimate = calculateQuote(parsed)
+		const parsed = await calculateQuoteSchema.parseAsync(req.body)
+		let estimate: number
+
+		if (!parsed.useFudge && parsed.token) {
+			const user = isAdminUser(parsed.token)
+
+			if (!user) {
+				return res.status(401).json({ reason: 'insufficient permission' })
+			}
+
+			estimate = calculateQuote(parsed.budget, false)
+		} else {
+			estimate = calculateQuote(parsed.budget)
+		}
 
 		res.status(200).json({ estimate })
 	} catch (error) {

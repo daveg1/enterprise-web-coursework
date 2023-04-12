@@ -1,6 +1,12 @@
 import { z } from 'zod'
 import { budgetSchema } from './budget.schema'
 
+export const calculateQuoteSchema = z.object({
+	budget: budgetSchema,
+	useFudge: z.boolean(),
+	token: z.string().optional(), // a token must be provided when useFudge is true
+})
+
 export const quoteSchema = z.object({
 	budget: budgetSchema,
 	projectName: z.string().max(64),

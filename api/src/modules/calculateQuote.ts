@@ -24,13 +24,23 @@ const rates = {
  * @param factor Percentage
  * @returns number
  */
-function fudgeFactor(factor: number) {
+function fudgeFactor(factor: number, useFudge: boolean) {
+	if (!useFudge) {
+		return 1
+	}
+
 	const min = 1 - factor
 	const max = 1 + factor
 	return Math.random() * (max - min) + min
 }
 
-export function calculateQuote(budget: Budget) {
+/**
+ * Calculates the estimate quote given a budget form
+ * @param budget The budget form
+ * @param useFudge Whether to calculate using the fudge factor. True by default
+ * @returns Estimate
+ */
+export function calculateQuote(budget: Budget, useFudge = true): number {
 	let totalCostOfWorkers = 0
 
 	// Tally up workers
@@ -46,7 +56,7 @@ export function calculateQuote(budget: Budget) {
 
 		const hourlyRate = rates[worker.payGrade].hourly
 		const costOfPerson = hoursNeeded * hourlyRate
-		totalCostOfWorkers += costOfPerson * fudgeFactor(0.05) // ±0.05%
+		totalCostOfWorkers += costOfPerson * fudgeFactor(0.05, useFudge) // ±0.05%
 	}
 
 	// Tally up one-off costs
