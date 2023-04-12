@@ -18,7 +18,7 @@ export type AuthResponse = {
 	username: string;
 	token: string;
 	quotes: any[];
-	isAdmin: number;
+	isAdmin: boolean;
 };
 
 // Alias

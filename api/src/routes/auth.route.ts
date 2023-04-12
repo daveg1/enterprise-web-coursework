@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken'
 import { encrypt, verify } from '../modules/encrypt'
 import { tokenSchema } from '../schemas/token.schema'
 import { Admin } from '../models/admin.model'
+import { isAdminUser } from '../modules/validateUser'
 
 const authRoutes = Router()
 
@@ -57,12 +58,9 @@ authRoutes.post('/login', async (req, res) => {
 		}
 
 		// Sign JWT using username and password
-		const { _id: userId, username } = user
+		const { username } = user
 		const token = jwt.sign(user._id.toString(), process.env.ACCESS_TOKEN)
-
-		// Check if user is an admin
-		const admin = await Admin.find({ user: userId })
-		const isAdmin = admin ? 1 : 0
+		const isAdmin = await isAdminUser(token)
 
 		res.status(200).json({ username, token, quotes: user.quotes ?? [], isAdmin })
 	} catch (error) {

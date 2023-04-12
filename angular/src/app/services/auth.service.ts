@@ -4,7 +4,7 @@ import {
 	HttpHeaders,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, Subject, tap, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, tap, throwError } from 'rxjs';
 import {
 	AuthLogin,
 	AuthResponse,
@@ -35,7 +35,7 @@ export class AuthService {
 		if (state) {
 			const parsed = JSON.parse(state);
 			this.isLoggedIn$.next(true);
-			this.isAdmin$.next(Boolean(parsed.isAdmin));
+			this.isAdmin$.next(parsed.isAdmin);
 			this.userState$.next(parsed);
 		}
 	}
@@ -61,7 +61,7 @@ export class AuthService {
 
 					// Update app states
 					this.isLoggedIn$.next(true);
-					this.isAdmin$.next(Boolean(response.isAdmin));
+					this.isAdmin$.next(response.isAdmin);
 					this.userState$.next(response);
 				})
 			);
