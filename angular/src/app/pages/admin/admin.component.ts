@@ -64,7 +64,7 @@ export class AdminComponent implements OnDestroy {
 			}
 		);
 
-		dialogRef.closed.subscribe({
+		dialogRef.closed.pipe(takeUntil(this.unsubscribe$)).subscribe({
 			next: (paygrade) => {
 				if (!paygrade) {
 					return;

@@ -139,7 +139,7 @@ export class CalculatorFormComponent implements OnDestroy {
 				width: '20rem',
 			});
 
-			dialogRef.closed.subscribe({
+			dialogRef.closed.pipe(takeUntil(this.unsubscribe$)).subscribe({
 				next: (projectName) => {
 					if (!projectName) {
 						return;
