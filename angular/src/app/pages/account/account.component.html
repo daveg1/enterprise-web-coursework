@@ -7,7 +7,13 @@
 		<h2 class="text-lg font-semibold">Quotes</h2>
 
 		<div class="flex gap-2">
-			<button *ngIf="isMerging" appButton size="small" (click)="mergeQuotes()">
+			<button
+				*ngIf="isMerging"
+				[disabled]="selectedQuotes.length < 2"
+				appButton
+				size="small"
+				(click)="mergeQuotes()"
+			>
 				Save
 			</button>
 

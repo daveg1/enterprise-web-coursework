@@ -1,6 +1,8 @@
+import { Dialog } from '@angular/cdk/dialog';
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
+import { ProjectNameDialogComponent } from 'src/app/components/dialogs/project-name-dialog/project-name-dialog.component';
 import { AuthService } from 'src/app/services/auth.service';
 import { QuoteService } from 'src/app/services/quote.service';
 
@@ -20,7 +22,8 @@ export class AccountComponent implements OnDestroy {
 		private readonly authService: AuthService,
 		private readonly quoteService: QuoteService,
 		readonly router: Router,
-		readonly route: ActivatedRoute
+		readonly route: ActivatedRoute,
+		readonly dialog: Dialog
 	) {
 		if (!this.authService.isLoggedIn$.value) {
 			this.router.navigate(['/']);
@@ -83,17 +86,28 @@ export class AccountComponent implements OnDestroy {
 	}
 
 	mergeQuotes() {
-		this.quoteService
-			.mergeQuotes(this.selectedQuotes, 'Merged') // get project name from dialog box
-			.pipe(takeUntil(this.unsubscribe$))
-			.subscribe({
-				next: (quote) => {
-					console.log(quote);
+		const dialogRef = this.dialog.open<string>(ProjectNameDialogComponent, {
+			width: '20rem',
+		});
 
-					// Update quotes list
-					this.getQuotes();
-				},
-			});
+		dialogRef.closed.subscribe({
+			next: (projectName) => {
+				if (!projectName) {
+					return;
+				}
+
+				this.quoteService
+					.mergeQuotes(this.selectedQuotes, projectName)
+					.pipe(takeUntil(this.unsubscribe$))
+					.subscribe({
+						next: () => {
+							// Update quotes list
+							this.getQuotes();
+							this.toggleMergeView();
+						},
+					});
+			},
+		});
 	}
 
 	// Account
