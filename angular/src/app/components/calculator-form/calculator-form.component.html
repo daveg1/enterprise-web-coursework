@@ -314,7 +314,12 @@
 
 			<div class="flex justify-between w-full px-6 py-4 border-y">
 				<div class="flex gap-2">
-					<button appButton (click)="calculateSubtask(subtask)">
+					<button
+						appButton
+						variant="secondary"
+						outlined="outlined"
+						(click)="calculateSubtask(subtask)"
+					>
 						Calculate subtask
 					</button>
 				</div>

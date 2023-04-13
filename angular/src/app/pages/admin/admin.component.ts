@@ -36,9 +36,13 @@ export class AdminComponent implements OnDestroy {
 		this.refreshPaygrades();
 	}
 
+	/**
+	 * Refreshes the paygrades and roles behaviour subjects
+	 */
 	private refreshPaygrades() {
 		this.paygradeForm.controls['paygrades'].clear();
 
+		// Refresh paygrades
 		this.paygradeService
 			.getPaygrades()
 			.pipe(takeUntil(this.unsubscribe$))
@@ -54,6 +58,12 @@ export class AdminComponent implements OnDestroy {
 					});
 				},
 			});
+
+		// Refresh roles
+		this.paygradeService
+			.getRoles()
+			.pipe(takeUntil(this.unsubscribe$))
+			.subscribe();
 	}
 
 	addPaygrade() {

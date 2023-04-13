@@ -13,6 +13,7 @@ export class PaygradeService implements OnDestroy {
 	private readonly unsubscribe$ = new Subject<void>();
 
 	readonly paygrades$ = new BehaviorSubject<Paygrade[]>([]);
+	readonly roles$ = new BehaviorSubject<string[]>([]);
 
 	private httpOptions = {
 		headers: new HttpHeaders({
@@ -26,6 +27,7 @@ export class PaygradeService implements OnDestroy {
 	) {
 		this.userState$ = this.authService.userState$;
 		this.getPaygrades().pipe(takeUntil(this.unsubscribe$)).subscribe();
+		this.getRoles().pipe(takeUntil(this.unsubscribe$)).subscribe();
 	}
 
 	ngOnDestroy() {
@@ -34,7 +36,9 @@ export class PaygradeService implements OnDestroy {
 	}
 
 	getRoles() {
-		return this.http.get<Paygrade['role'][]>(`${this.endpoint}/roles`);
+		return this.http
+			.get<Paygrade['role'][]>(`${this.endpoint}/roles`)
+			.pipe(tap((roles) => this.roles$.next(roles)));
 	}
 
 	getPaygrades() {

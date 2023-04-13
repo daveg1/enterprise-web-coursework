@@ -42,7 +42,7 @@ export class CalculatorFormComponent implements OnDestroy {
 	readonly subtasks;
 	// the following are used in the template
 	readonly timeUnits = timeUnits;
-	readonly roles$ = new BehaviorSubject<Paygrade['role'][]>([]);
+	readonly roles$;
 	readonly frequencies = frequencies;
 
 	readonly quote$;
@@ -66,17 +66,7 @@ export class CalculatorFormComponent implements OnDestroy {
 		this.editing$ = this.quoteService.editing$;
 		this.currentEstimate$ = this.quoteService.currentEstimate$;
 		this.isAdmin$ = this.authService.isAdmin$;
-
-		// Paygrades
-		this.paygradeService
-			.getRoles()
-			.pipe(takeUntil(this.unsubscribe$))
-			.subscribe({
-				next: (roles) => {
-					this.roles$.next(roles);
-					workerForm.payGrade = roles[0];
-				},
-			});
+		this.roles$ = this.paygradeService.roles$;
 
 		// Infer the types
 		this.subtasks = this.fb.array([
@@ -90,6 +80,18 @@ export class CalculatorFormComponent implements OnDestroy {
 		// Remove one-off and ongoing cost rows (by default only have a worker row)
 		this.subtasks.controls[0].controls['oneOffCosts'].clear();
 		this.subtasks.controls[0].controls['ongoingCosts'].clear();
+
+		this.paygradeService
+			.getRoles()
+			.pipe(takeUntil(this.unsubscribe$))
+			.subscribe((roles) => {
+				if (this.subtasks) {
+					this.subtasks
+						.at(0)
+						.controls['workers'].at(0)
+						.controls['payGrade'].setValue(roles[0]);
+				}
+			});
 	}
 
 	/**
