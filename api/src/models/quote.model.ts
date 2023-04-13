@@ -23,7 +23,6 @@ const schema = new Schema<Quote>({
 				{
 					itemName: { type: String, required: true, trim: true },
 					cost: { type: Number, required: true },
-					amount: { type: Number, required: true },
 					frequency: { type: String, required: true, trim: true },
 				},
 			],

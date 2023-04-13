@@ -28,12 +28,17 @@ function fudgeFactor(factor: number, useFudge: boolean) {
  */
 export async function calculateQuote(subtask: Subtask, useFudge = true): Promise<number> {
 	const paygrades = await Paygrade.find()
+	const WORK_DAY = 8 // regular work day is 8 hours
+	const WORK_WEEK = 5 // people work 5 days a week
+	const WEEKS_IN_A_MONTH = 4
+	const WORK_MONTH = 30 // standardise to 30 days a month
 
 	if (!paygrades.length) {
 		throw new Error('no paygrades available')
 	}
 
 	let totalCostOfWorkers = 0
+	let projectHours = 0
 
 	// Tally up workers
 	for (const worker of subtask.workers) {
@@ -41,9 +46,9 @@ export async function calculateQuote(subtask: Subtask, useFudge = true): Promise
 
 		// Convert alternative units into hours
 		if (worker.timeUnit === 'days') {
-			hoursNeeded *= 24
+			hoursNeeded *= WORK_DAY
 		} else if (worker.timeUnit === 'months') {
-			hoursNeeded *= 730
+			hoursNeeded *= WORK_DAY * WORK_MONTH
 		}
 
 		const paygrade = paygrades.find((pay) => pay.role === worker.payGrade)
@@ -52,6 +57,7 @@ export async function calculateQuote(subtask: Subtask, useFudge = true): Promise
 			throw new Error('That paygrade does not exist')
 		}
 
+		projectHours += hoursNeeded
 		const hourlyRate = paygrade.hourlyRate
 		const costOfPerson = hoursNeeded * hourlyRate
 		totalCostOfWorkers += costOfPerson * fudgeFactor(0.05, useFudge) // ±0.05%
@@ -68,7 +74,15 @@ export async function calculateQuote(subtask: Subtask, useFudge = true): Promise
 	let totalOngoingCosts = 0
 
 	for (const ongoingCost of subtask.ongoingCosts) {
-		totalOngoingCosts += ongoingCost.cost * ongoingCost.amount
+		let ongoingAmount = 1
+
+		if (ongoingCost.frequency === 'weekly') {
+			ongoingAmount = projectHours / (WORK_DAY * WORK_WEEK)
+		} else if (ongoingCost.frequency === 'monthly') {
+			ongoingAmount = projectHours / (WORK_DAY * WORK_WEEK * WEEKS_IN_A_MONTH)
+		}
+
+		totalOngoingCosts += ongoingCost.cost * ongoingAmount
 	}
 
 	return totalCostOfWorkers + totalOneOffCost + totalOngoingCosts

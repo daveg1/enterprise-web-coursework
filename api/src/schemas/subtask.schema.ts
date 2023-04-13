@@ -20,7 +20,6 @@ export const subtaskSchema = z.object({
 		z.object({
 			itemName: z.string().max(64),
 			cost: z.number(),
-			amount: z.number(),
 			frequency: z.union([z.literal('weekly'), z.literal('monthly')]),
 		}),
 	),

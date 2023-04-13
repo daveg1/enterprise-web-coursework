@@ -13,7 +13,6 @@ export type Subtask = {
 	ongoingCosts?: {
 		itemName?: string
 		cost?: number
-		amount?: number
 		frequency?: 'weekly' | 'monthly'
 	}[]
 }

@@ -27,7 +27,6 @@ const oneOffCostForm = {
 const ongoingCostForm = {
 	itemName: '',
 	cost: 0,
-	amount: 0,
 	frequency: frequencies[0],
 };
 
