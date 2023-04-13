@@ -6,6 +6,7 @@ import type {
 	EstimateResponse,
 	EstimateResponseBulk,
 	QuoteResponse,
+	UpdateQuoteResponse,
 } from '../types/quote';
 import { AuthService } from './auth.service';
 
@@ -52,12 +53,15 @@ export class QuoteService {
 	}
 
 	saveQuote(subtasks: Subtask[], projectName: string, useFudge: boolean) {
-		const state = this.authService.userState$.value;
-
 		return this.http
 			.post<QuoteResponse>(
 				`${this.endpoint}/save`,
-				{ subtasks, projectName, token: state!.token, useFudge },
+				{
+					subtasks,
+					projectName,
+					token: this.userState$.value?.token,
+					useFudge,
+				},
 				this.httpOptions
 			)
 			.pipe(
@@ -68,29 +72,25 @@ export class QuoteService {
 	}
 
 	updateQuote(id: string, subtasks: Subtask[], useFudge: boolean) {
-		const state = this.authService.userState$.value;
-
 		return this.http
-			.post<QuoteResponse>(`${this.endpoint}/update`, {
+			.post<UpdateQuoteResponse>(`${this.endpoint}/update`, {
 				id,
 				subtasks,
-				token: state!.token,
+				token: this.userState$.value?.token,
 				useFudge,
 			})
 			.pipe(
-				tap((quote) => {
-					this.currentQuote$.next(quote);
+				tap((res) => {
+					this.currentQuote$.next(res.quote);
 				})
 			);
 	}
 
 	getQuotes() {
-		const state = this.authService.userState$.value;
-
 		return this.http
 			.post<QuoteResponse[]>(
 				`${this.endpoint}/user`,
-				{ token: state!.token },
+				{ token: this.userState$.value?.token },
 				this.httpOptions
 			)
 			.pipe(
@@ -119,11 +119,9 @@ export class QuoteService {
 	}
 
 	mergeQuotes(quoteIds: string[], projectName: string) {
-		const state = this.authService.userState$.value;
-
 		return this.http.post<QuoteResponse>(
 			`${this.endpoint}/merge`,
-			{ token: state!.token, quoteIds, projectName },
+			{ token: this.userState$.value?.token, quoteIds, projectName },
 			this.httpOptions
 		);
 	}

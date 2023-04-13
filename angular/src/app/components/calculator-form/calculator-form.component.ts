@@ -213,8 +213,12 @@ export class CalculatorFormComponent implements OnDestroy {
 				.pipe(takeUntil(this.unsubscribe$))
 				.subscribe({
 					next: (res) => {
-						this.quoteCalculated.emit(res.estimate);
-						this.quoteService.currentEstimate$.next(res.estimate);
+						this.quoteCalculated.emit(res.total);
+						this.quoteService.currentEstimate$.next(res.total);
+
+						res.estimates.forEach((estimate, index) => {
+							this.subtaskQuotes[index] = estimate;
+						});
 					},
 
 					error: (err) => {

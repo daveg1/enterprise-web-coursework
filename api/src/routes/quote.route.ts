@@ -140,24 +140,26 @@ quoteRoutes.post('/update', async (req, res) => {
 			useFudge = false
 		}
 
-		let estimate = 0
+		const estimates = []
+		let total = 0
 
 		for (const subtask of parsed.subtasks) {
 			const cost = await calculateQuote(subtask, useFudge)
-			estimate += cost
+			estimates.push(cost)
+			total += cost
 		}
 
 		const result = await Quote.findByIdAndUpdate(
 			parsed.id,
 			{
 				subtasks: parsed.subtasks,
-				estimate,
+				estimate: total,
 			},
 			{ rawResult: true },
 		)
 
 		if (result.ok) {
-			res.status(200).json(result.value)
+			res.status(200).json({ quote: result.value, estimates, total })
 		} else {
 			res.status(500).json({ message: 'failed to update quote' })
 		}

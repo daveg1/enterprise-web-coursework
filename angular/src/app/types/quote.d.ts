@@ -10,14 +10,18 @@ export type QuoteResponse = {
 	projectName: string;
 };
 
-/**
- * Represents a simple numerical of the calculated quote value
- */
+// Response from quote/calculateQuote
 export type EstimateResponse = {
 	estimate: number;
 };
 
+// Response from quote/calculateQuoteBulk
 export type EstimateResponseBulk = {
 	estimates: number[]; // each subtask
 	total: number;
 };
+
+// Reponse from quote/update
+export type UpdateQuoteResponse = {
+	quote: QuoteResponse;
+} & EstimateResponseBulk;
