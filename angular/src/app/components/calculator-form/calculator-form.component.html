@@ -1,6 +1,6 @@
 <div class="flex justify-between w-full px-6 py-4">
 	<div class="flex gap-2">
-		<button appButton (click)="submitForm()">Calculate All</button>
+		<button appButton (click)="calculateAllSubtasks()">Calculate All</button>
 
 		<button
 			[disabled]="hasChanges$.value"
@@ -43,255 +43,286 @@
 			/>
 			Fudge factor
 		</label>
+
+		<button
+			appButton
+			type="button"
+			variant="secondary"
+			size="small"
+			(click)="addSubtask()"
+		>
+			<svg viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 -ml-1">
+				<path
+					d="M10.75 6.75a.75.75 0 00-1.5 0v2.5h-2.5a.75.75 0 000 1.5h2.5v2.5a.75.75 0 001.5 0v-2.5h2.5a.75.75 0 000-1.5h-2.5v-2.5z"
+				/>
+			</svg>
+
+			<span>Add subtask</span>
+		</button>
 	</div>
 </div>
 
 <!-- Subtasks -->
-<ng-container *ngFor="let subtask of subtasks.controls">
-	<form
-		[formGroup]="subtask"
-		class="flex flex-col items-start gap-4 bg-white border rounded-lg shadow-sm shadow-slate-300/50"
-		method="post"
-		spellcheck="false"
+<div class="flex flex-col gap-4 py-4">
+	<ng-container
+		*ngFor="let subtask of subtasks.controls; let subtaskIndex = index"
 	>
-		<!-- Workers Form -->
-
-		<div class="flex items-center justify-between w-full px-6 py-4 border-b">
-			<h2 class="text-lg font-semibold">Workers</h2>
-
-			<button
-				appButton
-				type="button"
-				variant="secondary"
-				size="small"
-				(click)="addWorker(subtask)"
-			>
-				<svg viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 -ml-1">
-					<path
-						d="M10.75 6.75a.75.75 0 00-1.5 0v2.5h-2.5a.75.75 0 000 1.5h2.5v2.5a.75.75 0 001.5 0v-2.5h2.5a.75.75 0 000-1.5h-2.5v-2.5z"
-					/>
-				</svg>
-
-				<span>Add worker</span>
-			</button>
-		</div>
-
-		<div class="flex flex-col items-start gap-2 px-6">
-			<!-- Headers -->
-			<div class="flex gap-2">
-				<div class="w-48 text-sm font-semibold">Time worked</div>
-				<div class="w-24 text-sm font-semibold">Units</div>
-				<div class="w-24 text-sm font-semibold">Pay grade</div>
-			</div>
-
-			<!-- Rows -->
-			<div formArrayName="workers" class="flex flex-col gap-2">
-				<ng-container
-					*ngFor="
-						let workerForm of subtask.controls['workers'].controls;
-						let i = index
-					"
-				>
-					<div [formGroup]="workerForm" class="flex gap-2">
-						<input
-							class="w-48 h-8 px-2 text-sm border rounded focus:z-10"
-							formControlName="timeWorked"
-							type="number"
-							placeholder="36"
-							min="1"
-							required
-						/>
-
-						<select
-							class="w-24 h-8 px-2 text-sm border rounded cursor-pointer"
-							formControlName="timeUnit"
-						>
-							<option *ngFor="let unit of timeUnits" [value]="unit">
-								{{ unit | titlecase }}
-							</option>
-						</select>
-
-						<select
-							class="w-24 h-8 px-2 text-sm border rounded-md cursor-pointer"
-							formControlName="payGrade"
-							required
-						>
-							<ng-container *ngIf="roles$ | async as roles">
-								<option *ngFor="let role of roles" [value]="role">
-									{{ role | titlecase }}
-								</option>
-							</ng-container>
-						</select>
-
-						<app-x-button
-							*ngIf="i > 0"
-							(click)="removeWorker(subtask, i)"
-						></app-x-button>
-					</div>
-				</ng-container>
-			</div>
-		</div>
-
-		<!-- One-off Costs Form -->
-
-		<div class="flex items-center justify-between w-full px-6 py-4 border-y">
-			<h2 class="text-lg font-semibold">One-off Costs</h2>
-
-			<button
-				appButton
-				type="button"
-				variant="secondary"
-				size="small"
-				(click)="addOneOffCost(subtask)"
-			>
-				<svg viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 -ml-1">
-					<path
-						d="M10.75 6.75a.75.75 0 00-1.5 0v2.5h-2.5a.75.75 0 000 1.5h2.5v2.5a.75.75 0 001.5 0v-2.5h2.5a.75.75 0 000-1.5h-2.5v-2.5z"
-					/>
-				</svg>
-
-				<span>Add item</span>
-			</button>
-		</div>
-
-		<div
-			*ngIf="subtask.controls['oneOffCosts'].controls.length"
-			class="flex flex-col items-start gap-2 px-6"
+		<form
+			[formGroup]="subtask"
+			class="flex flex-col items-start gap-4 bg-white border rounded-lg shadow-sm shadow-slate-300/50"
+			method="post"
+			spellcheck="false"
 		>
-			<!-- Headers -->
-			<div class="flex gap-2">
-				<div class="w-48 text-sm font-semibold">Item name</div>
-				<div class="w-24 text-sm font-semibold">Cost</div>
+			<div class="flex items-center justify-between w-full px-6 py-4 pb-0">
+				<h3 class="text-lg">Subtask {{ subtaskIndex + 1 }}</h3>
+
+				<app-x-button
+					*ngIf="subtaskIndex > 0"
+					(click)="removeSubtask(subtaskIndex)"
+				></app-x-button>
 			</div>
 
-			<!-- Rows -->
-			<div formArrayName="workers" class="flex flex-col gap-2">
-				<ng-container
-					*ngFor="
-						let oneOffCostForm of subtask.controls['oneOffCosts'].controls;
-						let i = index
-					"
+			<!-- Workers Form -->
+
+			<div class="flex items-center justify-between w-full px-6 py-4 border-y">
+				<h2 class="font-semibold">Workers</h2>
+
+				<button
+					appButton
+					type="button"
+					variant="secondary"
+					size="small"
+					(click)="addWorker(subtask)"
 				>
-					<div [formGroup]="oneOffCostForm" class="flex gap-2">
-						<input
-							class="w-48 h-8 px-2 text-sm border rounded focus:z-10"
-							formControlName="itemName"
-							type="text"
-							placeholder="E.g. desk"
-							maxlength="64"
-							required
+					<svg viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 -ml-1">
+						<path
+							d="M10.75 6.75a.75.75 0 00-1.5 0v2.5h-2.5a.75.75 0 000 1.5h2.5v2.5a.75.75 0 001.5 0v-2.5h2.5a.75.75 0 000-1.5h-2.5v-2.5z"
 						/>
+					</svg>
 
-						<input
-							class="w-48 h-8 px-2 text-sm border rounded focus:z-10"
-							formControlName="cost"
-							type="number"
-							placeholder="£"
-							min="1"
-							required
-						/>
-
-						<app-x-button (click)="removeOneOffCost(subtask, i)"></app-x-button>
-					</div>
-				</ng-container>
-			</div>
-		</div>
-
-		<!-- Ongoing Costs Form -->
-
-		<div class="flex items-center justify-between w-full px-6 py-4 border-y">
-			<h2 class="text-lg font-semibold">Ongoing Costs</h2>
-
-			<button
-				appButton
-				type="button"
-				variant="secondary"
-				size="small"
-				(click)="addOngoingCost(subtask)"
-			>
-				<svg viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 -ml-1">
-					<path
-						d="M10.75 6.75a.75.75 0 00-1.5 0v2.5h-2.5a.75.75 0 000 1.5h2.5v2.5a.75.75 0 001.5 0v-2.5h2.5a.75.75 0 000-1.5h-2.5v-2.5z"
-					/>
-				</svg>
-
-				<span>Add item</span>
-			</button>
-		</div>
-
-		<div
-			*ngIf="subtask.controls['ongoingCosts'].controls.length"
-			class="flex flex-col items-start gap-2 px-6"
-		>
-			<!-- Headers -->
-			<div class="flex gap-2">
-				<div class="w-64 text-sm font-semibold">Item name</div>
-				<div class="w-24 text-sm font-semibold">Cost</div>
-				<div class="w-24 text-sm font-semibold">How many</div>
-				<div class="w-24 text-sm font-semibold">How often</div>
-			</div>
-
-			<!-- Rows -->
-			<div formArrayName="workers" class="flex flex-col gap-2">
-				<ng-container
-					*ngFor="
-						let ongoingCostForm of subtask.controls['ongoingCosts'].controls;
-						let i = index
-					"
-				>
-					<div [formGroup]="ongoingCostForm" class="flex gap-2">
-						<input
-							class="w-64 h-8 px-2 text-sm border rounded focus:z-10"
-							formControlName="itemName"
-							type="text"
-							placeholder="E.g. desk"
-							maxlength="64"
-							required
-						/>
-
-						<input
-							class="w-24 h-8 px-2 text-sm border rounded focus:z-10"
-							formControlName="cost"
-							type="number"
-							placeholder="£"
-							min="1"
-							required
-						/>
-
-						<input
-							class="w-24 h-8 px-2 text-sm border rounded focus:z-10"
-							formControlName="amount"
-							type="number"
-							min="1"
-							required
-						/>
-
-						<select
-							class="w-24 h-8 px-2 text-sm border rounded cursor-pointer"
-							formControlName="frequency"
-						>
-							<option *ngFor="let unit of frequencies" [value]="unit">
-								{{ unit | titlecase }}
-							</option>
-						</select>
-
-						<app-x-button
-							(click)="removeOngoingCost(subtask, i)"
-						></app-x-button>
-					</div>
-				</ng-container>
-			</div>
-		</div>
-
-		<div class="flex justify-between w-full px-6 py-4 border-y">
-			<div class="flex gap-2">
-				<button appButton (click)="calculateSubtask(subtask)">
-					Calculate subtask
+					<span>Add worker</span>
 				</button>
 			</div>
-		</div>
-	</form>
-</ng-container>
+
+			<div class="flex flex-col items-start gap-2 px-6">
+				<!-- Headers -->
+				<div class="flex gap-2">
+					<div class="w-48 text-sm font-semibold">Time worked</div>
+					<div class="w-24 text-sm font-semibold">Units</div>
+					<div class="w-24 text-sm font-semibold">Pay grade</div>
+				</div>
+
+				<!-- Rows -->
+				<div formArrayName="workers" class="flex flex-col gap-2">
+					<ng-container
+						*ngFor="
+							let workerForm of subtask.controls['workers'].controls;
+							let i = index
+						"
+					>
+						<div [formGroup]="workerForm" class="flex gap-2">
+							<input
+								class="w-48 h-8 px-2 text-sm border rounded focus:z-10"
+								formControlName="timeWorked"
+								type="number"
+								placeholder="36"
+								min="1"
+								required
+							/>
+
+							<select
+								class="w-24 h-8 px-2 text-sm border rounded cursor-pointer"
+								formControlName="timeUnit"
+							>
+								<option *ngFor="let unit of timeUnits" [value]="unit">
+									{{ unit | titlecase }}
+								</option>
+							</select>
+
+							<select
+								class="w-24 h-8 px-2 text-sm border rounded-md cursor-pointer"
+								formControlName="payGrade"
+								required
+							>
+								<ng-container *ngIf="roles$ | async as roles">
+									<option *ngFor="let role of roles" [value]="role">
+										{{ role | titlecase }}
+									</option>
+								</ng-container>
+							</select>
+
+							<app-x-button
+								*ngIf="i > 0"
+								(click)="removeWorker(subtask, i)"
+							></app-x-button>
+						</div>
+					</ng-container>
+				</div>
+			</div>
+
+			<!-- One-off Costs Form -->
+
+			<div class="flex items-center justify-between w-full px-6 py-4 border-y">
+				<h2 class="font-semibold">One-off Costs</h2>
+
+				<button
+					appButton
+					type="button"
+					variant="secondary"
+					size="small"
+					(click)="addOneOffCost(subtask)"
+				>
+					<svg viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 -ml-1">
+						<path
+							d="M10.75 6.75a.75.75 0 00-1.5 0v2.5h-2.5a.75.75 0 000 1.5h2.5v2.5a.75.75 0 001.5 0v-2.5h2.5a.75.75 0 000-1.5h-2.5v-2.5z"
+						/>
+					</svg>
+
+					<span>Add item</span>
+				</button>
+			</div>
+
+			<div
+				*ngIf="subtask.controls['oneOffCosts'].controls.length"
+				class="flex flex-col items-start gap-2 px-6"
+			>
+				<!-- Headers -->
+				<div class="flex gap-2">
+					<div class="w-48 text-sm font-semibold">Item name</div>
+					<div class="w-24 text-sm font-semibold">Cost</div>
+				</div>
+
+				<!-- Rows -->
+				<div formArrayName="workers" class="flex flex-col gap-2">
+					<ng-container
+						*ngFor="
+							let oneOffCostForm of subtask.controls['oneOffCosts'].controls;
+							let i = index
+						"
+					>
+						<div [formGroup]="oneOffCostForm" class="flex gap-2">
+							<input
+								class="w-48 h-8 px-2 text-sm border rounded focus:z-10"
+								formControlName="itemName"
+								type="text"
+								placeholder="E.g. desk"
+								maxlength="64"
+								required
+							/>
+
+							<input
+								class="w-48 h-8 px-2 text-sm border rounded focus:z-10"
+								formControlName="cost"
+								type="number"
+								placeholder="£"
+								min="1"
+								required
+							/>
+
+							<app-x-button
+								(click)="removeOneOffCost(subtask, i)"
+							></app-x-button>
+						</div>
+					</ng-container>
+				</div>
+			</div>
+
+			<!-- Ongoing Costs Form -->
+
+			<div class="flex items-center justify-between w-full px-6 py-4 border-y">
+				<h2 class="font-semibold">Ongoing Costs</h2>
+
+				<button
+					appButton
+					type="button"
+					variant="secondary"
+					size="small"
+					(click)="addOngoingCost(subtask)"
+				>
+					<svg viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 -ml-1">
+						<path
+							d="M10.75 6.75a.75.75 0 00-1.5 0v2.5h-2.5a.75.75 0 000 1.5h2.5v2.5a.75.75 0 001.5 0v-2.5h2.5a.75.75 0 000-1.5h-2.5v-2.5z"
+						/>
+					</svg>
+
+					<span>Add item</span>
+				</button>
+			</div>
+
+			<div
+				*ngIf="subtask.controls['ongoingCosts'].controls.length"
+				class="flex flex-col items-start gap-2 px-6"
+			>
+				<!-- Headers -->
+				<div class="flex gap-2">
+					<div class="w-64 text-sm font-semibold">Item name</div>
+					<div class="w-24 text-sm font-semibold">Cost</div>
+					<div class="w-24 text-sm font-semibold">How many</div>
+					<div class="w-24 text-sm font-semibold">How often</div>
+				</div>
+
+				<!-- Rows -->
+				<div formArrayName="workers" class="flex flex-col gap-2">
+					<ng-container
+						*ngFor="
+							let ongoingCostForm of subtask.controls['ongoingCosts'].controls;
+							let i = index
+						"
+					>
+						<div [formGroup]="ongoingCostForm" class="flex gap-2">
+							<input
+								class="w-64 h-8 px-2 text-sm border rounded focus:z-10"
+								formControlName="itemName"
+								type="text"
+								placeholder="E.g. desk"
+								maxlength="64"
+								required
+							/>
+
+							<input
+								class="w-24 h-8 px-2 text-sm border rounded focus:z-10"
+								formControlName="cost"
+								type="number"
+								placeholder="£"
+								min="1"
+								required
+							/>
+
+							<input
+								class="w-24 h-8 px-2 text-sm border rounded focus:z-10"
+								formControlName="amount"
+								type="number"
+								min="1"
+								required
+							/>
+
+							<select
+								class="w-24 h-8 px-2 text-sm border rounded cursor-pointer"
+								formControlName="frequency"
+							>
+								<option *ngFor="let unit of frequencies" [value]="unit">
+									{{ unit | titlecase }}
+								</option>
+							</select>
+
+							<app-x-button
+								(click)="removeOngoingCost(subtask, i)"
+							></app-x-button>
+						</div>
+					</ng-container>
+				</div>
+			</div>
+
+			<div class="flex justify-between w-full px-6 py-4 border-y">
+				<div class="flex gap-2">
+					<button appButton (click)="calculateSubtask(subtask)">
+						Calculate subtask
+					</button>
+				</div>
+			</div>
+		</form>
+	</ng-container>
+</div>
 
 <!-- Calculation Output -->
 <ng-container *ngIf="currentEstimate$ | async as estimate">
@@ -299,7 +330,7 @@
 		class="flex flex-col mt-8 mb-16 bg-white border rounded-lg shadow-sm shadow-slate-300/50"
 	>
 		<div class="flex items-center justify-between w-full px-6 py-4 border-b">
-			<h2 class="text-lg font-semibold">Estimate</h2>
+			<h2 class="font-semibold">Estimate</h2>
 
 			<div class="flex gap-2">
 				<div

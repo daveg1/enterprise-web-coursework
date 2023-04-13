@@ -4,6 +4,7 @@ import { Quote } from '../models/quote.model'
 import { User } from '../models/user.model'
 import { calculateQuote } from '../modules/calculateQuote'
 import {
+	calculateQuoteBulkSchema,
 	calculateQuoteSchema,
 	mergeQuoteSchema,
 	quoteIdSchema,
@@ -31,6 +32,34 @@ quoteRoutes.post('/calculate', async (req, res) => {
 		} else {
 			estimate = calculateQuote(parsed.budget)
 		}
+
+		res.status(200).json({ estimate })
+	} catch (error) {
+		res.status(500).json({ error })
+	}
+})
+
+quoteRoutes.post('/calculateBulk', async (req, res) => {
+	try {
+		const parsed = await calculateQuoteBulkSchema.parseAsync(req.body)
+		let useFudge = true
+
+		if (!parsed.useFudge && parsed.token) {
+			const user = isAdminUser(parsed.token)
+
+			if (!user) {
+				return res.status(401).json({ reason: 'insufficient permission' })
+			}
+
+			useFudge = false
+		}
+
+		let estimate = 0
+		// TODO refactor to subtasks
+		parsed.budgets.forEach((subtask) => {
+			const cost = calculateQuote(subtask, useFudge)
+			estimate += cost
+		})
 
 		res.status(200).json({ estimate })
 	} catch (error) {

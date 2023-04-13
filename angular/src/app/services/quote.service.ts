@@ -40,6 +40,15 @@ export class QuoteService {
 		);
 	}
 
+	calculateQuoteBulk(budgets: Budget[], useFudge: boolean) {
+		console.log('bulk', budgets);
+		return this.http.post<EstimateResponse>(
+			`${this.endpoint}/calculateBulk`,
+			{ budgets, token: this.userState$.value?.token, useFudge },
+			this.httpOptions
+		);
+	}
+
 	saveQuote(budgets: Budget[], projectName: string) {
 		const state = this.authService.userState$.value;
 

@@ -7,6 +7,12 @@ export const calculateQuoteSchema = z.object({
 	token: z.string().optional(), // a token must be provided when useFudge is true
 })
 
+export const calculateQuoteBulkSchema = z.object({
+	budgets: z.array(budgetSchema),
+	useFudge: z.boolean(),
+	token: z.string().optional(), // a token must be provided when useFudge is true
+})
+
 export const quoteSchema = z.object({
 	budgets: z.array(budgetSchema),
 	projectName: z.string().max(64),

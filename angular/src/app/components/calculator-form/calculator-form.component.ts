@@ -142,7 +142,6 @@ export class CalculatorFormComponent implements OnDestroy {
 	}
 
 	calculateSubtask(subtask: (typeof this.subtasks.controls)[0]) {
-		console.log('calculate');
 		if (subtask && subtask.valid) {
 			this.quoteService
 				.calculateQuote(subtask.value as Budget, this.useFudge)
@@ -152,25 +151,26 @@ export class CalculatorFormComponent implements OnDestroy {
 					this.quoteService.currentEstimate$.next(res.estimate);
 				});
 		} else {
-			this.subtasks.markAllAsTouched();
+			subtask.markAllAsTouched();
 		}
 	}
 
-	submitForm() {
-		console.log('submit');
-		this.subtasks.controls.forEach((subtask) => {
-			if (subtask && subtask.valid) {
-				this.quoteService
-					.calculateQuote(subtask.value as Budget, this.useFudge)
-					.pipe(takeUntil(this.unsubscribe$))
-					.subscribe((res) => {
-						this.quoteCalculated.emit(res.estimate);
-						this.quoteService.currentEstimate$.next(res.estimate);
-					});
-			} else {
-				this.subtasks.markAllAsTouched();
-			}
-		});
+	calculateAllSubtasks() {
+		const subtasks = this.subtasks.controls.map(
+			(subtask) => subtask.value as Budget
+		);
+
+		if (this.subtasks.valid) {
+			this.quoteService
+				.calculateQuoteBulk(subtasks, this.useFudge)
+				.pipe(takeUntil(this.unsubscribe$))
+				.subscribe((res) => {
+					this.quoteCalculated.emit(res.estimate);
+					this.quoteService.currentEstimate$.next(res.estimate);
+				});
+		} else {
+			this.subtasks.markAllAsTouched();
+		}
 	}
 
 	saveQuote() {
@@ -221,6 +221,24 @@ export class CalculatorFormComponent implements OnDestroy {
 				},
 			});
 		}
+	}
+
+	addSubtask() {
+		const subtask = this.fb.group({
+			workers: this.fb.array([this.fb.group(workerForm)]),
+			oneOffCosts: this.fb.array([this.fb.group(oneOffCostForm)]),
+			ongoingCosts: this.fb.array([this.fb.group(ongoingCostForm)]),
+		});
+
+		// Remove one-off and ongoing cost rows (by default only have a worker row)
+		subtask.controls['oneOffCosts'].clear();
+		subtask.controls['ongoingCosts'].clear();
+
+		this.subtasks.controls.push(subtask);
+	}
+
+	removeSubtask(subtaskIndex: number) {
+		this.subtasks.removeAt(subtaskIndex);
 	}
 
 	addWorker(subtask: (typeof this.subtasks.controls)[0]) {
