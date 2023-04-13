@@ -16,7 +16,7 @@
 	</header>
 
 	<main>
-		<form class="flex flex-col p-4" [formGroup]="form">
+		<form class="flex flex-col p-4" [formGroup]="form" (keyup.enter)="submit()">
 			<input
 				class="h-8 px-2 text-sm border rounded focus:z-10"
 				name="projectName"

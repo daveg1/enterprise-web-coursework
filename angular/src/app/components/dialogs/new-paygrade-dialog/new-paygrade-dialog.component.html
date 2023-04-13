@@ -16,7 +16,11 @@
 	</header>
 
 	<main>
-		<form class="flex flex-col gap-4 p-4" [formGroup]="form">
+		<form
+			class="flex flex-col gap-4 p-4"
+			[formGroup]="form"
+			(keyup.submit)="submit()"
+		>
 			<div class="flex flex-col gap-1">
 				<label class="text-sm font-semibold cursor-pointer" for="role"
 					>Role</label
