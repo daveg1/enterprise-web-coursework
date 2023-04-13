@@ -16,3 +16,8 @@ export type QuoteResponse = {
 export type EstimateResponse = {
 	estimate: number;
 };
+
+export type EstimateResponseBulk = {
+	estimates: number[]; // each subtask
+	total: number;
+};

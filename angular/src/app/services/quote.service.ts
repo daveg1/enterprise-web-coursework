@@ -2,7 +2,11 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, tap } from 'rxjs';
 import type { Subtask } from '../types/subtask';
-import type { EstimateResponse, QuoteResponse } from '../types/quote';
+import type {
+	EstimateResponse,
+	EstimateResponseBulk,
+	QuoteResponse,
+} from '../types/quote';
 import { AuthService } from './auth.service';
 
 @Injectable({
@@ -40,7 +44,7 @@ export class QuoteService {
 	}
 
 	calculateQuoteBulk(subtasks: Subtask[], useFudge: boolean) {
-		return this.http.post<EstimateResponse>(
+		return this.http.post<EstimateResponseBulk>(
 			`${this.endpoint}/calculateBulk`,
 			{ subtasks, token: this.userState$.value?.token, useFudge },
 			this.httpOptions

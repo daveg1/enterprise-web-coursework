@@ -51,6 +51,8 @@ export class CalculatorFormComponent implements OnDestroy {
 
 	useFudge = true;
 
+	readonly subtaskQuotes = {} as { [key: number]: number };
+
 	private readonly unsubscribe$ = new Subject<void>();
 
 	constructor(
@@ -158,8 +160,10 @@ export class CalculatorFormComponent implements OnDestroy {
 				.calculateQuote(subtask.value as Subtask, this.useFudge)
 				.pipe(takeUntil(this.unsubscribe$))
 				.subscribe((res) => {
-					this.quoteCalculated.emit(res.estimate);
-					this.quoteService.currentEstimate$.next(res.estimate);
+					const subtaskIndex = this.subtasks.controls.findIndex(
+						(sub) => sub === subtask
+					);
+					this.subtaskQuotes[subtaskIndex] = res.estimate;
 				});
 		} else {
 			subtask.markAllAsTouched();
@@ -180,8 +184,12 @@ export class CalculatorFormComponent implements OnDestroy {
 			.calculateQuoteBulk(subtasks, this.useFudge)
 			.pipe(takeUntil(this.unsubscribe$))
 			.subscribe((res) => {
-				this.quoteCalculated.emit(res.estimate);
-				this.quoteService.currentEstimate$.next(res.estimate);
+				this.quoteCalculated.emit(res.total);
+				this.quoteService.currentEstimate$.next(res.total);
+
+				res.estimates.forEach((estimate, index) => {
+					this.subtaskQuotes[index] = estimate;
+				});
 			});
 	}
 

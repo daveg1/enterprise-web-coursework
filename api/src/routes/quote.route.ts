@@ -54,14 +54,16 @@ quoteRoutes.post('/calculateBulk', async (req, res) => {
 			useFudge = false
 		}
 
-		let estimate = 0
-		// TODO refactor to subtasks
+		const estimates = []
+		let total = 0
+
 		for (const subtask of parsed.subtasks) {
 			const cost = await calculateQuote(subtask, useFudge)
-			estimate += cost
+			estimates.push(cost)
+			total += cost
 		}
 
-		res.status(200).json({ estimate })
+		res.status(200).json({ estimates, total })
 	} catch (error) {
 		res.status(500).json({ error })
 	}
