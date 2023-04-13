@@ -38,13 +38,7 @@ MongoDB is used as the database.
 
 This project is designed to run on a server installed with Ubuntu 22.04 OS. The node processes (angular and api) are managed with [PM2](https://pm2.keymetrics.io/) and the database runs as a local MongoDB instance.
 
-To set this project up, please run the following script:
-[todo]
-
-Once the setup is completed, cd into each project (angular/ and api/) in separate terminal windows and run the following respectively:
-
-- angular: `ng serve`
-- api: `npm start`
+To set this project up, please run the script provided in the submission.
 
 ## References
 
