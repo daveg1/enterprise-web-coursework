@@ -2,7 +2,8 @@
   "name": "enterprise-web-coursework",
   "description": "CM4025 Enterprise Web App coursework",
   "scripts": {
-    "start": "ts-node-esm src/server.ts",
+		"build": "tsc",
+		"start": "node dist/server.js",
     "dev": "nodemon"
   },
   "devDependencies": {
