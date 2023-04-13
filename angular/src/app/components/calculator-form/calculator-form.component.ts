@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { FormArray, NonNullableFormBuilder, Validators } from '@angular/forms';
 import { QuoteService } from 'src/app/services/quote.service';
-import type { Budget } from 'src/app/types/budget';
+import type { Subtask } from 'src/app/types/subtask';
 import { QuoteResponse } from 'src/app/types/quote';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { Dialog } from '@angular/cdk/dialog';
@@ -99,43 +99,43 @@ export class CalculatorFormComponent implements OnDestroy {
 	setQuote(quote: QuoteResponse) {
 		this.subtasks.clear();
 
-		quote.budgets.forEach((budget) => {
-			const subtask = this.fb.group({
+		quote.subtasks.forEach((subtask) => {
+			const subtaskForm = this.fb.group({
 				workers: this.fb.array([this.fb.group(workerForm)]),
 				oneOffCosts: this.fb.array([this.fb.group(oneOffCostForm)]),
 				ongoingCosts: this.fb.array([this.fb.group(ongoingCostForm)]),
 			});
 
-			subtask.controls['workers'].clear();
-			subtask.controls['oneOffCosts'].clear();
-			subtask.controls['ongoingCosts'].clear();
+			subtaskForm.controls['workers'].clear();
+			subtaskForm.controls['oneOffCosts'].clear();
+			subtaskForm.controls['ongoingCosts'].clear();
 
-			budget.workers.forEach((worker) => {
+			subtask.workers.forEach((worker) => {
 				const row = this.fb.group(workerForm);
 				row.controls['payGrade'].setValue(worker.payGrade);
 				row.controls['timeUnit'].setValue(worker.timeUnit);
 				row.controls['timeWorked'].setValue(worker.timeWorked);
 
-				subtask.controls['workers'].push(row);
+				subtaskForm.controls['workers'].push(row);
 			});
 
-			budget.oneOffCosts.forEach((oneOffCost) => {
+			subtask.oneOffCosts.forEach((oneOffCost) => {
 				const row = this.fb.group(oneOffCostForm);
 				row.controls['cost'].setValue(oneOffCost.cost);
 				row.controls['itemName'].setValue(oneOffCost.itemName);
 
-				subtask.controls['oneOffCosts'].push(row);
+				subtaskForm.controls['oneOffCosts'].push(row);
 			});
 
-			budget.ongoingCosts.forEach((ongoingCost) => {
+			subtask.ongoingCosts.forEach((ongoingCost) => {
 				const row = this.fb.group(ongoingCostForm);
 				row.controls['cost'].setValue(ongoingCost.cost);
 				row.controls['itemName'].setValue(ongoingCost.itemName);
 
-				subtask.controls['ongoingCosts'].push(row);
+				subtaskForm.controls['ongoingCosts'].push(row);
 			});
 
-			this.subtasks.controls.push(subtask);
+			this.subtasks.controls.push(subtaskForm);
 		});
 
 		this.editing$.next(quote._id);
@@ -154,7 +154,7 @@ export class CalculatorFormComponent implements OnDestroy {
 	calculateSubtask(subtask: (typeof this.subtasks.controls)[0]) {
 		if (subtask && subtask.valid) {
 			this.quoteService
-				.calculateQuote(subtask.value as Budget, this.useFudge)
+				.calculateQuote(subtask.value as Subtask, this.useFudge)
 				.pipe(takeUntil(this.unsubscribe$))
 				.subscribe((res) => {
 					this.quoteCalculated.emit(res.estimate);
@@ -167,7 +167,7 @@ export class CalculatorFormComponent implements OnDestroy {
 
 	calculateAllSubtasks() {
 		const subtasks = this.subtasks.controls.map(
-			(subtask) => subtask.value as Budget
+			(subtask) => subtask.value as Subtask
 		);
 
 		if (!this.validateSubtasks()) {
@@ -185,7 +185,9 @@ export class CalculatorFormComponent implements OnDestroy {
 	}
 
 	saveQuote() {
-		const budgets = this.subtasks.controls.map((form) => form.value as Budget);
+		const subtasks = this.subtasks.controls.map(
+			(form) => form.value as Subtask
+		);
 
 		// If editing an existing quote, perform an update
 
@@ -198,7 +200,7 @@ export class CalculatorFormComponent implements OnDestroy {
 			const quoteId = this.editing$.value;
 
 			this.quoteService
-				.updateQuote(quoteId, budgets, this.useFudge)
+				.updateQuote(quoteId, subtasks, this.useFudge)
 				.pipe(takeUntil(this.unsubscribe$))
 				.subscribe({
 					next: (res) => {
@@ -225,7 +227,7 @@ export class CalculatorFormComponent implements OnDestroy {
 					}
 
 					this.quoteService
-						.saveQuote(budgets, projectName, this.useFudge)
+						.saveQuote(subtasks, projectName, this.useFudge)
 						.pipe(takeUntil(this.unsubscribe$))
 						.subscribe({
 							next: (quote) => {

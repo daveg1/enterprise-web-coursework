@@ -1,11 +1,11 @@
-import type { Budget } from './budget';
+import type { Subtask } from './subtask';
 
 /**
  * Represents a quote object from the database
  */
 export type QuoteResponse = {
 	_id: string;
-	budgets: Budget[];
+	subtasks: Subtask[];
 	estimate: number;
 	projectName: string;
 };

@@ -1,8 +1,8 @@
 import { Schema } from 'mongoose'
-import type { Budget } from './budget'
+import type { Subtask } from './subtask'
 
 export type Quote = {
-	budgets: Budget[]
+	subtasks: Subtask[]
 	estimate: number
 	projectName: string
 	user: typeof Schema.Types.ObjectId

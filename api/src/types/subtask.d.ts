@@ -1,4 +1,4 @@
-export type Budget = {
+export type Subtask = {
 	workers?: {
 		timeWorked?: number
 		timeUnit?: 'hours' | 'days' | 'months'

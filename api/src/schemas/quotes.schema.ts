@@ -1,20 +1,20 @@
 import { z } from 'zod'
-import { budgetSchema } from './budget.schema'
+import { subtaskSchema } from './subtask.schema'
 
 export const calculateQuoteSchema = z.object({
-	budget: budgetSchema,
+	subtask: subtaskSchema,
 	useFudge: z.boolean(),
 	token: z.string().optional(), // a token must be provided when useFudge is true
 })
 
 export const calculateQuoteBulkSchema = z.object({
-	budgets: z.array(budgetSchema),
+	subtasks: z.array(subtaskSchema),
 	useFudge: z.boolean(),
 	token: z.string().optional(), // a token must be provided when useFudge is true
 })
 
 export const quoteSchema = z.object({
-	budgets: z.array(budgetSchema),
+	subtasks: z.array(subtaskSchema),
 	projectName: z.string().max(64),
 	useFudge: z.boolean(),
 	token: z.string(),
@@ -26,7 +26,7 @@ export const quoteIdSchema = z.object({
 
 export const updateQuoteSchema = z.object({
 	id: z.string().length(24),
-	budgets: z.array(budgetSchema),
+	subtasks: z.array(subtaskSchema),
 	useFudge: z.boolean(),
 	token: z.string(),
 })

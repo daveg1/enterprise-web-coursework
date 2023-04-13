@@ -1,5 +1,5 @@
 import { Paygrade } from '../models/paygrade.model'
-import type { Budget } from '../types/budget'
+import type { Subtask } from '../types/subtask'
 
 /**
  * Generates a fudge factor plus or minus the given percentage
@@ -21,12 +21,12 @@ function fudgeFactor(factor: number, useFudge: boolean) {
 }
 
 /**
- * Calculates the estimate quote given a budget form
- * @param budget The budget form
+ * Calculates the estimate quote given a subtask form
+ * @param subtask The subtask form
  * @param useFudge Whether to calculate using the fudge factor. True by default
  * @returns Estimate
  */
-export async function calculateQuote(budget: Budget, useFudge = true): Promise<number> {
+export async function calculateQuote(subtask: Subtask, useFudge = true): Promise<number> {
 	const paygrades = await Paygrade.find()
 
 	if (!paygrades.length) {
@@ -36,7 +36,7 @@ export async function calculateQuote(budget: Budget, useFudge = true): Promise<n
 	let totalCostOfWorkers = 0
 
 	// Tally up workers
-	for (const worker of budget.workers) {
+	for (const worker of subtask.workers) {
 		let hoursNeeded = worker.timeWorked
 
 		// Convert alternative units into hours
@@ -60,14 +60,14 @@ export async function calculateQuote(budget: Budget, useFudge = true): Promise<n
 	// Tally up one-off costs
 	let totalOneOffCost = 0
 
-	for (const oneOffCost of budget.oneOffCosts) {
+	for (const oneOffCost of subtask.oneOffCosts) {
 		totalOneOffCost += oneOffCost.cost
 	}
 
 	// Tally up ongoing costs
 	let totalOngoingCosts = 0
 
-	for (const ongoingCost of budget.ongoingCosts) {
+	for (const ongoingCost of subtask.ongoingCosts) {
 		totalOngoingCosts += ongoingCost.cost * ongoingCost.amount
 	}
 

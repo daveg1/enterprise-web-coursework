@@ -28,9 +28,9 @@ quoteRoutes.post('/calculate', async (req, res) => {
 				return res.status(401).json({ reason: 'insufficient permission' })
 			}
 
-			estimate = await calculateQuote(parsed.budget, false)
+			estimate = await calculateQuote(parsed.subtask, false)
 		} else {
-			estimate = await calculateQuote(parsed.budget)
+			estimate = await calculateQuote(parsed.subtask)
 		}
 
 		res.status(200).json({ estimate })
@@ -56,7 +56,7 @@ quoteRoutes.post('/calculateBulk', async (req, res) => {
 
 		let estimate = 0
 		// TODO refactor to subtasks
-		for (const subtask of parsed.budgets) {
+		for (const subtask of parsed.subtasks) {
 			const cost = await calculateQuote(subtask, useFudge)
 			estimate += cost
 		}
@@ -93,13 +93,13 @@ quoteRoutes.post('/save', async (req, res) => {
 
 		let estimate = 0
 
-		for (const subtask of parsed.budgets) {
+		for (const subtask of parsed.subtasks) {
 			const cost = await calculateQuote(subtask, useFudge)
 			estimate += cost
 		}
 
 		const quote = new Quote({
-			budgets: parsed.budgets,
+			subtasks: parsed.subtasks,
 			estimate,
 			projectName: parsed.projectName,
 			user: userId,
@@ -140,7 +140,7 @@ quoteRoutes.post('/update', async (req, res) => {
 
 		let estimate = 0
 
-		for (const subtask of parsed.budgets) {
+		for (const subtask of parsed.subtasks) {
 			const cost = await calculateQuote(subtask, useFudge)
 			estimate += cost
 		}
@@ -148,7 +148,7 @@ quoteRoutes.post('/update', async (req, res) => {
 		const result = await Quote.findByIdAndUpdate(
 			parsed.id,
 			{
-				budgets: parsed.budgets,
+				subtasks: parsed.subtasks,
 				estimate,
 			},
 			{ rawResult: true },
@@ -228,7 +228,7 @@ quoteRoutes.post('/merge', async (req, res) => {
 		// Tally everything up
 		for (const quoteId of parsed.quoteIds) {
 			const quote = await Quote.findById(quoteId)
-			subtasks = [...subtasks, ...quote.budgets]
+			subtasks = [...subtasks, ...quote.subtasks]
 			estimates += quote.estimate
 		}
 
@@ -237,7 +237,7 @@ quoteRoutes.post('/merge', async (req, res) => {
 
 		// Create new combined quote
 		const quote = new Quote({
-			budgets: subtasks,
+			subtasks: subtasks,
 			estimate: estimates,
 			projectName: parsed.projectName,
 			user: userId,

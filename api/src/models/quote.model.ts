@@ -2,7 +2,7 @@ import { model, Schema } from 'mongoose'
 import type { Quote } from '../types/quote'
 
 const schema = new Schema<Quote>({
-	budgets: [
+	subtasks: [
 		{
 			workers: [
 				{

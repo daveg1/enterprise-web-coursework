@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, tap } from 'rxjs';
-import type { Budget } from '../types/budget';
+import type { Subtask } from '../types/subtask';
 import type { EstimateResponse, QuoteResponse } from '../types/quote';
 import { AuthService } from './auth.service';
 
@@ -31,29 +31,29 @@ export class QuoteService {
 		}),
 	};
 
-	calculateQuote(budget: Budget, useFudge: boolean) {
+	calculateQuote(subtask: Subtask, useFudge: boolean) {
 		return this.http.post<EstimateResponse>(
 			`${this.endpoint}/calculate`,
-			{ budget, token: this.userState$.value?.token, useFudge },
+			{ subtask, token: this.userState$.value?.token, useFudge },
 			this.httpOptions
 		);
 	}
 
-	calculateQuoteBulk(budgets: Budget[], useFudge: boolean) {
+	calculateQuoteBulk(subtasks: Subtask[], useFudge: boolean) {
 		return this.http.post<EstimateResponse>(
 			`${this.endpoint}/calculateBulk`,
-			{ budgets, token: this.userState$.value?.token, useFudge },
+			{ subtasks, token: this.userState$.value?.token, useFudge },
 			this.httpOptions
 		);
 	}
 
-	saveQuote(budgets: Budget[], projectName: string, useFudge: boolean) {
+	saveQuote(subtasks: Subtask[], projectName: string, useFudge: boolean) {
 		const state = this.authService.userState$.value;
 
 		return this.http
 			.post<QuoteResponse>(
 				`${this.endpoint}/save`,
-				{ budgets, projectName, token: state!.token, useFudge },
+				{ subtasks, projectName, token: state!.token, useFudge },
 				this.httpOptions
 			)
 			.pipe(
@@ -63,13 +63,13 @@ export class QuoteService {
 			);
 	}
 
-	updateQuote(id: string, budgets: Budget[], useFudge: boolean) {
+	updateQuote(id: string, subtasks: Subtask[], useFudge: boolean) {
 		const state = this.authService.userState$.value;
 
 		return this.http
 			.post<QuoteResponse>(`${this.endpoint}/update`, {
 				id,
-				budgets,
+				subtasks,
 				token: state!.token,
 				useFudge,
 			})

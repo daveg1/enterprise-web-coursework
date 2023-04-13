@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-export const budgetSchema = z.object({
+export const subtaskSchema = z.object({
 	workers: z.array(
 		z.object({
 			timeWorked: z.number(),
