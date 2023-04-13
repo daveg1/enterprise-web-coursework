@@ -41,7 +41,6 @@ export class QuoteService {
 	}
 
 	calculateQuoteBulk(budgets: Budget[], useFudge: boolean) {
-		console.log('bulk', budgets);
 		return this.http.post<EstimateResponse>(
 			`${this.endpoint}/calculateBulk`,
 			{ budgets, token: this.userState$.value?.token, useFudge },
