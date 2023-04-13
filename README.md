@@ -11,7 +11,6 @@ The webapp follows a MEAN stack architecture (MongoDB, Express, Angular, Node). 
 The frontend is built using [Angular v15](https://angular.io/). Components are styled using [Tailwind CSS](https://tailwindcss.com/). Pages include:
 
 - /
-- /calculator
 - /quote
 - /login
 - /signup
