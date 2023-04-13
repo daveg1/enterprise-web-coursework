@@ -2,7 +2,7 @@ export type Budget = {
 	workers?: {
 		timeWorked?: number
 		timeUnit?: 'hours' | 'days' | 'months'
-		payGrade?: 'junior' | 'standard' | 'senior'
+		payGrade?: string
 	}[]
 
 	oneOffCosts?: {

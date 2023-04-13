@@ -16,6 +16,7 @@ export const calculateQuoteBulkSchema = z.object({
 export const quoteSchema = z.object({
 	budgets: z.array(budgetSchema),
 	projectName: z.string().max(64),
+	useFudge: z.boolean(),
 	token: z.string(),
 })
 
@@ -26,6 +27,7 @@ export const quoteIdSchema = z.object({
 export const updateQuoteSchema = z.object({
 	id: z.string().length(24),
 	budgets: z.array(budgetSchema),
+	useFudge: z.boolean(),
 	token: z.string(),
 })
 

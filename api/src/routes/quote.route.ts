@@ -28,9 +28,9 @@ quoteRoutes.post('/calculate', async (req, res) => {
 				return res.status(401).json({ reason: 'insufficient permission' })
 			}
 
-			estimate = calculateQuote(parsed.budget, false)
+			estimate = await calculateQuote(parsed.budget, false)
 		} else {
-			estimate = calculateQuote(parsed.budget)
+			estimate = await calculateQuote(parsed.budget)
 		}
 
 		res.status(200).json({ estimate })
@@ -56,10 +56,10 @@ quoteRoutes.post('/calculateBulk', async (req, res) => {
 
 		let estimate = 0
 		// TODO refactor to subtasks
-		parsed.budgets.forEach((subtask) => {
-			const cost = calculateQuote(subtask, useFudge)
+		for (const subtask of parsed.budgets) {
+			const cost = await calculateQuote(subtask, useFudge)
 			estimate += cost
-		})
+		}
 
 		res.status(200).json({ estimate })
 	} catch (error) {
@@ -79,15 +79,28 @@ quoteRoutes.post('/save', async (req, res) => {
 			res.status(401).json({ message: 'quote/save POST No user by that id' })
 		}
 
-		let estimates = 0
+		let useFudge = true
 
-		parsed.budgets.forEach((budget) => {
-			estimates += calculateQuote(budget)
-		})
+		if (!parsed.useFudge && parsed.token) {
+			const user = isAdminUser(parsed.token)
+
+			if (!user) {
+				return res.status(401).json({ reason: 'insufficient permission' })
+			}
+
+			useFudge = false
+		}
+
+		let estimate = 0
+
+		for (const subtask of parsed.budgets) {
+			const cost = await calculateQuote(subtask, useFudge)
+			estimate += cost
+		}
 
 		const quote = new Quote({
 			budgets: parsed.budgets,
-			estimate: estimates,
+			estimate,
 			projectName: parsed.projectName,
 			user: userId,
 		})
@@ -113,17 +126,30 @@ quoteRoutes.post('/update', async (req, res) => {
 			res.status(401).json({ message: 'quote/update POST No user by that id' })
 		}
 
-		let estimates = 0
+		let useFudge = true
 
-		parsed.budgets.forEach((budget) => {
-			estimates += calculateQuote(budget)
-		})
+		if (!parsed.useFudge && parsed.token) {
+			const user = isAdminUser(parsed.token)
+
+			if (!user) {
+				return res.status(401).json({ reason: 'insufficient permission' })
+			}
+
+			useFudge = false
+		}
+
+		let estimate = 0
+
+		for (const subtask of parsed.budgets) {
+			const cost = await calculateQuote(subtask, useFudge)
+			estimate += cost
+		}
 
 		const result = await Quote.findByIdAndUpdate(
 			parsed.id,
 			{
 				budget: parsed.budgets,
-				estimate: estimates,
+				estimate,
 			},
 			{ rawResult: true },
 		)

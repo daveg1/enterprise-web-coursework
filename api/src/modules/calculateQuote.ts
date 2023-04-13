@@ -1,19 +1,5 @@
+import { Paygrade } from '../models/paygrade.model'
 import type { Budget } from '../types/budget'
-
-const rates = {
-	junior: {
-		hourly: 10,
-		annual: 20000,
-	},
-	standard: {
-		hourly: 20,
-		annual: 40000,
-	},
-	senior: {
-		hourly: 30,
-		annual: 60000,
-	},
-}
 
 /**
  * Generates a fudge factor plus or minus the given percentage
@@ -40,7 +26,13 @@ function fudgeFactor(factor: number, useFudge: boolean) {
  * @param useFudge Whether to calculate using the fudge factor. True by default
  * @returns Estimate
  */
-export function calculateQuote(budget: Budget, useFudge = true): number {
+export async function calculateQuote(budget: Budget, useFudge = true): Promise<number> {
+	const paygrades = await Paygrade.find()
+
+	if (!paygrades.length) {
+		throw new Error('no paygrades available')
+	}
+
 	let totalCostOfWorkers = 0
 
 	// Tally up workers
@@ -54,7 +46,13 @@ export function calculateQuote(budget: Budget, useFudge = true): number {
 			hoursNeeded *= 730
 		}
 
-		const hourlyRate = rates[worker.payGrade].hourly
+		const paygrade = paygrades.find((pay) => pay.role === worker.payGrade)
+
+		if (!paygrade) {
+			throw new Error('That paygrade does not exist')
+		}
+
+		const hourlyRate = paygrade.hourlyRate
 		const costOfPerson = hoursNeeded * hourlyRate
 		totalCostOfWorkers += costOfPerson * fudgeFactor(0.05, useFudge) // ±0.05%
 	}
