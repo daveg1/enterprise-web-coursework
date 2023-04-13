@@ -1,15 +1,14 @@
 import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
-import { FormArray, NonNullableFormBuilder, Validators } from '@angular/forms';
+import { NonNullableFormBuilder, Validators } from '@angular/forms';
 import { QuoteService } from 'src/app/services/quote.service';
 import type { Subtask } from 'src/app/types/subtask';
 import { QuoteResponse } from 'src/app/types/quote';
-import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { Dialog } from '@angular/cdk/dialog';
 import { ProjectNameDialogComponent } from '../dialogs/project-name-dialog/project-name-dialog.component';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { PaygradeService } from 'src/app/services/paygrade.service';
-import { Paygrade } from 'src/app/types/paygrade';
 
 const timeUnits = ['hours', 'days', 'months'];
 const frequencies = ['weekly', 'monthly'];
@@ -85,7 +84,7 @@ export class CalculatorFormComponent implements OnDestroy {
 			.getRoles()
 			.pipe(takeUntil(this.unsubscribe$))
 			.subscribe((roles) => {
-				if (this.subtasks) {
+				if (this.subtasks && !this.editing$.value) {
 					this.subtasks
 						.at(0)
 						.controls['workers'].at(0)
