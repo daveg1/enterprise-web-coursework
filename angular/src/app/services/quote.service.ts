@@ -48,13 +48,13 @@ export class QuoteService {
 		);
 	}
 
-	saveQuote(budgets: Budget[], projectName: string) {
+	saveQuote(budgets: Budget[], projectName: string, useFudge: boolean) {
 		const state = this.authService.userState$.value;
 
 		return this.http
 			.post<QuoteResponse>(
 				`${this.endpoint}/save`,
-				{ budgets, projectName, token: state!.token },
+				{ budgets, projectName, token: state!.token, useFudge },
 				this.httpOptions
 			)
 			.pipe(
@@ -64,7 +64,7 @@ export class QuoteService {
 			);
 	}
 
-	updateQuote(id: string, budgets: Budget[]) {
+	updateQuote(id: string, budgets: Budget[], useFudge: boolean) {
 		const state = this.authService.userState$.value;
 
 		return this.http
@@ -72,6 +72,7 @@ export class QuoteService {
 				id,
 				budgets,
 				token: state!.token,
+				useFudge,
 			})
 			.pipe(
 				tap((quote) => {

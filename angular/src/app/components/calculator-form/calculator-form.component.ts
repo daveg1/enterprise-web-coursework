@@ -181,7 +181,7 @@ export class CalculatorFormComponent implements OnDestroy {
 			const quoteId = this.quoteService.editing$.value;
 
 			this.quoteService
-				.updateQuote(quoteId, budgets)
+				.updateQuote(quoteId, budgets, this.useFudge)
 				.pipe(takeUntil(this.unsubscribe$))
 				.subscribe({
 					next: (res) => {
@@ -207,7 +207,7 @@ export class CalculatorFormComponent implements OnDestroy {
 					}
 
 					this.quoteService
-						.saveQuote(budgets, projectName)
+						.saveQuote(budgets, projectName, this.useFudge)
 						.pipe(takeUntil(this.unsubscribe$))
 						.subscribe({
 							next: (quote) => {
