@@ -196,13 +196,13 @@ quoteRoutes.post('/merge', async (req, res) => {
 			res.status(401).json({ message: 'quote/update POST No user by that id' })
 		}
 
-		const subtasks = []
+		let subtasks = []
 		let estimates = 0
 
 		// Tally everything up
 		for (const quoteId of parsed.quoteIds) {
 			const quote = await Quote.findById(quoteId)
-			subtasks.push(quote.budgets)
+			subtasks = [...subtasks, ...quote.budgets]
 			estimates += quote.estimate
 		}
 
