@@ -9,6 +9,7 @@ const baseStyles = [
 	'rounded',
 	'text-sm',
 	'font-semibold',
+	'select-none',
 ];
 
 type buttonVariants = 'primary' | 'secondary';

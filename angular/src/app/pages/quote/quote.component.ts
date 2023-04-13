@@ -1,6 +1,6 @@
-import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { CalculatorFormComponent } from 'src/app/components/calculator-form/calculator-form.component';
 import { AuthService } from 'src/app/services/auth.service';
 import { QuoteService } from 'src/app/services/quote.service';
@@ -9,7 +9,7 @@ import { QuoteService } from 'src/app/services/quote.service';
 	selector: 'app-quote',
 	templateUrl: './quote.component.html',
 })
-export class QuoteComponent implements AfterViewInit, OnDestroy {
+export class QuoteComponent implements OnDestroy {
 	@ViewChild(CalculatorFormComponent)
 	calculatorForm!: CalculatorFormComponent;
 
@@ -17,7 +17,6 @@ export class QuoteComponent implements AfterViewInit, OnDestroy {
 
 	isLoggedIn$;
 	quote$;
-	hasChanges$;
 
 	private readonly unsubscribe$ = new Subject<void>();
 
@@ -29,7 +28,6 @@ export class QuoteComponent implements AfterViewInit, OnDestroy {
 	) {
 		this.isLoggedIn$ = this.authService.isLoggedIn$;
 		this.quote$ = this.quoteService.currentQuote$;
-		this.hasChanges$ = this.quoteService.hasChanges$;
 
 		this.route.paramMap.subscribe((paramMap) => {
 			const quoteId = paramMap.get('id') ?? '';
@@ -54,26 +52,6 @@ export class QuoteComponent implements AfterViewInit, OnDestroy {
 					},
 				});
 		});
-	}
-
-	ngAfterViewInit() {
-		this.calculatorForm.subtasks.valueChanges
-			.pipe(takeUntil(this.unsubscribe$))
-			.subscribe({
-				next: (changedValue) => {
-					// Value isn't set yet, ignore
-					if (!this.baseValue) {
-						return;
-					}
-
-					// Compare baseline to changed value
-					if (!Object.is(this.baseValue, changedValue)) {
-						this.hasChanges$.next(true);
-					} else {
-						this.hasChanges$.next(false);
-					}
-				},
-			});
 	}
 
 	ngOnDestroy() {

@@ -45,8 +45,8 @@ export class CalculatorFormComponent implements OnDestroy {
 	readonly roles$ = new BehaviorSubject<Paygrade['role'][]>([]);
 	readonly frequencies = frequencies;
 
-	readonly hasChanges$;
 	readonly quote$;
+	readonly editing$;
 	readonly currentEstimate$;
 	readonly isAdmin$;
 
@@ -62,8 +62,8 @@ export class CalculatorFormComponent implements OnDestroy {
 		readonly dialog: Dialog,
 		readonly router: Router
 	) {
-		this.hasChanges$ = this.quoteService.hasChanges$;
 		this.quote$ = this.quoteService.currentQuote$;
+		this.editing$ = this.quoteService.editing$;
 		this.currentEstimate$ = this.quoteService.currentEstimate$;
 		this.isAdmin$ = this.authService.isAdmin$;
 
@@ -138,7 +138,17 @@ export class CalculatorFormComponent implements OnDestroy {
 			this.subtasks.controls.push(subtask);
 		});
 
-		this.quoteService.editing$.next(quote._id);
+		this.editing$.next(quote._id);
+	}
+
+	validateSubtasks() {
+		for (const subtask of this.subtasks.controls) {
+			if (!subtask.valid) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	calculateSubtask(subtask: (typeof this.subtasks.controls)[0]) {
@@ -160,32 +170,40 @@ export class CalculatorFormComponent implements OnDestroy {
 			(subtask) => subtask.value as Budget
 		);
 
-		if (this.subtasks.valid) {
-			this.quoteService
-				.calculateQuoteBulk(subtasks, this.useFudge)
-				.pipe(takeUntil(this.unsubscribe$))
-				.subscribe((res) => {
-					this.quoteCalculated.emit(res.estimate);
-					this.quoteService.currentEstimate$.next(res.estimate);
-				});
-		} else {
+		if (!this.validateSubtasks()) {
 			this.subtasks.markAllAsTouched();
+			return;
 		}
+
+		this.quoteService
+			.calculateQuoteBulk(subtasks, this.useFudge)
+			.pipe(takeUntil(this.unsubscribe$))
+			.subscribe((res) => {
+				this.quoteCalculated.emit(res.estimate);
+				this.quoteService.currentEstimate$.next(res.estimate);
+			});
 	}
 
 	saveQuote() {
 		const budgets = this.subtasks.controls.map((form) => form.value as Budget);
 
-		// If editing, update the existing quote
-		if (this.quoteService.editing$.value) {
-			const quoteId = this.quoteService.editing$.value;
+		// If editing an existing quote, perform an update
+
+		if (this.editing$.value) {
+			if (!this.validateSubtasks()) {
+				this.subtasks.markAllAsTouched();
+				return;
+			}
+
+			const quoteId = this.editing$.value;
 
 			this.quoteService
 				.updateQuote(quoteId, budgets, this.useFudge)
 				.pipe(takeUntil(this.unsubscribe$))
 				.subscribe({
 					next: (res) => {
-						console.log('Quote updated', res);
+						this.quoteCalculated.emit(res.estimate);
+						this.quoteService.currentEstimate$.next(res.estimate);
 					},
 
 					error: (err) => {
@@ -273,7 +291,7 @@ export class CalculatorFormComponent implements OnDestroy {
 	}
 
 	ngOnDestroy() {
-		this.quoteService.editing$.next('');
+		this.editing$.next('');
 		this.quoteService.currentEstimate$.next(0);
 		this.unsubscribe$.next();
 		this.unsubscribe$.complete();

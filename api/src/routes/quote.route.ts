@@ -148,7 +148,7 @@ quoteRoutes.post('/update', async (req, res) => {
 		const result = await Quote.findByIdAndUpdate(
 			parsed.id,
 			{
-				budget: parsed.budgets,
+				budgets: parsed.budgets,
 				estimate,
 			},
 			{ rawResult: true },

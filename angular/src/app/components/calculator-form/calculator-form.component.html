@@ -2,13 +2,7 @@
 	<div class="flex gap-2">
 		<button appButton (click)="calculateAllSubtasks()">Calculate All</button>
 
-		<button
-			[disabled]="hasChanges$.value"
-			(click)="saveQuote()"
-			appButton
-			size="small"
-			variant="secondary"
-		>
+		<button (click)="saveQuote()" appButton size="small" variant="secondary">
 			<svg
 				fill="none"
 				viewBox="0 0 24 24"
@@ -23,18 +17,23 @@
 				/>
 			</svg>
 
-			<span>Save</span>
+			<span>
+				<ng-container *ngIf="editing$ | async; else saveText">
+					Update
+				</ng-container>
+
+				<ng-template #saveText>Save</ng-template>
+			</span>
 		</button>
 	</div>
 
-	<div class="flex">
+	<div class="flex gap-2">
 		<label
 			*ngIf="isAdmin$ | async"
 			appButton
 			variant="secondary"
-			outlined="outlined"
 			size="small"
-			class="gap-1"
+			class="gap-2"
 		>
 			<input
 				type="checkbox"
@@ -329,17 +328,8 @@
 	<div
 		class="flex flex-col mt-8 mb-16 bg-white border rounded-lg shadow-sm shadow-slate-300/50"
 	>
-		<div class="flex items-center justify-between w-full px-6 py-4 border-b">
+		<div class="flex px-6 py-4 border-b">
 			<h2 class="font-semibold">Estimate</h2>
-
-			<div class="flex gap-2">
-				<div
-					*ngIf="hasChanges$ | async"
-					class="px-1 text-sm font-semibold leading-6 text-white rounded bg-slate-400"
-				>
-					Form has changed
-				</div>
-			</div>
 		</div>
 
 		<div class="flex flex-col px-6 py-4">
